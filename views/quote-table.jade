@@ -12,10 +12,12 @@ html(lang="en")
             thead
                 tr
                     each col in tableColumns
-                        th= col.label
+                        - var className = col.key + ' ' + col.format
+                        th(class=className)= col.label
             tbody
-                each val, i in quotes
+                each quote, i in quotes
                     tr
-                        - var quote = quotes[i]
                         each col in tableColumns
-                            td= quote[col.key]
+                            - var className = col.key + ' ' + col.format
+                            - var value = quote[col.key]
+                            td(class=className)= col.formatFn(value)

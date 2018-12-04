@@ -13,10 +13,42 @@ const mapQuotes = (d) => {
     return d.results;
 };
 
-const col = (label, key) => ({
-    label,
-    key
-})
+const col = (label, key, {format} = {}) => {
+    const formatMap = {
+        number: (val) => {
+            if (typeof val === 'number') {
+                val = val.toString();
+                let decimals = val.split('.');
+                if (decimals.length === 1) {
+                    decimals.push('00');
+                } else if (decimals.length === 2) {
+                    if (decimals[1].length === 1) decimals[1] += '0';
+                }
+                return decimals.join('.');
+            }
+            return val;
+        },
+        percent: (val) => {
+            if (typeof val === 'number') {
+                val = val.toString();
+                let decimals = val.split('.');
+                if (decimals.length === 1) {
+                    decimals.push('00');
+                } else if (decimals.length === 2) {
+                    if (decimals[1].length === 1) decimals[1] += '0';
+                }
+                return decimals.join('.') + '%';
+            }
+            return val + '%';
+        }
+    }
+    return {
+        label,
+        key,
+        format,
+        formatFn: format ? formatMap[format] : val => val
+    };
+};
 
 app.get('/api/quotes', (req, res) => {
     const queryParams = req.query;
@@ -28,15 +60,15 @@ app.get('/api/quotes', (req, res) => {
             res.render('quote-table', {
                 quotes: mapQuotes(data),
                 tableColumns: [
-                    col('Symbol', 'symbol'),
                     col('Name', 'name'),
-                    col('Price', 'lastPrice'),
-                    col('Chg', 'netChange'),
-                    col('Chg %', 'percentChange'),
-                    col('Open', 'open'),
-                    col('High', 'high'),
-                    col('Low', 'low'),
-                    col('Close', 'close')
+                    col('Symbol', 'symbol'),
+                    col('Price', 'lastPrice', {format: 'number'}),
+                    col('Chg', 'netChange', {format: 'number'}),
+                    col('Chg %', 'percentChange', {format: 'percent'}),
+                    col('Open', 'open', {format: 'number'}),
+                    col('High', 'high', {format: 'number'}),
+                    col('Low', 'low', {format: 'number'}),
+                    col('Close', 'close', {format: 'number'})
                 ]
             });
         });

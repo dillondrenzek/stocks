@@ -1,8 +1,32 @@
+h2 {
+    font-family: Helvetica, sans-serif;
+    margin: 0;
+}
+
+table {
+    font-family: monospace;
+    border-top: 2px solid black;
+}
+
+thead {
+    border-bottom: 1px solid lightgray;
+}
+
 th {
     color: gray;
 }
 
 th,
 td {
-    padding: 3px 5px;
+    padding: 3px 15px;
+    text-align: right;
+}
+
+td.symbol {
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+td.lastPrice {
+    font-size: 1.05rem;
 }
