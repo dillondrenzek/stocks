@@ -44,26 +44,6 @@ module.exports = function() {
     const api = BarchartAPI();
 
     return {
-        getQuotes
+        getQuotes: api.getQuotes
     }
-
-
-    function getQuotes(symbolsArray, callback) {
-
-        
-        api.getQuotes(symbolsArray, callback);
-
-        // Call the Barchart API
-        // var response = UrlFetchApp.fetch(url);
-
-        // Parse the JSON reply
-        // var json = response.getContentText();
-        // var data = JSON.parse(json);
-
-        // return data['results'];
-
-    }
-
-    
-
 };
