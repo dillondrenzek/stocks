@@ -1,14 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const QuoteController = require('./controllers/quotes.controller');
+const quotes = require('./controllers/quotes.controller')();
 
 const app = express();
 
 let port = 7000;
 
 app.get('/', (req, res) => {
-    res.send('Ok');
+
+    quotes.getQuotes([
+        'AAPL',
+        'TTWO'
+    ], (data) => {
+        res.json(data);
+    });
+
+    
 });
 
 app.listen(port, () => {
