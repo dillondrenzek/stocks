@@ -13,6 +13,11 @@ const mapQuotes = (d) => {
     return d.results;
 };
 
+const col = (label, key) => ({
+    label,
+    key
+})
+
 app.get('/api/quotes', (req, res) => {
     const queryParams = req.query;
     let symbols = queryParams['symbols'];
@@ -21,13 +26,26 @@ app.get('/api/quotes', (req, res) => {
         symbols = symbols.split(',');
         quotes.getQuotes(symbols, (data) => {
             res.render('quote-table', {
-                quotes: mapQuotes(data)
+                quotes: mapQuotes(data),
+                tableColumns: [
+                    col('Symbol', 'symbol'),
+                    col('Name', 'name'),
+                    col('Price', 'lastPrice'),
+                    col('Chg', 'netChange'),
+                    col('Chg %', 'percentChange'),
+                    col('Open', 'open'),
+                    col('High', 'high'),
+                    col('Low', 'low'),
+                    col('Close', 'close')
+                ]
             });
         });
     } else {
         res.render('quote-table');
     }  
 });
+
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.send('Home');

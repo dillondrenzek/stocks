@@ -5,18 +5,17 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
         title Document
+        link(rel="stylesheet" type="text/css" href="/public/styles/main.css")
     body
         h2 Quotes
         table
             thead
                 tr
-                    th Symbol
-                    th Name
-                    th Price
+                    each col in tableColumns
+                        th= col.label
             tbody
                 each val, i in quotes
                     tr
                         - var quote = quotes[i]
-                        td= quote.symbol
-                        td= quote.name
-                        td= quote.lastPrice
+                        each col in tableColumns
+                            td= quote[col.key]
