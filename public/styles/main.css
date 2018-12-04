@@ -1,3 +1,8 @@
 th {
     color: gray;
 }
+
+th,
+td {
+    padding: 3px 5px;
+}
