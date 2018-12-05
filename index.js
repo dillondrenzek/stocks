@@ -19,10 +19,15 @@ const col = (label, key, {format} = {}) => {
             if (typeof val === 'number') {
                 val = val.toString();
                 let decimals = val.split('.');
+
                 if (decimals.length === 1) {
                     decimals.push('00');
                 } else if (decimals.length === 2) {
-                    if (decimals[1].length === 1) decimals[1] += '0';
+                    if (decimals[1].length === 1) {
+                        decimals[1] += '0';
+                    } else if(decimals[1].length >= 3) {
+                        decimals[1] = decimals[1].substr(0, 2);
+                    }
                 }
                 return decimals.join('.');
             }
@@ -46,7 +51,7 @@ const col = (label, key, {format} = {}) => {
         label,
         key,
         format,
-        formatFn: format ? formatMap[format] : val => val
+        formatFn: format && formatMap[format] ? formatMap[format] : val => val
     };
 };
 
@@ -68,7 +73,20 @@ app.get('/api/quotes', (req, res) => {
                     col('Open', 'open', {format: 'number'}),
                     col('High', 'high', {format: 'number'}),
                     col('Low', 'low', {format: 'number'}),
-                    col('Close', 'close', {format: 'number'})
+                    col('Close', 'close', {format: 'number'}),
+                    col('52-wk Hi', 'fiftyTwoWkHigh', {
+                        format: 'number'
+                    }),
+                    col('52-wk Hi Date', 'fiftyTwoWkHighDate', {
+                        format: 'date'
+                    }),
+                    col('52-wk Lo', 'fiftyTwoWkLow', {
+                        format: 'number'
+                    }),
+                    col('52-wk Lo Date', 'fiftyTwoWkLowDate', {
+                        format: 'date'
+                    }),
+
                 ]
             });
         });
