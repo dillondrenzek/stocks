@@ -13,6 +13,8 @@ table {
     font-family: monospace;
     letter-spacing: -0.01em;
     border-top: 2px solid black;
+    border-collapse: separate;
+    border-spacing: 15px;
 }
 
 thead {
@@ -25,11 +27,13 @@ th {
     font-weight: 200;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #d8d8d8;
 }
 
 th,
 td {
-    padding: 3px 10px;
+    /* padding-bottom: 5px; */
     text-align: right;
 }
 

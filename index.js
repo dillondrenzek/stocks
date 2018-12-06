@@ -74,19 +74,10 @@ app.get('/api/quotes', (req, res) => {
                     col('High', 'high', {format: 'number'}),
                     col('Low', 'low', {format: 'number'}),
                     col('Close', 'close', {format: 'number'}),
-                    col('52-wk Hi', 'fiftyTwoWkHigh', {
-                        format: 'number'
-                    }),
-                    col('52-wk Hi Date', 'fiftyTwoWkHighDate', {
-                        format: 'date'
-                    }),
-                    col('52-wk Lo', 'fiftyTwoWkLow', {
-                        format: 'number'
-                    }),
-                    col('52-wk Lo Date', 'fiftyTwoWkLowDate', {
-                        format: 'date'
-                    }),
-
+                    col('52-wk Hi', 'fiftyTwoWkHigh', {format: 'number'}),
+                    col('52-wk Hi Date', 'fiftyTwoWkHighDate', {format: 'date'}),
+                    col('52-wk Lo', 'fiftyTwoWkLow', {format: 'number'}),
+                    col('52-wk Lo Date', 'fiftyTwoWkLowDate', {format: 'date'}),
                 ]
             });
         });
