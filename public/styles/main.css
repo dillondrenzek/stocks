@@ -1,8 +1,49 @@
+html {
+    font-size: 14px;
+}
+
+h2 {
+    font-family: Helvetica, sans-serif;
+    font-size: 1.75rem;
+    letter-spacing: -0.05em;
+    margin: 0;
+}
+
+table {
+    font-family: monospace;
+    letter-spacing: -0.01em;
+    border-top: 2px solid black;
+    border-collapse: separate;
+    border-spacing: 15px;
+}
+
+thead {
+    border-bottom: 1px solid lightgray;
+}
+
 th {
     color: gray;
+    font-size: 0.75rem;
+    font-weight: 200;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #d8d8d8;
 }
 
 th,
 td {
-    padding: 3px 5px;
+    /* padding-bottom: 5px; */
+    text-align: right;
+}
+
+td.symbol {
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+}
+
+td.lastPrice {
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
 }

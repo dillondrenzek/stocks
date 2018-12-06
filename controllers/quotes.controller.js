@@ -10,10 +10,16 @@ function BarchartAPI() {
 
     function getQuotes(symbolsArray, callback) {
         if (!symbolsArray || !symbolsArray.length) {
-            console.log('No symbols passed to getQuotes:', symbolsArray);
+            console.warn('No symbols passed to getQuotes');
         }
 
         var symbols = symbolsArray.join(',');
+        var additionalFields = [
+            'fiftyTwoWkHigh',
+            'fiftyTwoWkHighDate',
+            'fiftyTwoWkLow',
+            'fiftyTwoWkLowDate'
+        ].join('%2C');
 
         // TODO: dynamic `fields`
         var url = [
@@ -21,7 +27,7 @@ function BarchartAPI() {
             "getQuote.json?",
             "apikey=" + apiKey,
             "&symbols=" + symbols,
-            "&fields=fiftyTwoWkHigh%2CfiftyTwoWkHighDate%2CfiftyTwoWkLow%2CfiftyTwoWkLowDate"
+            "&fields=" + additionalFields
         ].join('');
 
         https.get(url, (res) => {
