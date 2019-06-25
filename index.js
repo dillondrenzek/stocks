@@ -25,7 +25,7 @@ const col = (label, key, {format} = {}) => {
                 } else if (decimals.length === 2) {
                     if (decimals[1].length === 1) {
                         decimals[1] += '0';
-                    } else if(decimals[1].length >= 3) {
+                    } else if (decimals[1].length >= 3) {
                         decimals[1] = decimals[1].substr(0, 2);
                     }
                 }

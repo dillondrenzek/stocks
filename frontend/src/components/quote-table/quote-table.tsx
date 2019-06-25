@@ -25,6 +25,40 @@ interface TableColumn {
     options?: TableColumnOptions;
 }
 
+const formatMap = {
+    number: (val: any) => {
+        if (typeof val === 'number') {
+            val = val.toString();
+            let decimals = val.split('.');
+
+            if (decimals.length === 1) {
+                decimals.push('00');
+            } else if (decimals.length === 2) {
+                if (decimals[1].length === 1) {
+                    decimals[1] += '0';
+                } else if (decimals[1].length >= 3) {
+                    decimals[1] = decimals[1].substr(0, 2);
+                }
+            }
+            return decimals.join('.');
+        }
+        return val;
+    },
+    percent: (val: any) => {
+        if (typeof val === 'number') {
+            val = val.toString();
+            let decimals = val.split('.');
+            if (decimals.length === 1) {
+                decimals.push('00');
+            } else if (decimals.length === 2) {
+                if (decimals[1].length === 1) decimals[1] += '0';
+            }
+            return decimals.join('.') + '%';
+        }
+        return val + '%';
+    }
+};
+
 function col(label: string, key: keyof Quote, options?: TableColumnOptions) {
     return {
         label,
@@ -64,17 +98,23 @@ const TableCell = (props: TableHeaderCellProps) => {
     } = props;
 
     let className = '';
+    let formatter = (val: any) => val;
 
     if (column && column.options) {
         const { options } = column;
         if (options.format) {
             className += column.options.format;
+
+            // format
+            if (formatMap[options.format]) {
+                formatter = formatMap[options.format];
+            }
         }
     }
 
     return column ? (
         <th className={className}>
-            {column.label}
+            {formatter(column.label)}
         </th>
     ) : null;
 };
@@ -133,15 +173,15 @@ export class QuoteTable extends React.Component<QuoteTableProps> {
             <table className={styles.table}>
                 <thead className={styles.thead}>
                     <tr>
-                        {this.tableHeaders.map((h) => <TableHeaderCell column={h} />)}
+                        {this.tableHeaders.map((h, i) => <TableHeaderCell key={i} column={h} />)}
                     </tr>
                 </thead>
                 {quotes && quotes.length && (
                     <tbody>
-                        {quotes.map((quote) => (
-                            <tr>
-                                {this.tableHeaders.map((headers) => (
-                                    <td className={`td ${headers.key} ${headers.options ? headers.options.format : ''}`}>{quote[headers.key]}</td>
+                        {quotes.map((quote, i) => (
+                            <tr key={i}>
+                                {this.tableHeaders.map((headers, j) => (
+                                    <td className={`td ${headers.key} ${headers.options ? headers.options.format : ''}`} key={j}>{quote[headers.key]}</td>
                                 ))}
                             </tr>
                         ))}
