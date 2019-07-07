@@ -1,10 +1,10 @@
 # stocks
 
 Milestone 1
-- get quotes for list of symbols
+- save positions
 
 Milestone 2
-- save positions
+- get quotes for list of symbols
 
 Milestone 3
 - calculate profits
