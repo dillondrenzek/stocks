@@ -2,7 +2,10 @@ import React from 'react';
 import * as MUI from '@material-ui/core';
 import './App.scss';
 
-import Quotes from './get-quotes.json';
+import { HoldingsTable } from './components/holdings-table/holdings-table';
+
+import Quotes from './spec/get-quotes.json';
+import Holdings from './spec/get-holdings.json';
 
 export class App extends React.Component {
   render() {
@@ -16,21 +19,12 @@ export class App extends React.Component {
 
           <MUI.Grid item xs={12}>
 
-            <MUI.Table>
-              <MUI.TableHead>
-                <MUI.TableRow>
-                  <MUI.TableCell>Header</MUI.TableCell>
-                </MUI.TableRow>
-              </MUI.TableHead>
-              <MUI.TableBody>
-                <MUI.TableRow>
-                  <MUI.TableCell>Test</MUI.TableCell>
-                </MUI.TableRow>
-              </MUI.TableBody>
-            </MUI.Table>
+            <HoldingsTable
+              holdings={Holdings.results}
+            />
 
           </MUI.Grid>
-          
+
         </MUI.Grid>
         {/* 
         <MUI.Link href='/'>
