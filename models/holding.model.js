@@ -5,7 +5,11 @@ let HoldingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cost: {
+    avgCost: {
+        type: Number,
+        required: true
+    },
+    quantity: {
         type: Number,
         required: true
     }
