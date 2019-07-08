@@ -11,9 +11,11 @@ app.set('port', process.env.PORT || 7000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // Database 
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/stocks', { useNewUrlParser: true });
 
 // Serve Static files
 app.use('/public', express.static(path.join(__dirname, 'public')));

@@ -12,6 +12,27 @@ const HoldingsController = require('../controllers/holdingsController');
 // Export Router
 const router = express();
 
+router.post('/', (req, res) => {
+    const holding = req.body;
+
+    console.log('create holding:', holding);
+    HoldingsController.createHolding(holding, (result) => {
+        console.log('created holding');
+
+        HoldingsController.getHoldings((err, holdings) => {
+            if (err) throw new Error('Error getHoldings');
+            res.render('holdings', {
+                data: holdings,
+                tableColumns: [
+                    col('Symbol', 'symbol'),
+                    col('Avg. Cost', 'avgCost', { format: 'number' }),
+                    col('Quantity', 'quantity', { format: 'number' }),
+                ]
+            });
+        });
+    });
+});
+
 router.get('/', (req, res) => {
     HoldingsController.getHoldings((err, holdings) => {
         if (err) throw new Error('Error getHoldings');
