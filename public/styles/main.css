@@ -2,12 +2,44 @@ html {
     font-size: 14px;
 }
 
+
+/* Headings */
+
 h2 {
     font-family: Helvetica, sans-serif;
     font-size: 1.75rem;
     letter-spacing: -0.05em;
     margin: 0;
 }
+
+
+/* Nav */
+
+nav {
+    margin-bottom: 30px;
+}
+
+nav a {
+    color: gray;
+    font-size: 0.75rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: Helvetica, sans-serif;
+    margin: 0;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #333;
+}
+
+nav a:not(:last-child) {
+    margin-right: 15px;
+}
+
+
+/* Table */
 
 table {
     font-family: monospace;

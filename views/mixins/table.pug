@@ -1,0 +1,14 @@
+mixin table(tableColumns)
+    table
+        thead
+            tr
+                each col in tableColumns
+                    - var className = col.key + ' ' + col.format
+                    th(class=className)= col.label
+        tbody
+            each quote, i in quotes
+                tr
+                    each col in tableColumns
+                        - var className = col.key + ' ' + col.format
+                        - var value = quote[col.key]
+                        td(class=className)= col.formatFn(value)
