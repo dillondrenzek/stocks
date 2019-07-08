@@ -9,7 +9,7 @@ mixin table(tableColumns, data)
             tbody
                 if data && data.length
                     each d, i in data
-                        tr
+                        tr(id=`${d._id}`)
                             each col in tableColumns
                                 - var className = col.key + ' ' + col.format
                                 - var value = d[col.key]

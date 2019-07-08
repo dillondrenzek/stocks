@@ -12,25 +12,22 @@ const HoldingsController = require('../controllers/holdingsController');
 // Export Router
 const router = express();
 
+router.delete('/:id', (req, res) => {
+    console.log('delete id:', req.query.id);
+    HoldingsController.deleteHolding(req.query.id, (err) => {
+        if (err) throw new Error('Error delete Holdings');
+        console.log('deleted');
+        res.redirect(req.baseUrl);
+    });
+});
+
 router.post('/', (req, res) => {
     const holding = req.body;
 
     console.log('create holding:', holding);
     HoldingsController.createHolding(holding, (result) => {
         console.log('created holding', path.resolve('./'));
-
         res.redirect(req.baseUrl);
-        // HoldingsController.getHoldings((err, holdings) => {
-        //     if (err) throw new Error('Error getHoldings');
-        //     res.render('holdings', {
-        //         data: holdings,
-        //         tableColumns: [
-        //             col('Symbol', 'symbol'),
-        //             col('Avg. Cost', 'avgCost', { format: 'number' }),
-        //             col('Quantity', 'quantity', { format: 'number' }),
-        //         ]
-        //     });
-        // });
     });
 });
 
@@ -43,7 +40,8 @@ router.get('/', (req, res) => {
                 col('Symbol', 'symbol'),
                 col('Avg. Cost', 'avgCost', { format: 'number' }),
                 col('Quantity', 'quantity', { format: 'number' }),
-            ]
+            ],
+            getDeleteUrl: (item) => { return item._id; }
         });
     });
 });

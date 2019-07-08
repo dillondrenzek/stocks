@@ -24,6 +24,13 @@ const HoldingsController = (() => {
             });
 
 
+        },
+
+        deleteHolding: (id, cb) => {
+            Holding.deleteOne({ _id: id }, (err) => {
+                if (!err)
+                    cb(err);
+            });
         }
     }
 })();

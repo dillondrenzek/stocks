@@ -9,7 +9,7 @@ block body
         h2 Holdings
         .row
             .col-8
-                +table(tableColumns, data)
+                +table(tableColumns, data, getDeleteUrl)
             .col-4
                 form(action="/holdings", method="post")
 
