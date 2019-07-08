@@ -17,19 +17,20 @@ router.post('/', (req, res) => {
 
     console.log('create holding:', holding);
     HoldingsController.createHolding(holding, (result) => {
-        console.log('created holding');
+        console.log('created holding', path.resolve('./'));
 
-        HoldingsController.getHoldings((err, holdings) => {
-            if (err) throw new Error('Error getHoldings');
-            res.render('holdings', {
-                data: holdings,
-                tableColumns: [
-                    col('Symbol', 'symbol'),
-                    col('Avg. Cost', 'avgCost', { format: 'number' }),
-                    col('Quantity', 'quantity', { format: 'number' }),
-                ]
-            });
-        });
+        res.redirect(req.baseUrl);
+        // HoldingsController.getHoldings((err, holdings) => {
+        //     if (err) throw new Error('Error getHoldings');
+        //     res.render('holdings', {
+        //         data: holdings,
+        //         tableColumns: [
+        //             col('Symbol', 'symbol'),
+        //             col('Avg. Cost', 'avgCost', { format: 'number' }),
+        //             col('Quantity', 'quantity', { format: 'number' }),
+        //         ]
+        //     });
+        // });
     });
 });
 

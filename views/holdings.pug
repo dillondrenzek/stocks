@@ -2,7 +2,19 @@ extends ./layout/default.pug
 
 //- Mixins
 include ./mixins/table
+include ./mixins/form
 
 block body
-    h2 Holdings
-    +table(tableColumns, data)
+    .container
+        h2 Holdings
+        .row
+            .col-8
+                +table(tableColumns, data)
+            .col-4
+                form(action="/holdings", method="post")
+
+                    +formGroup('Symbol', 'symbol')
+                    +formGroup('Avg. Cost', 'avgCost')
+                    +formGroup('Quantity', 'quantity')
+
+                    button(type="submit" class="btn btn-primary") Submit
