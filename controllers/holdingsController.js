@@ -14,22 +14,15 @@ const HoldingsController = (() => {
         },
 
         getHoldings: (cb) => {
-            // test data
-            // const data = (getHoldingsJson && getHoldingsJson.results) ? getHoldingsJson.results : [];
-            // cb(null, data);
-
             Holding.find((err, res) => {
                 if (err) throw new Error('Error Holding.find');
                 cb(null, res);
             });
-
-
         },
 
         deleteHolding: (id, cb) => {
             Holding.deleteOne({ _id: id }, (err) => {
-                if (!err)
-                    cb(err);
+                cb(err);
             });
         }
     }

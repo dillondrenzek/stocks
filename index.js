@@ -6,6 +6,7 @@ const app = express();
 
 const holdingsRoutes = require('./routes/holdings');
 const quotesRoutes = require('./routes/quotes');
+const api = require('./api');
 
 app.set('port', process.env.PORT || 7000);
 app.set('views', path.join(__dirname, 'views'));
@@ -20,6 +21,7 @@ mongoose.connect('mongodb://localhost/stocks', { useNewUrlParser: true });
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // View routes
+app.use('/api', api);
 app.use('/holdings', holdingsRoutes);
 app.use('/quotes', quotesRoutes);
 app.get('/', (req, res) => {
