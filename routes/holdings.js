@@ -3,25 +3,26 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { col } = require('../lib/table-helpers');
 const { mapHttpResults } = require('../lib/http');
+const Holding = require('../models/holding.model');
+const HoldingsController = require('../controllers/holdingsController');
 
-// Test Data
-const getHoldingsJson = require('../spec/get-holdings.json');
+
 
 
 // Export Router
 const router = express();
 
 router.get('/', (req, res) => {
-    // Use fake data
-    const data = getHoldingsJson;
-
-    res.render('holdings', {
-        data: mapHttpResults(data),
-        tableColumns: [
-            col('Symbol', 'symbol'),
-            col('Avg. Cost', 'avgCost', { format: 'number' }),
-            col('Quantity', 'quantity', { format: 'number' }),
-        ]
+    HoldingsController.getHoldings((err, holdings) => {
+        if (err) throw new Error('Error getHoldings');
+        res.render('holdings', {
+            data: holdings,
+            tableColumns: [
+                col('Symbol', 'symbol'),
+                col('Avg. Cost', 'avgCost', { format: 'number' }),
+                col('Quantity', 'quantity', { format: 'number' }),
+            ]
+        });
     });
 });
 
