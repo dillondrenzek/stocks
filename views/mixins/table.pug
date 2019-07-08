@@ -1,14 +1,19 @@
-mixin table(tableColumns)
-    table
-        thead
-            tr
-                each col in tableColumns
-                    - var className = col.key + ' ' + col.format
-                    th(class=className)= col.label
-        tbody
-            each quote, i in quotes
+mixin table(tableColumns, data)
+    if tableColumns && tableColumns.length
+        table
+            thead
                 tr
                     each col in tableColumns
                         - var className = col.key + ' ' + col.format
-                        - var value = quote[col.key]
-                        td(class=className)= col.formatFn(value)
+                        th(class=className)= col.label
+            tbody
+                if data && data.length
+                    each d, i in data
+                        tr
+                            each col in tableColumns
+                                - var className = col.key + ' ' + col.format
+                                - var value = d[col.key]
+                                td(class=className)= col.formatFn(value)
+                else
+                    tr
+                        td(colspan=`${tableColumns.length}` style="text-align:center;background:#ddd") No data
