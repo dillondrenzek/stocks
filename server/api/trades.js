@@ -6,22 +6,28 @@ const { TradeController } = require('../../db');
 // Export Router
 const router = express();
 
-router.delete('/:id', (req, res) => {
-    // console.log('delete id:', req.params.id);
-    // HoldingsController.deleteHolding(req.params.id, (err) => {
-    //     if (err) {
-    //         res.status(500).send('Error delete holdings');
-    //         return;
-    //     }
-    //     res.status(200).send('Ok');
-    // });
+router.delete('/:id', async function(req, res) {
+    const id = req.params['id'];
+    try {
+        const trades = await TradeController.deleteTradeById(id);
+        res.status(200)
+            .send('Ok');
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error getting holdings');
+    }
 });
 
-router.post('/', (req, res) => {
-    // const holding = req.body;
-    // HoldingsController.createHolding(holding, (err, result) => {
-    //     res.status(200).send('Ok');
-    // });
+router.post('/', async function(req, res) {
+    const trade = req.body;
+    try {
+        const trades = await TradeController.createTrade(trade);
+        res.status(200)
+            .send('Ok');
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Error getting holdings');
+    }
 });
 
 router.get('/', async function(req, res) {
