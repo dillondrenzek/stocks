@@ -1,33 +1,18 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const app = express();
+const minimist = require('minimist');
+const db = require('./db');
 
-const holdingsRoutes = require('./routes/holdings');
-const quotesRoutes = require('./routes/quotes');
-const api = require('./api');
+module.exports = async function() {
+    const input = minimist(process.argv.slice(2));
+    const args = input._;
 
-app.set('port', process.env.PORT || 7000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+    switch (args[0]) {
+        case 'db':
+            await db(input);
+            break;
+        default:
+            console.log('No args provided.');
+    }
 
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-
-// Database 
-mongoose.connect('mongodb://localhost/stocks', { useNewUrlParser: true });
-
-// Serve Static files
-app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// View routes
-app.use('/api', api);
-app.use('/holdings', holdingsRoutes);
-app.use('/quotes', quotesRoutes);
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-app.listen(app.get('port'), () => {
-    console.log(`Server started. Port: ${app.get('port')}`);
-});
+    // console.log('Exiting');
+    process.exit();
+}
