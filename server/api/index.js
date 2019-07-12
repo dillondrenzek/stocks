@@ -2,13 +2,16 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const { Logger } = require('./util');
 const holdingsApi = require('./holdings');
 const tradesApi = require('./trades');
-const quotesApi = require('./quotes');
 
 
 // Export Router
 const router = express();
+
+// Log
+router.use(Logger.logRequest);
 
 router.use('/holdings', holdingsApi);
 router.use('/trades', tradesApi);

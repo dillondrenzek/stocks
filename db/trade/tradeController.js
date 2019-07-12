@@ -1,4 +1,4 @@
-const Trade = require('../models/Trade');
+const Trade = require('./Trade');
 
 class TradeController {
     async createTrade(trade) {
@@ -13,5 +13,7 @@ class TradeController {
         return await Trade.deleteOne({ _id: id });
     }
 }
+
+
 
 module.exports = (() => { return new TradeController(); })();
