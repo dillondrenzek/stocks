@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 module.exports = {
-    HoldingsController: require('./controllers/holdingsController'),
+    Trade: require('./models/Trade'),
+    TradeController: require('./controllers/tradeController'),
     connectDb: function(connectionString) {
-        return mongoose.connect(connectionString, { useNewUrlParser: true });
+        mongoose.connect(connectionString, { useNewUrlParser: true });
     }
 }

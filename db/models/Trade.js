@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const { Schema, model } = mongoose
 
-let TradeSchema = new mongoose.Schema({
+// class Trade {
+const tradeSchema = new Schema({
     date: Date,
     quantity: Number,
     price: Number,
@@ -8,6 +10,5 @@ let TradeSchema = new mongoose.Schema({
     symbol: String,
 });
 
-
 // Export the model
-module.exports = mongoose.model('Trade', TradeSchema);
+module.exports = mongoose.model('Trade', tradeSchema);
