@@ -3,6 +3,9 @@
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
+    "bin": {
+        "stocks": "bin/stocks"
+    },
     "scripts": {
         "dev": "concurrently \"npm run server:dev\" \"npm run web:dev\"",
         "server:dev": "node-dev index.js",
@@ -21,9 +24,11 @@
         "http": "0.0.0",
         "https": "^1.0.0",
         "jade": "^1.11.0",
+        "mongodb": "3.2.7",
         "mongoose": "^5.3.12",
         "morgan": "~1.9.0",
         "path": "^0.12.7",
+        "pug": "2.0.4",
         "serve-favicon": "~2.4.5"
     },
     "devDependencies": {
