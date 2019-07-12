@@ -10,4 +10,4 @@ let TradeSchema = new mongoose.Schema({
 
 
 // Export the model
-exports = mongoose.model('Trade', TradeSchema);
+module.exports = mongoose.model('Trade', TradeSchema);
