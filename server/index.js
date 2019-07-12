@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const quotes = require('../controllers/quotes.controller')();
+const quotes = require('./controllers/quotes.controller')();
 const app = express();
 
 app.set('port', process.env.PORT || 7000);
