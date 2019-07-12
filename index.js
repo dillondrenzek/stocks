@@ -1,13 +1,18 @@
 const minimist = require('minimist');
-
 const db = require('./db');
 
-module.exports = () => {
-    const args = minimist(process.argv.slice(2));
+module.exports = async function() {
+    const input = minimist(process.argv.slice(2));
+    const args = input._;
 
-    console.log(args);
+    switch (args[0]) {
+        case 'db':
+            await db(input);
+            break;
+        default:
+            console.log('No args provided.');
+    }
 
-    // const connectionString = 'mongodb://localhost/test';
-
-    // db(connectionString);
-};
+    // console.log('Exiting');
+    process.exit();
+}
