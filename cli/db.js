@@ -14,7 +14,7 @@ async function trade(input) {
                 side: 'buy', // 'buy' or 'sell'
                 symbol: 'TEST',
             });
-            trade.save();
+            await trade.save();
             break;
         default:
             console.log('[Trade usage]');
@@ -25,7 +25,7 @@ module.exports = async function(input) {
 
     switch (input._[1]) {
         case 'trades':
-            trade(input);
+            await trade(input);
             break;
         default:
             console.log('No arguments');
