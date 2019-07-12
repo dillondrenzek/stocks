@@ -33,11 +33,11 @@ function BarchartAPI() {
         https.get(url, (res) => {
             var body = '';
 
-            res.on('data', function(chunk) {
+            res.on('data', function (chunk) {
                 body += chunk;
             });
 
-            res.on('end', function() {
+            res.on('end', function () {
                 var result = JSON.parse(body);
                 callback(result);
             });

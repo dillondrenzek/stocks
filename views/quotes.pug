@@ -1,0 +1,8 @@
+extends ./layout/default.pug
+
+//- Mixins
+include ./mixins/table
+
+block body
+    h2 Quotes
+    +table(tableColumns, data)
