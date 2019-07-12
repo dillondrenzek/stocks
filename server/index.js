@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const quotes = require('./controllers/quotes.controller')();
+const quotes = require('../controllers/quotes.controller')();
 const app = express();
 
 app.set('port', process.env.PORT || 7000);
@@ -13,7 +13,7 @@ const mapQuotes = (d) => {
     return d.results;
 };
 
-const col = (label, key, {format} = {}) => {
+const col = (label, key, { format } = {}) => {
     const formatMap = {
         number: (val) => {
             if (typeof val === 'number') {
@@ -67,23 +67,23 @@ app.get('/api/quotes', (req, res) => {
                 tableColumns: [
                     col('Name', 'name'),
                     col('Symbol', 'symbol'),
-                    col('Price', 'lastPrice', {format: 'number'}),
-                    col('Chg', 'netChange', {format: 'number'}),
-                    col('Chg %', 'percentChange', {format: 'percent'}),
-                    col('Open', 'open', {format: 'number'}),
-                    col('High', 'high', {format: 'number'}),
-                    col('Low', 'low', {format: 'number'}),
-                    col('Close', 'close', {format: 'number'}),
-                    col('52-wk Hi', 'fiftyTwoWkHigh', {format: 'number'}),
-                    col('52-wk Hi Date', 'fiftyTwoWkHighDate', {format: 'date'}),
-                    col('52-wk Lo', 'fiftyTwoWkLow', {format: 'number'}),
-                    col('52-wk Lo Date', 'fiftyTwoWkLowDate', {format: 'date'}),
+                    col('Price', 'lastPrice', { format: 'number' }),
+                    col('Chg', 'netChange', { format: 'number' }),
+                    col('Chg %', 'percentChange', { format: 'percent' }),
+                    col('Open', 'open', { format: 'number' }),
+                    col('High', 'high', { format: 'number' }),
+                    col('Low', 'low', { format: 'number' }),
+                    col('Close', 'close', { format: 'number' }),
+                    col('52-wk Hi', 'fiftyTwoWkHigh', { format: 'number' }),
+                    col('52-wk Hi Date', 'fiftyTwoWkHighDate', { format: 'date' }),
+                    col('52-wk Lo', 'fiftyTwoWkLow', { format: 'number' }),
+                    col('52-wk Lo Date', 'fiftyTwoWkLowDate', { format: 'date' }),
                 ]
             });
         });
     } else {
         res.render('quote-table');
-    }  
+    }
 });
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
