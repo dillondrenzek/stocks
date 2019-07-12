@@ -1,5 +1,5 @@
 const minimist = require('minimist');
-const db = require('./db');
+const db = require('./cli/db');
 
 module.exports = async function() {
     const input = minimist(process.argv.slice(2));
@@ -13,6 +13,5 @@ module.exports = async function() {
             console.log('No args provided.');
     }
 
-    // console.log('Exiting');
     process.exit();
 }
