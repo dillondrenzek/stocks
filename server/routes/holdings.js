@@ -1,11 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { col } = require('../../lib/table-helpers');
-const { mapHttpResults } = require('../../lib/http');
-const Holding = require('../models/holding.model');
-const HoldingsController = require('../controllers/holdingsController');
-
+const { col } = require('../lib/table-helpers');
+const { mapHttpResults } = require('../lib/http');
+const { HoldingsController } = require('../../db');
 
 
 

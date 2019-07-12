@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const barchartApi = require('../barchart-api')();
-const { col } = require('../../lib/table-helpers');
-const { mapHttpResults } = require('../../lib/http');
+const barchartApi = require('./barchart-api')();
+// const { col } = require('../server/lib/table-helpers');
+// const { mapHttpResults } = require('../server/lib/http');
 
 // Test Data
-const getHoldingsJson = require('../../spec/get-holdings.json');
+// const getHoldingsJson = require('../../spec/get-holdings.json');
 
 
 // Export Router

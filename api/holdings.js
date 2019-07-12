@@ -1,10 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { col } = require('../../lib/table-helpers');
-const { mapHttpResults } = require('../../lib/http');
-const Holding = require('../../models/holding.model');
-const HoldingsController = require('../../controllers/holdingsController');
+const { HoldingsController } = require('../db');
 
 // Export Router
 const router = express();
@@ -34,8 +31,7 @@ router.get('/', (req, res) => {
             return;
         }
 
-        res
-            .type('application/json')
+        res.type('application/json')
             .status(200)
             .json({
                 result: holdings

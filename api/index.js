@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const holdingsDb = require('./db/holdings');
-const quotesDb = require('./db/quotes');
+const holdingsDb = require('./holdings');
+const quotesDb = require('./quotes');
 
 
 // Export Router
