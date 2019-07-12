@@ -1,9 +1,3 @@
 #!/usr/bin/env node
 
-const stocks = require('../');
-
-if (typeof stocks === 'function') {
-    stocks();
-} else {
-    console.error('Could not run app: stocks');
-}
+require('../')();
