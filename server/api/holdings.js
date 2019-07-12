@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { HoldingsController } = require('../db');
+const { HoldingsController } = require('../../db');
 
 // Export Router
 const router = express();

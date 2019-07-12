@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const barchartApi = require('../../api/barchart-api')();
+const barchartApi = require('../api/barchart-api')();
 const { col } = require('../lib/table-helpers');
 const { mapHttpResults } = require('../lib/http');
 
