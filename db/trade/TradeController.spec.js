@@ -20,6 +20,11 @@ describe('Trade', () => {
     //         done();
     //     });
     // });
+
+    beforeEach(() => {
+
+    })
+
     it('getTrades', () => {
 
     })
