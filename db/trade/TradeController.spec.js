@@ -1,10 +1,26 @@
-const connect = require('../connect');
-const TradeController = require('./TradeController');
+const sinon = require('sinon');
+const chai = require('chai');
+const expect = chai.expect;
 
-describe('TradeController', () => {
+const mongoose = require('mongoose');
+require('sinon-mongoose');
 
-    it('is true', () => {
-        expect(true).toBe(true);
+//Importing our todo model for our unit testing.
+const Trade = require('./Trade');
+
+describe('Trade', () => {
+    // it('', (done) => {
+    //     const TradeMock = sinon.mock(Trade);
+    //     const expectedResult = { status: true, todo: [] };
+    //     TradeMock.expects('find').yields(null, expectedResult);
+    //     Trade.find(function(err, result) {
+    //         TradeMock.verify();
+    //         TradeMock.restore();
+    //         expect(result.status).to.be.true;
+    //         done();
+    //     });
+    // });
+    it('getTrades', () => {
+
     })
-
-})
+});
