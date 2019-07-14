@@ -8,7 +8,7 @@ require('sinon-mongoose');
 //Importing our todo model for our unit testing.
 const Trade = require('./Trade');
 
-describe('Trade', () => {
+describe('TradeController', () => {
     // it('', (done) => {
     //     const TradeMock = sinon.mock(Trade);
     //     const expectedResult = { status: true, todo: [] };
