@@ -14,6 +14,6 @@ class TradeController {
     }
 }
 
+module.exports = TradeController;
 
-
-module.exports = (() => { return new TradeController(); })();
+// module.exports = (() => { return new TradeController(); })();
