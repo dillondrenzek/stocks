@@ -1,0 +1,13 @@
+{
+    "color": true,
+    "extension": [
+        "js"
+    ],
+    // "files": [
+    //     "./db/**/*.spec.js"
+    // ],
+    "spec": [
+        "./db/**/*.spec.js"
+    ],
+    "recursive": true
+}
