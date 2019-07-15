@@ -1,4 +1,4 @@
-const Trade = require('./Trade');
+const Trade = require('../db/trade/Trade');
 
 class TradeController {
     async createTrade(trade) {
@@ -15,5 +15,3 @@ class TradeController {
 }
 
 module.exports = TradeController;
-
-// module.exports = (() => { return new TradeController(); })();
