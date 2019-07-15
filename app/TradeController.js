@@ -1,6 +1,7 @@
 const Trade = require('../db/trade/Trade');
 
 class TradeController {
+
     async createTrade(trade) {
         return await Trade.create([trade]);
     }
@@ -12,6 +13,7 @@ class TradeController {
     async deleteTradeById(id) {
         return await Trade.deleteOne({ _id: id });
     }
+    
 }
 
 module.exports = TradeController;
