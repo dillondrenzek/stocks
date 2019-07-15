@@ -7,5 +7,12 @@ const holdingSchema = new mongoose.Schema({
     symbol: String,
 });
 
+holdingSchema.statics.findBySymbol = async function(symbol) {
+    return await this.find({
+        symbol
+    });
+};
+
+
 // Export
 module.exports = mongoose.model('Holding', holdingSchema);
