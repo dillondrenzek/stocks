@@ -5,6 +5,7 @@ const holdingSchema = new mongoose.Schema({
     cost: Number,
     quantity: Number,
     symbol: String,
+    // trades: Trade._id[]
 });
 
 holdingSchema.statics.findBySymbol = async function(symbol) {

@@ -3,11 +3,9 @@
     "extension": [
         "js"
     ],
-    // "files": [
-    //     "./db/**/*.spec.js"
-    // ],
     "spec": [
-        "./db/**/*.spec.js"
+        "./db/**/*.spec.js",
+        "./app/**/*.spec.js"
     ],
     "recursive": true
 }
