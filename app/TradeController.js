@@ -1,8 +1,11 @@
+const Holding = require('../db/holding/Holding');
 const Trade = require('../db/trade/Trade');
 
 class TradeController {
 
     async createTrade(trade) {
+        // get Holding by symbol
+
         return await Trade.create([trade]);
     }
 
@@ -13,7 +16,7 @@ class TradeController {
     async deleteTradeById(id) {
         return await Trade.deleteOne({ _id: id });
     }
-    
+
 }
 
 module.exports = TradeController;
