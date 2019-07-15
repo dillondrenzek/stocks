@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 
 // Schema
 const holdingSchema = new mongoose.Schema({
-    date: Date,
+    cost: Number,
     quantity: Number,
-    price: Number,
-    side: String, // 'buy' or 'sell'
     symbol: String,
 });
 
