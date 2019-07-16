@@ -89,7 +89,7 @@ describe('PortfolioController', () => {
         });
     });
 
-    describe('add trade', () => {
+    describe('add trade to portfolio', () => {
         it('creates the trade', async () => {
             const newTrade = {
                 symbol: 'TEST',
@@ -99,8 +99,7 @@ describe('PortfolioController', () => {
             };
             // count before
             const preCount = await Trade.countDocuments();
-            // create portfolio
-        
+            // add the trade
             await controller.addTrade(newTrade);
             // count after
             const postCount = await Trade.countDocuments();
@@ -108,7 +107,8 @@ describe('PortfolioController', () => {
             expect(postCount).to.eq(preCount + 1);
         });
 
-        xdescribe('with a symbol that has a holding', () => {
+        xdescribe('with a symbol that alreday has a holding in the portfolio', () => {
+            const symbol = 'TEST';
             xit('adds the trade to the holding', () => {});
             xit('updates the holding\'s data', () => {});
         });
