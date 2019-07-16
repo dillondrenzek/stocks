@@ -1,7 +1,10 @@
-const Holding = require('../db/holding/Holding');
-const Trade = require('../db/trade/Trade');
+const {Trade, Holding, Portfolio} = require('../db');
 
 class PortfolioController {
+
+    async createPortfolio(name) {
+
+    }
 
     async addTrade(trade) {
         // save trade
@@ -26,4 +29,4 @@ class PortfolioController {
 
 }
 
-module.exports = TradeController;
+module.exports = PortfolioController;

@@ -1,4 +1,3 @@
-const TradeController = require('./TradeController');
 
 // add trade
 // - get symbol's position
@@ -11,7 +10,6 @@ const TradeController = require('./TradeController');
 
 
 module.exports = function () {
-  const tradeController = new TradeController();
 
 
 };
