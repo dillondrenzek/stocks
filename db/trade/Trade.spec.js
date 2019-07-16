@@ -9,7 +9,7 @@ require('sinon-mongoose');
 const Trade = require('./Trade');
 
 describe('Trade', () => {
-    it('gets Trades', (done) => {
+    it ('gets Trades', (done) => {
         const TradeMock = sinon.mock(Trade);
         const expectedResult = { status: true, todo: [] };
         TradeMock.expects('find').yields(null, expectedResult);
@@ -20,4 +20,10 @@ describe('Trade', () => {
             done();
         });
     });
+
+    xit ('gets a Trade by id', () => {});
+    xit ('creates a Trade', () => {});
+    xit ('updates a Trade', () => {});
+    xit ('deletes a Trade by id', () => {});
+
 });

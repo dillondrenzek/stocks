@@ -65,4 +65,8 @@ describe('Holding', () => {
             done();
         });
     });
+
+    xit ('gets a Holding by id', () => {});
+    xit ('updates a Holding', () => {});
+    xit ('deletes a Holding by id', () => {});
 });
