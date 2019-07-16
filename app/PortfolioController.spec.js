@@ -42,8 +42,8 @@ describe('PortfolioController', () => {
             // count before
             const preCount = await Portfolio.countDocuments();
             // create portfolio
-            controller = new PortfolioController(newPortfolio);
-            await controller.createPortfolio();
+            controller = new PortfolioController();
+            await controller.createPortfolio(newPortfolio);
             // count after
             const postCount = await Portfolio.countDocuments();
             // test
