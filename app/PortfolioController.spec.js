@@ -15,7 +15,7 @@ describe('PortfolioController', () => {
     before((done) => {
         mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
         mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-        mongoose.connection.once('open', function () {
+        mongoose.connection.once('open', function() {
             done();
         });
     });
@@ -31,14 +31,14 @@ describe('PortfolioController', () => {
     });
 
     after((done) => {
-        mongoose.connection.db.dropDatabase(function () {
-        mongoose.connection.close(done);
+        mongoose.connection.db.dropDatabase(function() {
+            mongoose.connection.close(done);
         });
     });
 
     describe('create portfolio', () => {
 
-        it ('creates the portfolio', async () => {
+        it('creates the portfolio', async() => {
             const newPortfolio = {
                 name: 'New Portfolio',
                 holding_ids: []
@@ -53,13 +53,13 @@ describe('PortfolioController', () => {
             expect(postCount).to.eq(preCount + 1);
         });
 
-        it ('returns the portfolio', async () => {
+        it('returns the portfolio', async() => {
             const newPortfolio = {
                 name: 'New Portfolio',
                 holding_ids: []
             };
             // create portfolio
-        
+
             const created = await controller.createPortfolio(newPortfolio);
             // test
             expect(created).not.to.be.undefined;
@@ -67,22 +67,22 @@ describe('PortfolioController', () => {
     });
 
     describe('get portfolios', () => {
-        it ('gets all portfolios', async () => {
+        it('gets all portfolios', async() => {
             // create portfolio
             await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
             await Portfolio.create({ name: 'New Portfolio 2', holding_ids: [] });
             // get existing
-        
+
             const portfolios = await controller.getPortfolios();
             // expect two portfolios returned
             expect(portfolios.length).to.eq(2);
         });
 
-        it ('gets portfolio by id', async () => {
+        it('gets portfolio by id', async() => {
             // create portfolio
             const created = await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
             // get portfolio
-        
+
             const portfolio = await controller.getPortfolioById(created._id);
             // expect portfolio to be defined
             expect(portfolio.id).to.eq(created.id);
@@ -90,7 +90,7 @@ describe('PortfolioController', () => {
     });
 
     describe('add trade to portfolio', () => {
-        it('creates the trade', async () => {
+        it('creates the trade', async() => {
             const newTrade = {
                 symbol: 'TEST',
                 quantity: 5,
@@ -126,8 +126,20 @@ describe('PortfolioController', () => {
         });
     });
 
+    describe('create Holding', () => {
+        it('returns the created Holding', async() => {
+            const newHolding = {
+                symbol: 'TEST',
+                quantity: 31,
+                cost: 29.73
+            }
+            const holding = await controller.createHolding(newHolding);
+            expect(holding).not.to.be.undefined;
+        });
+    });
+
     describe('get Holdings', () => {
-        it('all existing', async () => {
+        it('all existing', async() => {
             // create seed Holdings
             await Holding.create({ symbol: 'TEST' });
             await Holding.create({ symbol: 'TEST' });
@@ -147,13 +159,13 @@ describe('PortfolioController', () => {
                 cost: 50.23
             };
 
-            beforeEach(async () => {
-               // create holding
-               created = await Holding.create(newHolding);
-            
-               result = await controller.getHoldingBySymbol(newHolding.symbol);
+            beforeEach(async() => {
+                // create holding
+                created = await Holding.create(newHolding);
+
+                result = await controller.getHoldingBySymbol(newHolding.symbol);
             })
-            it('returns the Holding', async () => {
+            it('returns the Holding', async() => {
                 // test
                 expect(result).not.to.be.undefined;
             });
@@ -162,7 +174,7 @@ describe('PortfolioController', () => {
             });
         });
         describe('that does not exist', () => {
-            it('returns null', async () => {
+            it('returns null', async() => {
                 const result = await controller.getHoldingBySymbol('RANDOM');
                 // test
                 expect(result).to.be.null;

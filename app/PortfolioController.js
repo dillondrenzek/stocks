@@ -1,4 +1,4 @@
-const {Trade, Holding, Portfolio} = require('../db');
+const { Trade, Holding, Portfolio } = require('../db');
 
 class PortfolioController {
 
@@ -30,9 +30,23 @@ class PortfolioController {
             side,
         });
         // get Holding by symbol
-        // const holding = await Holding.findBySymbol();
+        let holding = await Holding.findBySymbol(symbol);
 
         // if holding doesn't exist, create it
+        if (holding) {
+            holding = this.createHolding({ symbol });
+        } else {
+            // holding.
+        }
+    }
+
+    async createHolding({ symbol, quantity, cost }) {
+        const holding = Holding.create({
+            symbol,
+            quantity,
+            cost
+        });
+        return holding;
     }
 
     async getHoldingBySymbol(symbol) {
@@ -47,6 +61,10 @@ class PortfolioController {
     async getHoldings() {
         const holdings = await Holding.find();
         return holdings;
+    }
+
+    async addTradeToHolding(trade, holding) {
+
     }
 
     async getTradesForHolding() {

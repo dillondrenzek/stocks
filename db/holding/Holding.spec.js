@@ -9,6 +9,89 @@ require('sinon-mongoose');
 
 //Importing our todo model for our unit testing.
 const Holding = require('./Holding');
+const Trade = require('../trade/Trade');
+const Portfolio = require('../portfolio/Portfolio');
+
+describe('Holding', () => {
+
+    before((done) => {
+        mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
+        mongoose.connection.on('error', console.error.bind(console, 'connection error'));
+        mongoose.connection.once('open', function() {
+            done();
+        });
+    });
+
+    afterEach((done) => {
+        mongoose.connection.db.dropDatabase(function() {
+            done();
+        });
+    });
+
+    after((done) => {
+        mongoose.connection.db.dropDatabase(function() {
+            mongoose.connection.close(done);
+        });
+    });
+
+    describe('adds a trade', () => {
+        const newTrade = {
+            symbol: 'TEST',
+            quantity: 12,
+            cost: 95
+        };
+        const newHolding = {
+            symbol: 'TEST',
+            quantity: 123,
+            cost: 100
+        };
+        let holding, trade;
+
+        beforeEach(async() => {
+            holding = await Holding.create(newHolding);
+            trade = await Trade.create(newTrade);
+            await holding.addTrade(trade.id);
+        });
+
+        it('adds trade id to trade id array', async() => {
+            expect(holding.trade_ids[0]).to.eq(trade.id);
+        });
+
+        it('saves trade id to trade id array', async() => {
+            const getHolding = await Holding.findById(holding.id);
+            expect(getHolding.trade_ids[0]).to.eq(trade.id);
+        });
+    });
+
+    describe('adds a portfolio', () => {
+        const newPortfolio = {
+            name: 'Portfolio 1',
+            holding_ids: []
+        };
+        const newHolding = {
+            symbol: 'TEST',
+            quantity: 123,
+            cost: 100
+        };
+        let holding, portfolio;
+
+        beforeEach(async() => {
+            holding = await Holding.create(newHolding);
+            portfolio = await Portfolio.create(newPortfolio);
+            await holding.addPortfolio(portfolio.id);
+        });
+
+        it('sets portfolio id', async() => {
+            expect(holding.portfolio_id).to.eq(portfolio.id);
+        });
+
+        it('saves portfolio id', async() => {
+            const getHolding = await Holding.findById(holding.id);
+            expect(getHolding.portfolio_id).to.eq(portfolio.id);
+        });
+    });
+
+});
 
 // describe('Holding', () => {
 //     let conn;
