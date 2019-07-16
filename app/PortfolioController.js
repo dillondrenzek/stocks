@@ -36,11 +36,17 @@ class PortfolioController {
     }
 
     async getHoldingBySymbol(symbol) {
-
+        const holdings = await Holding.findBySymbol(symbol);
+        if (holdings.length === 1) {
+            return holdings[0];
+        } else {
+            return null;
+        }
     }
 
     async getHoldings() {
-
+        const holdings = await Holding.find();
+        return holdings;
     }
 
     async getTradesForHolding() {
