@@ -34,15 +34,13 @@ describe('PortfolioController', () => {
 
     describe('create portfolio', () => {
 
-        it ('creates the trade', async () => {
+        it ('creates the portfolio', async () => {
             const newPortfolioName = 'Test portfolio';
             // count before
             const preCount = await Portfolio.countDocuments();
             // create portfolio
-            controller = new PortfolioController(newPortfolioName);
-            await controller.createPortfolio();
-            // const createPortfolio = new Portfolio(newPortfolio);
-            // await createPortfolio.save();
+            controller = new PortfolioController();
+            await controller.createPortfolio(newPortfolioName);
             // count after
             const postCount = await Portfolio.countDocuments();
             // test
@@ -50,27 +48,29 @@ describe('PortfolioController', () => {
         })
     });
 
-    // xdescribe('add trade', () => {
-    //     xit('creates the trade', () => {
+    xdescribe('add trade', () => {
+        xit('creates the trade', () => {});
 
-    //     });
+        xdescribe('with a symbol that has a holding', () => {
+            xit('adds the trade to the holding', () => {});
+            xit('updates the holding\'s data', () => {});
+        });
 
-    //     xdescribe('to a holding', () => {
-           
-    //         xit('that exists', () => {});
-    //         xit('that does not exist', () => {});
+        xdescribe('with a symbol that does not have a holding', () => {
+            xit('creates a new holding', () => {});
+            xit('adds holding to portfolio', () => {});
+            xit('adds the trade to the holding', () => {});
+            xit('updates the holding\'s data', () => {});
+        });
 
-    //     });
-    // });
+        xdescribe('to a holding', () => {
+            xit('that exists', () => {});
+            xit('that does not exist', () => {});
+        });
+    });
 
-    // xdescribe('get holdings', () => {
-
-    //     xit('all existing', () => {
-
-    //     });
-
-    //     xit('by symbol', () => {
-
-    //     });
-    // });
+    xdescribe('get holdings', () => {
+        xit('all existing', () => {});
+        xit('by symbol', () => {});
+    });
 });
