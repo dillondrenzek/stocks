@@ -35,12 +35,15 @@ describe('PortfolioController', () => {
     describe('create portfolio', () => {
 
         it ('creates the portfolio', async () => {
-            const newPortfolioName = 'Test portfolio';
+            const newPortfolio = {
+                name: 'New Portfolio',
+                holding_ids: []
+            };
             // count before
             const preCount = await Portfolio.countDocuments();
             // create portfolio
-            controller = new PortfolioController();
-            await controller.createPortfolio(newPortfolioName);
+            controller = new PortfolioController(newPortfolio);
+            await controller.createPortfolio();
             // count after
             const postCount = await Portfolio.countDocuments();
             // test

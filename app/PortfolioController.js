@@ -2,8 +2,12 @@ const {Trade, Holding, Portfolio} = require('../db');
 
 class PortfolioController {
 
-    async createPortfolio(name) {
-        
+    async createPortfolio({ name, holding_ids }) {
+        const portfolio = new Portfolio({
+            name,
+            holding_ids
+        });
+        await portfolio.save();
     }
 
     // addTradeToPortfolio?
