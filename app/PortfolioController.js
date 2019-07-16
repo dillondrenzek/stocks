@@ -3,17 +3,32 @@ const {Trade, Holding, Portfolio} = require('../db');
 class PortfolioController {
 
     async createPortfolio({ name, holding_ids }) {
-        const portfolio = new Portfolio({
+        const portfolio = await Portfolio.create({
             name,
             holding_ids
         });
-        await portfolio.save();
+        return portfolio;
+    }
+
+    async getPortfolios() {
+        const portfolios = await Portfolio.find();
+        return portfolios;
+    }
+
+    async getPortfolioById(id) {
+        const portfolio = await Portfolio.findById(id);
+        return portfolio;
     }
 
     // addTradeToPortfolio?
-    async addTrade(trade) {
+    async addTrade({ symbol, quantity, price, side }) {
         // save trade
-
+        const trade = await Trade.create({
+            symbol,
+            quantity,
+            price,
+            side,
+        });
         // get Holding by symbol
         // const holding = await Holding.findBySymbol();
 
