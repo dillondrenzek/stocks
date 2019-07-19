@@ -1,9 +1,9 @@
-import React from 'react';
-import styles from './quote-table.module.scss';
+import React from "react";
+import styles from "./quote-table.module.scss";
 
-type TableColumnOptions = {
-    format?: 'number' | 'date' | 'percent';
-};
+interface TableColumnOptions {
+    format?: "number" | "date" | "percent";
+}
 
 // table
 // thead
@@ -27,35 +27,35 @@ interface TableColumn {
 
 const formatMap = {
     number: (val: any) => {
-        if (typeof val === 'number') {
+        if (typeof val === "number") {
             val = val.toString();
-            let decimals = val.split('.');
+            const decimals = val.split(".");
 
             if (decimals.length === 1) {
-                decimals.push('00');
+                decimals.push("00");
             } else if (decimals.length === 2) {
                 if (decimals[1].length === 1) {
-                    decimals[1] += '0';
+                    decimals[1] += "0";
                 } else if (decimals[1].length >= 3) {
                     decimals[1] = decimals[1].substr(0, 2);
                 }
             }
-            return decimals.join('.');
+            return decimals.join(".");
         }
         return val;
     },
     percent: (val: any) => {
-        if (typeof val === 'number') {
+        if (typeof val === "number") {
             val = val.toString();
-            let decimals = val.split('.');
+            const decimals = val.split(".");
             if (decimals.length === 1) {
-                decimals.push('00');
+                decimals.push("00");
             } else if (decimals.length === 2) {
-                if (decimals[1].length === 1) decimals[1] += '0';
+                if (decimals[1].length === 1) { decimals[1] += "0"; }
             }
-            return decimals.join('.') + '%';
+            return decimals.join(".") + "%";
         }
-        return val + '%';
+        return val + "%";
     }
 };
 
@@ -64,7 +64,7 @@ function col(label: string, key: keyof Quote, options?: TableColumnOptions) {
         label,
         key,
         options
-    }
+    };
 }
 
 interface TableHeaderCellProps {
@@ -72,11 +72,11 @@ interface TableHeaderCellProps {
 }
 
 const TableHeaderCell = (props: TableHeaderCellProps) => {
-    const { 
+    const {
         column
     } = props;
 
-    let className = '';
+    let className = "";
 
     if (column && column.options) {
         const { options } = column;
@@ -93,11 +93,11 @@ const TableHeaderCell = (props: TableHeaderCellProps) => {
 };
 
 const TableCell = (props: TableHeaderCellProps) => {
-    const { 
+    const {
         column
     } = props;
 
-    let className = '';
+    let className = "";
     let formatter = (val: any) => val;
 
     if (column && column.options) {
@@ -119,7 +119,7 @@ const TableCell = (props: TableHeaderCellProps) => {
     ) : null;
 };
 
-type Quote = {
+interface Quote {
     symbol: string;
     exchange: string;
     name: string;
@@ -141,7 +141,7 @@ type Quote = {
     fiftyTwoWkHighDate: string; // date
     fiftyTwoWkLow: number;
     fiftyTwoWkLowDate: string; // date (YYYY-MM-DD)
-};
+}
 
 export interface QuoteTableProps {
     quotes?: Quote[];
@@ -150,20 +150,20 @@ export interface QuoteTableProps {
 export class QuoteTable extends React.Component<QuoteTableProps> {
 
     private tableHeaders = [
-        col('Name', 'name'),
-        col('Symbol', 'symbol'),
-        col('Price', 'lastPrice', { format: 'number' }),
-        col('Chg', 'netChange', { format: 'number' }),
-        col('Chg %', 'percentChange', { format: 'percent' }),
-        col('Open', 'open', { format: 'number' }),
-        col('High', 'high', { format: 'number' }),
-        col('Low', 'low', { format: 'number' }),
-        col('Close', 'close', { format: 'number' }),
-        col('52-wk Hi', 'fiftyTwoWkHigh', { format: 'number' }),
-        col('52-wk Hi Date', 'fiftyTwoWkHighDate', { format: 'date' }),
-        col('52-wk Lo', 'fiftyTwoWkLow', { format: 'number' }),
-        col('52-wk Lo Date', 'fiftyTwoWkLowDate', { format: 'date' })
-    ]
+        col("Name", "name"),
+        col("Symbol", "symbol"),
+        col("Price", "lastPrice", { format: "number" }),
+        col("Chg", "netChange", { format: "number" }),
+        col("Chg %", "percentChange", { format: "percent" }),
+        col("Open", "open", { format: "number" }),
+        col("High", "high", { format: "number" }),
+        col("Low", "low", { format: "number" }),
+        col("Close", "close", { format: "number" }),
+        col("52-wk Hi", "fiftyTwoWkHigh", { format: "number" }),
+        col("52-wk Hi Date", "fiftyTwoWkHighDate", { format: "date" }),
+        col("52-wk Lo", "fiftyTwoWkLow", { format: "number" }),
+        col("52-wk Lo Date", "fiftyTwoWkLowDate", { format: "date" })
+    ];
 
     public render() {
         const {
@@ -181,7 +181,7 @@ export class QuoteTable extends React.Component<QuoteTableProps> {
                         {quotes.map((quote, i) => (
                             <tr key={i}>
                                 {this.tableHeaders.map((headers, j) => (
-                                    <td className={`td ${headers.key} ${headers.options ? headers.options.format : ''}`} key={j}>{quote[headers.key]}</td>
+                                    <td className={`td ${headers.key} ${headers.options ? headers.options.format : ""}`} key={j}>{quote[headers.key]}</td>
                                 ))}
                             </tr>
                         ))}

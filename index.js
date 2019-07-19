@@ -1,6 +1,9 @@
-const minimist = require('minimist');
 const db = require('./cli/db');
 const server = require('./cli/server');
+
+import minimist from 'minimist';
+import db from './cli/db';
+import server from './cli/server';
 
 module.exports = async function() {
     const input = minimist(process.argv.slice(2));
@@ -18,4 +21,4 @@ module.exports = async function() {
     }
 
     // process.exit();
-}
+};
