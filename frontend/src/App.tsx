@@ -1,14 +1,14 @@
-import React from 'react';
-import * as MUI from '@material-ui/core';
-import './App.scss';
+import * as MUI from "@material-ui/core";
+import React from "react";
+import "./App.scss";
 
-import { HoldingsTable } from './components/holdings-table/holdings-table';
+import { HoldingsTable } from "./components/holdings-table/holdings-table";
 
-import Quotes from './spec/get-quotes.json';
-import Holdings from './spec/get-holdings.json';
+import Holdings from "./spec/get-holdings.json";
+import Quotes from "./spec/get-quotes.json";
 
 export class App extends React.Component {
-  render() {
+  public render() {
     return (
       <MUI.Container>
         <MUI.Grid container spacing={3}>
@@ -26,7 +26,7 @@ export class App extends React.Component {
           </MUI.Grid>
 
         </MUI.Grid>
-        {/* 
+        {/*
         <MUI.Link href='/'>
           Link
         </MUI.Link> */}

@@ -1,11 +1,10 @@
-const sinon = require('sinon');
-const chai = require('chai');
+import chai from 'chai';
 const expect = chai.expect;
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 require('sinon-mongoose');
 
-const Portfolio = require('./Portfolio');
+import {Portfolio} from './Portfolio';
 
 // describe('Portfolio', () => {
 //   let db;
