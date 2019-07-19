@@ -4,8 +4,7 @@
         "js"
     ],
     "spec": [
-        "./db/**/*.spec.js",
-        "./app/**/*.spec.js"
+        "./dist/**/*.spec.js"
     ],
     "recursive": true
 }
