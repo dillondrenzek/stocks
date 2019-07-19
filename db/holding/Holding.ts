@@ -1,17 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose = require('mongoose');
+import { IPortfolioDocument } from '../portfolio/Portfolio';
+import { ITradeDocument } from '../trade/Trade';
 
-export interface IHolding extends mongoose.Document {
+export interface IHoldingDocument extends mongoose.Document {
     cost: number;
-    portfolioId: string;
+    portfolioId: IPortfolioDocument['_id'];
     quantity: number;
     symbol: string;
-    tradeIds: string[];
-    addPortfolio: (portfolioId: string) => void;
-    addTrade: (tradeId: string) => void;
+    tradeIds: Array<ITradeDocument['_id']>;
+    addPortfolio ?: (portfolioId: IPortfolioDocument['_id']) => void;
+    addTrade ?: (tradeId: ITradeDocument['_id']) => void;
+}
+
+export interface IHoldingModel extends mongoose.Model<IHoldingDocument> {
+    findBySymbol?: (symbol: string) => mongoose.Model<IHoldingDocument>;
 }
 
 // Schema
-const holdingSchema = new mongoose.Schema<IHolding>({
+const holdingSchema = new mongoose.Schema<IHoldingDocument>({
     cost: Number,
     portfolioId: String,
     quantity: Number,
@@ -26,16 +32,17 @@ holdingSchema.statics.findBySymbol = async function(symbol: string) {
     });
 };
 
-// Instance Methods
 holdingSchema.methods.addPortfolio = async function(portfolioId: string) {
     this.portfolioId = portfolioId;
-    await this.save();
+    return await this.save();
 };
 
 holdingSchema.methods.addTrade = async function(tradeId: string) {
     this.tradeIds.push(tradeId);
-    await this.save();
+    return await this.save();
 };
 
+// Instance Methods
+
 // Export
-export default mongoose.model<IHolding>('Holding', holdingSchema);
+export const Holding: IHoldingModel = mongoose.model<IHoldingDocument, IHoldingModel>('Holding', holdingSchema);

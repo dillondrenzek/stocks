@@ -1,13 +1,11 @@
-import mongoose from 'mongoose';
-import Trade from './trade/Trade';
+import { connectDb } from './connect';
+import { Holding } from './holding/Holding';
+import { Portfolio } from './portfolio/Portfolio';
+import { Trade } from './trade/Trade';
 
-// module.exports = {
-//     connectDb: require('./connect'),
-//     Holding: require('./holding/Holding'),
-//     Portfolio: require('./portfolio/Portfolio'),
-//     Trade: require('./trade/Trade'),
-// };
-
-export default {
+export {
+    connectDb,
+    Holding,
+    Portfolio,
     Trade
 };

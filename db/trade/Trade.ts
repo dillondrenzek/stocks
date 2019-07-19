@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export interface ITrade extends mongoose.Document {
+export interface ITradeDocument extends mongoose.Document {
     date: Date;
     price: number;
     quantity: number;
@@ -9,7 +9,7 @@ export interface ITrade extends mongoose.Document {
 }
 
 // Schema
-const tradeSchema = new mongoose.Schema<ITrade>({
+const tradeSchema = new mongoose.Schema<ITradeDocument>({
     date: Date,
     price: Number,
     quantity: Number,
@@ -18,4 +18,4 @@ const tradeSchema = new mongoose.Schema<ITrade>({
 });
 
 // Export
-export default mongoose.model<ITrade>('Trade', tradeSchema);
+export const Trade = mongoose.model<ITradeDocument>('Trade', tradeSchema);

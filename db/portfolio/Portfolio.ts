@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
+import { IHoldingDocument } from '../holding/Holding';
 
-export interface IPortfolio extends mongoose.Document {
-  holdingIds: string[];
+export interface IPortfolioDocument extends mongoose.Document {
+  holdingIds: Array<IHoldingDocument['id']>;
   name: string;
 }
 
-const portfolioSchema = new mongoose.Schema<IPortfolio>({
+const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
   holdingIds: Array, // String ids
   name: String,
 });
 
 // Export
-export default mongoose.model<IPortfolio>('Portfolio', portfolioSchema);
+export const Portfolio = mongoose.model<IPortfolioDocument>('Portfolio', portfolioSchema);
