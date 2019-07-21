@@ -7,7 +7,7 @@
         "stocks": "bin/stocks"
     },
     "scripts": {
-        "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+        "prebuild": "rm -rf dist; tslint -c tslint.json -p tsconfig.json --fix",
         "build": "tsc",
         "build:watch": "nodemon",
         "dev": "concurrently \"npm run server:dev\" \"npm run web:dev\"",

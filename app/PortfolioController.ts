@@ -3,12 +3,12 @@ import { Holding, Portfolio, Trade } from './types';
 
 export class PortfolioController {
 
-    public async createPortfolio({ holdingIds, name }: Portfolio) {
-        const portfolio = await DB.Portfolio.create({
-            holdingIds,
-            name
-        });
-        return portfolio;
+    public async createPortfolioWithName(name: string) {
+        // const portfolio = await DB.Portfolio.create({
+        //     holdingIds: [],
+        //     name
+        // });
+        // return portfolio;
     }
 
     public async getPortfolios() {
@@ -70,5 +70,3 @@ export class PortfolioController {
     // }
 
 }
-
-module.exports = PortfolioController;
