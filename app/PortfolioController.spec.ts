@@ -52,9 +52,34 @@ describe('PortfolioController', withDb(() => {
             // create portfolio
             const created = await DB.Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
             // get portfolio
-            const portfolio = await controller.getPortfolioById(created._id);
+            const portfolio = await controller.getPortfolioById(created.id);
             // expect portfolio to be defined
-            expect(portfolio._id).to.eq(created._id);
+            expect(portfolio.id).to.eq(created.id);
+        });
+    });
+
+    describe('delete portfolios', () => {
+        describe('that exist', () => {
+            let existing: Portfolio;
+            beforeEach(async () => {
+                existing = await controller.createPortfolioWithName('Test Portfolio');
+            });
+            it('should return the deleted portfolio', async () => {
+                // delete portfolio
+                const removed = await controller.deletePortfolioById(existing.id);
+                // expect
+                expect(removed).not.to.be.undefined;
+                expect(removed.id).to.eq(existing.id);
+            });
+        });
+
+        describe('that do not exist', () => {
+            it('should return null', async () => {
+                // delete non-existent portfolio
+                const removed = await controller.deletePortfolioById('does not exist');
+                // expect
+                expect(removed).to.be.null;
+            });
         });
     });
 

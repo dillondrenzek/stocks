@@ -21,6 +21,16 @@ export class PortfolioController {
         return portfolio;
     }
 
+    public async deletePortfolioById(id: string): Promise<Portfolio> {
+        try {
+            const removed = await DB.Portfolio.findByIdAndDelete(id);
+            return removed;
+        } catch (error) {
+            // console.error('Error deleting portfolio:', error);
+            return null;
+        }
+    }
+
     // addTradeToPortfolio?
     public async addTradeToPortfolio(trade: Trade, portfolio: Portfolio) {
         // // save trade

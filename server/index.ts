@@ -8,7 +8,7 @@ const app = express();
 // import holdingsRoutes = require('./routes/holdings');
 // import quotesRoutes = require('./routes/quotes');
 
-async function startServer() {
+export async function startServer() {
     app.set('port', process.env.PORT || 7000);
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'pug');
@@ -33,5 +33,3 @@ async function startServer() {
 
     console.log(`Server started. Port: ${app.get('port')}`);
 }
-
-export default startServer;
