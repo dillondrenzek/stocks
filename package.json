@@ -8,13 +8,14 @@
     },
     "scripts": {
         "prebuild": "rm -rf dist; tslint -c tslint.json -p tsconfig.json --fix",
-        "build": "tsc",
-        "build:watch": "nodemon",
+        "build": "tsc --build tsconfig.json",
+        "prebuild:test": "rm -rf dist; tslint -c tslint.json -p tsconfig-spec.json --fix",
+        "build:test": "tsc --build tsconfig-spec.json",
         "dev": "concurrently \"npm run server:dev\" \"npm run web:dev\"",
         "server:dev": "node-dev ./dist/index.js",
         "web:dev": "cd frontend && npm run start",
         "start": "node ./bin/www",
-        "pretest": "npm run build",
+        "pretest": "npm run build:test",
         "test": "mocha"
     },
     "nodemonConfig": {
