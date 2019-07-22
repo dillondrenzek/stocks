@@ -1,5 +1,6 @@
 export interface Portfolio {
-  id?: string;
+  _id?: string;
   holdingIds: string[];
   name: string;
+  tradeIds: string[];
 }

@@ -1,10 +1,11 @@
+import { DBRef } from 'bson';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import * as DB from '../db';
 import { getMockDateString } from '../spec/helpers/date';
 import { withDb } from '../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
-import { Trade } from './types';
+import { Portfolio, Trade } from './types';
 
 describe('PortfolioController', withDb(() => {
     let controller: PortfolioController;
@@ -53,11 +54,16 @@ describe('PortfolioController', withDb(() => {
             // get portfolio
             const portfolio = await controller.getPortfolioById(created._id);
             // expect portfolio to be defined
-            expect(portfolio.id).to.eq(created.id);
+            expect(portfolio._id).to.eq(created._id);
         });
     });
 
     describe('add trade to portfolio', () => {
+        const portfolio: Portfolio = {
+            holdingIds: [],
+            name: 'Test Portfolio',
+            tradeIds: [],
+        };
         const newTrade: Trade = {
             date: new Date(getMockDateString()),
             symbol: 'TEST',
@@ -65,10 +71,15 @@ describe('PortfolioController', withDb(() => {
             price: 123.24,
             side: 'buy',
         };
+        let savedPortfolio: Portfolio;
+
+        beforeEach(async () => {
+            savedPortfolio = await DB.Portfolio.create(portfolio);
+        });
 
         describe('with a symbol that does not have a holding', () => {
             const performTest = async () => {
-                await controller.addTrade(newTrade);
+                await controller.addTradeToPortfolio(newTrade, savedPortfolio);
             };
 
             it('creates the trade', async () => {
@@ -93,6 +104,16 @@ describe('PortfolioController', withDb(() => {
                 postHoldingCount = await DB.Holding.countDocuments();
                 // test
                 expect(postHoldingCount).to.eq(preHoldingCount + 1);
+            });
+
+            it('adds the trade to the portfolio', async () => {
+                let preCount: number, postCount: number;
+                preCount = savedPortfolio.tradeIds.length;
+                // perform test
+                performTest();
+                postCount = savedPortfolio.tradeIds.length;
+                // test
+                expect(postCount).to.eq(preCount + 1);
             });
 
             xit('adds holding to portfolio');

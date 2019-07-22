@@ -22,7 +22,7 @@ export class PortfolioController {
     }
 
     // addTradeToPortfolio?
-    public async addTrade({ quantity, price, side, symbol }: Trade) {
+    public async addTradeToPortfolio(trade: Trade, portfolio: Portfolio) {
         // // save trade
         // const trade = await DB.Trade.create({
         //     quantity,

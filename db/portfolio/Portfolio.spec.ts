@@ -1,37 +1,28 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import { withDb } from '../../spec/helpers/db-connect';
-import { Portfolio } from './Portfolio';
+import { ITradeDocument } from '../trade/Trade';
+import { IPortfolioDocument, Portfolio } from './Portfolio';
 
-// describe('Portfolio', withDb(() => {
+describe('Portfolio', withDb(() => {
 
-// //   it ('creates a Portfolio', async () => {
+  describe('adds a trade', () => {
+    let tradeId: ITradeDocument['_id'];
+    let portfolio: IPortfolioDocument;
 
-// //   });
+    beforeEach( async () => {
+      portfolio = await Portfolio.create({
+        name: 'Test Portfolio name'
+      });
+      tradeId = 'test-trade-id';
+      await portfolio.addTrade(tradeId);
+    });
 
-// //   it ('gets a Portfolio by id', async () => {
-// //     const newPortfolio = {
-// //       name: 'Test portfolio',
-// //       holding_ids: []
-// //     };
-// //     // create portfolio
-// //     const createPortfolio = new Portfolio(newPortfolio);
-// //     await createPortfolio.save();
-// //     const id = createPortfolio._id;
-// //     // get by id
-// //     const result = await Portfolio.findById(id);
-// //     // test
-// //     expect(result).not.to.be.undefined;
-// //   });
+    it('adds the trade\'s id to its trades', async () => {
+      expect(portfolio.isModified()).to.eq(false);
+      expect(portfolio.tradeIds).to.contain(tradeId);
+    });
 
-// //   xit ('gets all Portfolios', async () => {})
-// //   xit ('updates a Portfolio', async () => {})
-// //   xit ('deletes a Portfolio by id', async () => {})
+  });
 
-//   describe('adds a Trade', () => {
-
-//     xit('creates the Trade');
-//     xit('sets the ');
-//   });
-
-// }));
+}));
