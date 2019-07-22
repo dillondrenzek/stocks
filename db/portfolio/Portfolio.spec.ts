@@ -1,28 +1,55 @@
-import { expect } from 'chai';
+import chai from 'chai';
+const expect = chai.expect;
+
 import mongoose from 'mongoose';
-import { withDb } from '../../spec/helpers/db-connect';
-import { ITradeDocument } from '../trade/Trade';
-import { IPortfolioDocument, Portfolio } from './Portfolio';
+require('sinon-mongoose');
 
-describe('Portfolio', withDb(() => {
+import {Portfolio} from './Portfolio';
 
-  describe('adds a trade', () => {
-    let tradeId: ITradeDocument['_id'];
-    let portfolio: IPortfolioDocument;
+// describe('Portfolio', () => {
+//   let db;
 
-    beforeEach( async () => {
-      portfolio = await Portfolio.create({
-        name: 'Test Portfolio name'
-      });
-      tradeId = 'test-trade-id';
-      await portfolio.addTrade(tradeId);
-    });
+//   before((done) => {
+//     mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
+//     mongoose.connection.on('error', console.error.bind(console, 'connection error'));
+//     mongoose.connection.once('open', function () {
+//       done();
+//     });
+//   });
 
-    it('adds the trade\'s id to its trades', async () => {
-      expect(portfolio.isModified()).to.eq(false);
-      expect(portfolio.tradeIds).to.contain(tradeId);
-    });
+//   afterEach((done) => {
+//     mongoose.connection.db.dropDatabase(function() {
+//       done();
+//     });
+//   });
 
-  });
+//   after((done) => {
+//     mongoose.connection.db.dropDatabase(function () {
+//       mongoose.connection.close(done);
+//     });
+//   });
 
-}));
+//   it ('creates a Portfolio', async () => {
+
+//   });
+
+//   it ('gets a Portfolio by id', async () => {
+//     const newPortfolio = {
+//       name: 'Test portfolio',
+//       holding_ids: []
+//     };
+//     // create portfolio
+//     const createPortfolio = new Portfolio(newPortfolio);
+//     await createPortfolio.save();
+//     const id = createPortfolio._id;
+//     // get by id
+//     const result = await Portfolio.findById(id);
+//     // test
+//     expect(result).not.to.be.undefined;
+//   });
+
+//   xit ('gets all Portfolios', async () => {})
+//   xit ('updates a Portfolio', async () => {})
+//   xit ('deletes a Portfolio by id', async () => {})
+
+// });
