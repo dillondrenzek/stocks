@@ -3,44 +3,54 @@ import { Holding, Portfolio, Trade } from './types';
 
 export class PortfolioController {
 
-    public async createPortfolio({ holdingIds, name }: Portfolio) {
+    public async createPortfolioWithName(name: string): Promise<Portfolio> {
         const portfolio = await DB.Portfolio.create({
-            holdingIds,
+            holdingIds: [],
             name
         });
         return portfolio;
     }
 
-    public async getPortfolios() {
+    public async getPortfolios(): Promise<Portfolio[]> {
         const portfolios = await DB.Portfolio.find();
         return portfolios;
     }
 
-    public async getPortfolioById(id: string) {
+    public async getPortfolioById(id: string): Promise<Portfolio> {
         const portfolio = await DB.Portfolio.findById(id);
         return portfolio;
     }
 
-    // addTradeToPortfolio?
-    public async addTrade({ quantity, price, side, symbol }: Trade) {
-        // save trade
-        const trade = await DB.Trade.create({
-            quantity,
-            price,
-            side,
-            symbol,
-        });
-        // get Holding by symbols
-        const holding = await DB.Holding.findBySymbol(symbol);
-
-        // if holding doesn't exist, create it
-        if (!holding) {
-            await this.createHolding({
-                cost: price,
-                quantity,
-                symbol,
-            });
+    public async deletePortfolioById(id: string): Promise<Portfolio> {
+        try {
+            const removed = await DB.Portfolio.findByIdAndDelete(id);
+            return removed;
+        } catch (error) {
+            // console.error('Error deleting portfolio:', error);
+            return null;
         }
+    }
+
+    // addTradeToPortfolio?
+    public async addTradeToPortfolio(trade: Trade, portfolio: Portfolio) {
+        // // save trade
+        // const trade = await DB.Trade.create({
+        //     quantity,
+        //     price,
+        //     side,
+        //     symbol,
+        // });
+        // // get Holding by symbols
+        // const holding = await DB.Holding.findBySymbol(symbol);
+
+        // // if holding doesn't exist, create it
+        // if (!holding) {
+        //     await this.createHolding({
+        //         cost: price,
+        //         quantity,
+        //         symbol,
+        //     });
+        // }
     }
 
     public async createHolding({  cost, symbol, quantity, }: Partial<Holding>) {
@@ -70,5 +80,3 @@ export class PortfolioController {
     // }
 
 }
-
-module.exports = PortfolioController;

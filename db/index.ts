@@ -1,11 +1,4 @@
-import { connectDb } from './connect';
-import { Holding } from './holding/Holding';
-import { Portfolio } from './portfolio/Portfolio';
-import { Trade } from './trade/Trade';
-
-export {
-    connectDb,
-    Holding,
-    Portfolio,
-    Trade
-};
+export { connectDb } from './connect';
+export { Holding, IHoldingDocument } from './holding/Holding';
+export { Portfolio, IPortfolioDocument } from './portfolio/Portfolio';
+export { Trade, ITradeDocument } from './trade/Trade';

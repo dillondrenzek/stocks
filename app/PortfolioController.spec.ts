@@ -1,156 +1,184 @@
-import chai from 'chai';
-const expect = chai.expect;
-
+import { DBRef } from 'bson';
+import { expect } from 'chai';
 import mongoose from 'mongoose';
-require('sinon-mongoose');
+import * as DB from '../db';
+import { getMockDateString } from '../spec/helpers/date';
+import { withDb } from '../spec/helpers/db-connect';
+import { PortfolioController } from './PortfolioController';
+import { Portfolio, Trade } from './types';
 
-// Importing our todo model for our unit testing.
-import { Holding, Portfolio, Trade } from '../db';
-import {PortfolioController} from './PortfolioController';
+describe('PortfolioController', withDb(() => {
+    let controller: PortfolioController;
 
-// describe('PortfolioController', () => {
-//     let controller: PortfolioController;
+    beforeEach(function() {
+        controller = new PortfolioController();
+    });
 
-//     before((done) => {
-//         mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
-//         mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-//         mongoose.connection.once('open', function() {
-//             done();
-//         });
-//     });
+    describe('creates a portfolio using a name', () => {
+        const newPortfolioName = 'New Portfolio';
+        let beforeCount: number, afterCount: number;
+        let returned: any;
 
-//     beforeEach(() => {
-//         controller = new PortfolioController();
-//     });
+        beforeEach(async () => {
+            // count before
+            beforeCount = await DB.Portfolio.countDocuments();
+            // create portfolio
+            returned = await controller.createPortfolioWithName(newPortfolioName);
+            // count after
+            afterCount = await DB.Portfolio.countDocuments();
+        });
 
-//     afterEach((done) => {
-//         mongoose.connection.db.dropDatabase(function() {
-//             done();
-//         });
-//     });
+        it('returns the created portfolio', () => {
+            expect(returned).not.to.be.undefined;
+        });
 
-//     after((done) => {
-//         mongoose.connection.db.dropDatabase(function() {
-//             mongoose.connection.close(done);
-//         });
-//     });
+        it('creates the portfolio', () => {
+            expect(afterCount).to.eq(beforeCount + 1);
+        });
+    });
 
-//     describe('create portfolio', () => {
+    describe('get portfolios', () => {
+        it('gets all portfolios', async () => {
+            // create portfolios
+            await DB.Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
+            await DB.Portfolio.create({ name: 'New Portfolio 2', holding_ids: [] });
+            // get existing
+            const portfolios = await controller.getPortfolios();
+            // expect two portfolios returned
+            expect(portfolios.length).to.eq(2);
+        });
 
-//         it('creates the portfolio', async () => {
-//             const newPortfolio = {
-//                 name: 'New Portfolio',
-//                 holding_ids: []
-//             };
-//             // count before
-//             const preCount = await Portfolio.countDocuments();
-//             // create portfolio
-//             await controller.createPortfolio(newPortfolio);
-//             // count after
-//             const postCount = await Portfolio.countDocuments();
-//             // test
-//             expect(postCount).to.eq(preCount + 1);
-//         });
+        it('gets portfolio by id', async () => {
+            // create portfolio
+            const created = await DB.Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
+            // get portfolio
+            const portfolio = await controller.getPortfolioById(created.id);
+            // expect portfolio to be defined
+            expect(portfolio.id).to.eq(created.id);
+        });
+    });
 
-//         it('returns the portfolio', async () => {
-//             const newPortfolio = {
-//                 name: 'New Portfolio',
-//                 holding_ids: []
-//             };
-//             // create portfolio
+    describe('delete portfolios', () => {
+        describe('that exist', () => {
+            let existing: Portfolio;
+            beforeEach(async () => {
+                existing = await controller.createPortfolioWithName('Test Portfolio');
+            });
+            it('should return the deleted portfolio', async () => {
+                // delete portfolio
+                const removed = await controller.deletePortfolioById(existing.id);
+                // expect
+                expect(removed).not.to.be.undefined;
+                expect(removed.id).to.eq(existing.id);
+            });
+        });
 
-//             const created = await controller.createPortfolio(newPortfolio);
-//             // test
-//             expect(created).not.to.be.undefined;
-//         });
-//     });
+        describe('that do not exist', () => {
+            it('should return null', async () => {
+                // delete non-existent portfolio
+                const removed = await controller.deletePortfolioById('does not exist');
+                // expect
+                expect(removed).to.be.null;
+            });
+        });
+    });
 
-//     describe('get portfolios', () => {
-//         it('gets all portfolios', async () => {
-//             // create portfolio
-//             await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
-//             await Portfolio.create({ name: 'New Portfolio 2', holding_ids: [] });
-//             // get existing
+    describe('add trade to portfolio', () => {
+        const portfolio: Portfolio = {
+            holdingIds: [],
+            name: 'Test Portfolio',
+            tradeIds: [],
+        };
+        const newTrade: Trade = {
+            date: new Date(getMockDateString()),
+            symbol: 'TEST',
+            quantity: 5,
+            price: 123.24,
+            side: 'buy',
+        };
+        let savedPortfolio: Portfolio;
 
-//             const portfolios = await controller.getPortfolios();
-//             // expect two portfolios returned
-//             expect(portfolios.length).to.eq(2);
-//         });
+        beforeEach(async () => {
+            savedPortfolio = await DB.Portfolio.create(portfolio);
+        });
 
-//         it('gets portfolio by id', async () => {
-//             // create portfolio
-//             const created = await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
-//             // get portfolio
+        describe('with a symbol that does not have a holding', () => {
+            const performTest = async () => {
+                await controller.addTradeToPortfolio(newTrade, savedPortfolio);
+            };
 
-//             const portfolio = await controller.getPortfolioById(created._id);
-//             // expect portfolio to be defined
-//             expect(portfolio.id).to.eq(created.id);
-//         });
-//     });
+            it('creates the trade', async () => {
+                let preTradeCount: number, postTradeCount: number;
+                // count before
+                preTradeCount = await DB.Trade.countDocuments();
+                // perform test
+                performTest();
+                // count after
+                postTradeCount = await DB.Trade.countDocuments();
+                // test
+                expect(postTradeCount).to.eq(preTradeCount + 1);
+            });
 
-//     describe('add trade to portfolio', () => {
-//         it('creates the trade', async () => {
-//             const newTrade = {
-//                 symbol: 'TEST',
-//                 quantity: 5,
-//                 price: 123.24,
-//                 side: 'buy',
-//             };
-//             // count before
-//             const preCount = await Trade.countDocuments();
-//             // add the trade
-//             await controller.addTrade(newTrade);
-//             // count after
-//             const postCount = await Trade.countDocuments();
-//             // test
-//             expect(postCount).to.eq(preCount + 1);
-//         });
+            it('creates a new holding', async () => {
+                let preHoldingCount: number, postHoldingCount: number;
+                // count before
+                preHoldingCount = await DB.Holding.countDocuments();
+                // perform test
+                performTest();
+                // count after
+                postHoldingCount = await DB.Holding.countDocuments();
+                // test
+                expect(postHoldingCount).to.eq(preHoldingCount + 1);
+            });
 
-//         xdescribe('with a symbol that alreday has a holding in the portfolio', () => {
-//             const symbol = 'TEST';
-//             xit('adds the trade to the holding', () => {});
-//             xit('updates the holding\'s data', () => {});
-//         });
+            it('adds the trade to the portfolio', async () => {
+                let preCount: number, postCount: number;
+                preCount = savedPortfolio.tradeIds.length;
+                // perform test
+                performTest();
+                postCount = savedPortfolio.tradeIds.length;
+                // test
+                expect(postCount).to.eq(preCount + 1);
+            });
 
-//         xdescribe('with a symbol that does not have a holding', () => {
-//             xit('creates a new holding', () => {});
-//             xit('adds holding to portfolio', () => {});
-//             xit('adds the trade to the holding', () => {});
-//             xit('updates the holding\'s data', () => {});
-//         });
+            xit('adds holding to portfolio');
+            xit('adds the trade to the holding');
+            xit('updates the holding\'s data');
+        });
 
-//         xdescribe('to a holding', () => {
-//             xit('that exists', () => {});
-//             xit('that does not exist', () => {});
-//         });
-//     });
+        xdescribe('with a symbol that already has a holding in the portfolio', () => {
+            xit('creates the trade', async () => {
 
-//     describe('create Holding', () => {
-//         it('returns the created Holding', async () => {
-//             const newHolding = {
-//                 symbol: 'TEST',
-//                 quantity: 31,
-//                 cost: 29.73
-//             };
-//             const holding = await controller.createHolding(newHolding);
-//             expect(holding).not.to.be.undefined;
-//         });
-//     });
+            });
+            xit('adds the trade to the holding');
+            xit('updates the holding\'s data');
+        });
 
-//     describe('get Holdings', () => {
-//         it('all existing', async () => {
-//             // create seed Holdings
+        xdescribe('to a holding', () => {
+            xit('that exists');
+            xit('that does not exist');
+        });
+    });
+
+    xdescribe('get all Holdings for Portfolio', () => {
+        xdescribe('when no Holdings exist', () => {
+            xit('returns empty array ');
+        });
+
+        xdescribe('when one or more Holdings exist', () => {
+            //             // create seed Holdings
 //             await Holding.create({ symbol: 'TEST' });
 //             await Holding.create({ symbol: 'TEST' });
 //             // get holdings
 //             const holdings = await controller.getHoldings();
 //             // expect there to be two
 //             expect(holdings.length).to.eq(2);
-//         });
-//     });
+            xit('returns all the Holdings');
+        });
+    });
 
-//     describe('get Holding by symbol', () => {
-//         describe('that exists', () => {
+    xdescribe('get Holding by symbol', () => {
+        xdescribe('that exists', () => {
 //             let created, result;
 //             const newHolding = {
 //                 symbol: 'TEST',
@@ -164,20 +192,15 @@ import {PortfolioController} from './PortfolioController';
 
 //                 result = await controller.getHoldingBySymbol(newHolding.symbol);
 //             });
-//             it('returns the Holding', async () => {
 //                 // test
 //                 expect(result).not.to.be.undefined;
-//             });
-//             it('returns one holding', () => {
-//                 expect(result.symbol).to.eq(newHolding.symbol);
-//             });
-//         });
-//         describe('that does not exist', () => {
-//             it('returns null', async () => {
-//                 const result = await controller.getHoldingBySymbol('RANDOM');
-//                 // test
-//                 expect(result).to.be.null;
-//             });
-//         });
-//     });
-// });
+            xit('returns the Holding');
+        });
+        xdescribe('that does not exist', () => {
+            //                 const result = await controller.getHoldingBySymbol('RANDOM');
+            //                 // test
+            //                 expect(result).to.be.null;
+            xit('returns null');
+        });
+    });
+}));
