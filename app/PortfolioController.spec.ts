@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import * as DB from '../db';
+import { getMockDateString } from '../spec/helpers/date';
 import { withDb } from '../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
+import { Trade } from './types';
 
-describe('PortfolioController', withDb('mongodb://localhost:27017/stocks-test', () => {
+describe('PortfolioController', withDb(() => {
     let controller: PortfolioController;
 
     beforeEach(function() {
@@ -12,68 +14,96 @@ describe('PortfolioController', withDb('mongodb://localhost:27017/stocks-test', 
     });
 
     describe('creates a portfolio using a name', () => {
+        const newPortfolioName = 'New Portfolio';
+        let beforeCount: number, afterCount: number;
+        let returned: any;
 
-        it('creates the portfolio', async () => {
-            const newPortfolioName = 'New Portfolio';
+        beforeEach(async () => {
             // count before
-            const initialCount = await DB.Portfolio.countDocuments();
+            beforeCount = await DB.Portfolio.countDocuments();
             // create portfolio
-            await controller.createPortfolioWithName(newPortfolioName);
+            returned = await controller.createPortfolioWithName(newPortfolioName);
             // count after
-            const postCount = await DB.Portfolio.countDocuments();
-            // test
-            expect(postCount).to.eq(initialCount + 1);
+            afterCount = await DB.Portfolio.countDocuments();
         });
-        xit('returns the portfolio');
+
+        it('returns the created portfolio', () => {
+            expect(returned).not.to.be.undefined;
+        });
+
+        it('creates the portfolio', () => {
+            expect(afterCount).to.eq(beforeCount + 1);
+        });
     });
 
-    xdescribe('get portfolios', () => {
-        //             // create portfolio
-        //             await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
-        //             await Portfolio.create({ name: 'New Portfolio 2', holding_ids: [] });
-        //             // get existing
+    describe('get portfolios', () => {
+        it('gets all portfolios', async () => {
+            // create portfolios
+            await DB.Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
+            await DB.Portfolio.create({ name: 'New Portfolio 2', holding_ids: [] });
+            // get existing
+            const portfolios = await controller.getPortfolios();
+            // expect two portfolios returned
+            expect(portfolios.length).to.eq(2);
+        });
 
-        //             const portfolios = await controller.getPortfolios();
-        //             // expect two portfolios returned
-        //             expect(portfolios.length).to.eq(2);
-        xit('gets all portfolios');
-
-        //             // create portfolio
-        //             const created = await Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
-        //             // get portfolio
-
-        //             const portfolio = await controller.getPortfolioById(created._id);
-        //             // expect portfolio to be defined
-        //             expect(portfolio.id).to.eq(created.id);
-        xit('gets portfolio by id');
+        it('gets portfolio by id', async () => {
+            // create portfolio
+            const created = await DB.Portfolio.create({ name: 'New Portfolio 1', holding_ids: [] });
+            // get portfolio
+            const portfolio = await controller.getPortfolioById(created._id);
+            // expect portfolio to be defined
+            expect(portfolio.id).to.eq(created.id);
+        });
     });
 
-    xdescribe('add trade to portfolio', () => {
-        //             const newTrade = {
-        //                 symbol: 'TEST',
-        //                 quantity: 5,
-        //                 price: 123.24,
-        //                 side: 'buy',
-        //             };
-        //             // count before
-        //             const preCount = await Trade.countDocuments();
-        //             // add the trade
-        //             await controller.addTrade(newTrade);
-        //             // count after
-        //             const postCount = await Trade.countDocuments();
-        //             // test
-        //             expect(postCount).to.eq(preCount + 1);
-        xit('creates the trade');
+    describe('add trade to portfolio', () => {
+        const newTrade: Trade = {
+            date: new Date(getMockDateString()),
+            symbol: 'TEST',
+            quantity: 5,
+            price: 123.24,
+            side: 'buy',
+        };
 
-        xdescribe('with a symbol that alreday has a holding in the portfolio', () => {
-//             const symbol = 'TEST';
+        describe('with a symbol that does not have a holding', () => {
+            const performTest = async () => {
+                await controller.addTrade(newTrade);
+            };
+
+            it('creates the trade', async () => {
+                let preTradeCount: number, postTradeCount: number;
+                // count before
+                preTradeCount = await DB.Trade.countDocuments();
+                // perform test
+                performTest();
+                // count after
+                postTradeCount = await DB.Trade.countDocuments();
+                // test
+                expect(postTradeCount).to.eq(preTradeCount + 1);
+            });
+
+            it('creates a new holding', async () => {
+                let preHoldingCount: number, postHoldingCount: number;
+                // count before
+                preHoldingCount = await DB.Holding.countDocuments();
+                // perform test
+                performTest();
+                // count after
+                postHoldingCount = await DB.Holding.countDocuments();
+                // test
+                expect(postHoldingCount).to.eq(preHoldingCount + 1);
+            });
+
+            xit('adds holding to portfolio');
             xit('adds the trade to the holding');
             xit('updates the holding\'s data');
         });
 
-        xdescribe('with a symbol that does not have a holding', () => {
-            xit('creates a new holding');
-            xit('adds holding to portfolio');
+        xdescribe('with a symbol that already has a holding in the portfolio', () => {
+            xit('creates the trade', async () => {
+
+            });
             xit('adds the trade to the holding');
             xit('updates the holding\'s data');
         });

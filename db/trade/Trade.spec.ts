@@ -1,31 +1,9 @@
-import chai from 'chai';
-const expect = chai.expect;
+import { expect } from 'chai';
 import mongoose from 'mongoose';
-require('sinon-mongoose');
+import { withDb } from '../../spec/helpers/db-connect';
+import { ITradeDocument, Trade } from './Trade';
 
-// Importing our todo model for our unit testing.
-import {Trade} from './Trade';
-
-// describe('Trade', () => {
-//     let conn;
-//     let db;
-
-//     beforeEach(() => {
-//         conn = mongoose.connect('mongodb://localhost:27017/stocks-test', {
-//             useNewUrlParser: true
-//         });
-//         db = mongoose.connection;
-//         db.on('error', console.error.bind(console, 'connection error'));
-//         db.once('open', function () {
-//             done();
-//         });
-//     });
-
-//     afterEach((done) => {
-//         db.db.dropDatabase(function () {
-//             db.close(done);
-//         });
-//     });
+describe('Trade', withDb(() => {
 
 //     xit ('gets Trades', (done) => {
 //         const TradeMock = sinon.mock(Trade);
@@ -44,4 +22,27 @@ import {Trade} from './Trade';
 //     xit ('updates a Trade', () => {});
 //     xit ('deletes a Trade by id', () => {});
 
-// });
+  describe('adds a portfolio', () => {
+    let portfolioId: string;
+    let trade: ITradeDocument;
+
+    beforeEach(async () => {
+      trade = await Trade.create({
+        symbol: 'TEST',
+        quantity: 12,
+        price: 123.23
+      });
+      portfolioId = 'portfolio-id';
+      await trade.addToPortfolio(portfolioId);
+
+    });
+
+    it('has a portfolio id after save', () => {
+      const isModified = trade.isModified();
+      expect(isModified).to.be.false;
+      expect(trade.portfolioId).to.eq(portfolioId);
+    });
+
+  });
+
+}));

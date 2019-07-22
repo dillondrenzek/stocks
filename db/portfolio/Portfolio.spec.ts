@@ -1,55 +1,37 @@
-import chai from 'chai';
-const expect = chai.expect;
-
+import { expect } from 'chai';
 import mongoose from 'mongoose';
-require('sinon-mongoose');
+import { withDb } from '../../spec/helpers/db-connect';
+import { Portfolio } from './Portfolio';
 
-import {Portfolio} from './Portfolio';
+// describe('Portfolio', withDb(() => {
 
-// describe('Portfolio', () => {
-//   let db;
+// //   it ('creates a Portfolio', async () => {
 
-//   before((done) => {
-//     mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
-//     mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-//     mongoose.connection.once('open', function () {
-//       done();
-//     });
+// //   });
+
+// //   it ('gets a Portfolio by id', async () => {
+// //     const newPortfolio = {
+// //       name: 'Test portfolio',
+// //       holding_ids: []
+// //     };
+// //     // create portfolio
+// //     const createPortfolio = new Portfolio(newPortfolio);
+// //     await createPortfolio.save();
+// //     const id = createPortfolio._id;
+// //     // get by id
+// //     const result = await Portfolio.findById(id);
+// //     // test
+// //     expect(result).not.to.be.undefined;
+// //   });
+
+// //   xit ('gets all Portfolios', async () => {})
+// //   xit ('updates a Portfolio', async () => {})
+// //   xit ('deletes a Portfolio by id', async () => {})
+
+//   describe('adds a Trade', () => {
+
+//     xit('creates the Trade');
+//     xit('sets the ');
 //   });
 
-//   afterEach((done) => {
-//     mongoose.connection.db.dropDatabase(function() {
-//       done();
-//     });
-//   });
-
-//   after((done) => {
-//     mongoose.connection.db.dropDatabase(function () {
-//       mongoose.connection.close(done);
-//     });
-//   });
-
-//   it ('creates a Portfolio', async () => {
-
-//   });
-
-//   it ('gets a Portfolio by id', async () => {
-//     const newPortfolio = {
-//       name: 'Test portfolio',
-//       holding_ids: []
-//     };
-//     // create portfolio
-//     const createPortfolio = new Portfolio(newPortfolio);
-//     await createPortfolio.save();
-//     const id = createPortfolio._id;
-//     // get by id
-//     const result = await Portfolio.findById(id);
-//     // test
-//     expect(result).not.to.be.undefined;
-//   });
-
-//   xit ('gets all Portfolios', async () => {})
-//   xit ('updates a Portfolio', async () => {})
-//   xit ('deletes a Portfolio by id', async () => {})
-
-// });
+// }));
