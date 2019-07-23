@@ -54,7 +54,8 @@ export class PortfolioController {
   }
 
   public async getHoldingsForPortfolio(portfolio: Portfolio): Promise<Holding[]> {
-    return null;
+    const holdings = await DB.Holding.find({ _id: { $in: portfolio.holdingIds }});
+    return holdings;
   }
 
   public async createHolding({ cost, symbol, quantity, }: Partial<Holding>) {

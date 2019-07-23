@@ -183,15 +183,33 @@ describe('PortfolioController', withDb(() => {
         beforeEach(async () => {
           // create test portfolio
           portfolio = await DB.Portfolio.create({
-            name: 'Test Portfolio'
+            name: 'Test Portfolio',
+            holdingIds: [],
+            tradeIds: []
           });
           // create multiple holdings
-          portfolio;
+          const holding1 = await DB.Holding.create({
+            cost: 0.00,
+            portfolioId: portfolio.id,
+            quantity: 12,
+            symbol: 'TEST1',
+            tradeIds: []
+          });
+          const holding2 = await DB.Holding.create({
+            cost: 0.00,
+            portfolioId: portfolio.id,
+            quantity: 12,
+            symbol: 'TEST2',
+            tradeIds: []
+          });
+          // perform test
+          await portfolio.addHolding(holding1);
+          await portfolio.addHolding(holding2);
         });
 
         it('returns an array equal to the number of holdings', async () => {
           const result = await controller.getHoldingsForPortfolio(portfolio);
-          expect(result.length).to.eq(0);
+          expect(result.length).to.eq(2);
         });
       });
     });

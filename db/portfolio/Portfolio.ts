@@ -6,8 +6,8 @@ export interface IPortfolioDocument extends mongoose.Document {
   holdingIds: Array<IHoldingDocument['_id']>;
   tradeIds: Array<ITradeDocument['_id']>;
   name: string;
-  addTrade?: (id: ITradeDocument['_id']) => void;
-  addHolding?: (id: IHoldingDocument['_id']) => void;
+  addTrade?: (id: ITradeDocument) => void;
+  addHolding?: (id: IHoldingDocument) => void;
 }
 
 const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({

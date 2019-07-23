@@ -8,8 +8,8 @@ export interface IHoldingDocument extends mongoose.Document {
     quantity: number;
     symbol: string;
     tradeIds: Array<ITradeDocument['_id']>;
-    addPortfolio ?: (portfolioId: IPortfolioDocument['_id']) => void;
-    addTrade ?: (tradeId: ITradeDocument['_id']) => void;
+    addPortfolio?: (portfolioId: IPortfolioDocument['_id']) => void;
+    addTrade?: (tradeId: ITradeDocument['_id']) => void;
 }
 
 export interface IHoldingModel extends mongoose.Model<IHoldingDocument> {
