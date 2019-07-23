@@ -83,7 +83,7 @@ describe('PortfolioController', withDb(() => {
         });
     });
 
-    describe('add trade to portfolio', () => {
+    xdescribe('add trade to portfolio', () => {
         const portfolio: Portfolio = {
             holdingIds: [],
             name: 'Test Portfolio',
@@ -133,9 +133,11 @@ describe('PortfolioController', withDb(() => {
 
             it('adds the trade to the portfolio', async () => {
                 let preCount: number, postCount: number;
+                // count before
                 preCount = savedPortfolio.tradeIds.length;
                 // perform test
                 performTest();
+                // count after
                 postCount = savedPortfolio.tradeIds.length;
                 // test
                 expect(postCount).to.eq(preCount + 1);
@@ -160,47 +162,62 @@ describe('PortfolioController', withDb(() => {
         });
     });
 
-    xdescribe('get all Holdings for Portfolio', () => {
-        xdescribe('when no Holdings exist', () => {
-            xit('returns empty array ');
-        });
+    describe('get all Holdings for a Portfolio', () => {
+      let portfolio: Portfolio;
 
-        xdescribe('when one or more Holdings exist', () => {
-            //             // create seed Holdings
-//             await Holding.create({ symbol: 'TEST' });
-//             await Holding.create({ symbol: 'TEST' });
-//             // get holdings
-//             const holdings = await controller.getHoldings();
-//             // expect there to be two
-//             expect(holdings.length).to.eq(2);
-            xit('returns all the Holdings');
+      describe('when no Holdings exist', () => {
+        beforeEach(async () => {
+          // create test portfolio
+          portfolio = await DB.Portfolio.create({
+            name: 'Test Portfolio'
+          });
+          // don't create any holdings
         });
+        it('returns empty array', async () => {
+          const result = await controller.getHoldingsForPortfolio(portfolio);
+          expect(result.length).to.eq(0);
+        });
+      });
     });
 
-    xdescribe('get Holding by symbol', () => {
-        xdescribe('that exists', () => {
-//             let created, result;
-//             const newHolding = {
-//                 symbol: 'TEST',
-//                 quantity: 1,
-//                 cost: 50.23
-//             };
+//     xdescribe('get all Holdings for Portfolio', () => {
 
-//             beforeEach(async () => {
-//                 // create holding
-//                 created = await Holding.create(newHolding);
+//         xdescribe('when one or more Holdings exist', () => {
+//             //             // create seed Holdings
+// //             await Holding.create({ symbol: 'TEST' });
+// //             await Holding.create({ symbol: 'TEST' });
+// //             // get holdings
+// //             const holdings = await controller.getHoldings();
+// //             // expect there to be two
+// //             expect(holdings.length).to.eq(2);
+//             xit('returns all the Holdings');
+//         });
+//     });
 
-//                 result = await controller.getHoldingBySymbol(newHolding.symbol);
-//             });
-//                 // test
-//                 expect(result).not.to.be.undefined;
-            xit('returns the Holding');
-        });
-        xdescribe('that does not exist', () => {
-            //                 const result = await controller.getHoldingBySymbol('RANDOM');
-            //                 // test
-            //                 expect(result).to.be.null;
-            xit('returns null');
-        });
-    });
+//     xdescribe('get Holding by symbol', () => {
+//         xdescribe('that exists', () => {
+// //             let created, result;
+// //             const newHolding = {
+// //                 symbol: 'TEST',
+// //                 quantity: 1,
+// //                 cost: 50.23
+// //             };
+
+// //             beforeEach(async () => {
+// //                 // create holding
+// //                 created = await Holding.create(newHolding);
+
+// //                 result = await controller.getHoldingBySymbol(newHolding.symbol);
+// //             });
+// //                 // test
+// //                 expect(result).not.to.be.undefined;
+//             xit('returns the Holding');
+//         });
+//         xdescribe('that does not exist', () => {
+//             //                 const result = await controller.getHoldingBySymbol('RANDOM');
+//             //                 // test
+//             //                 expect(result).to.be.null;
+//             xit('returns null');
+//         });
+//     });
 }));
