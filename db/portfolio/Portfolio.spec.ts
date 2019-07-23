@@ -1,33 +1,45 @@
-import chai from 'chai';
-const expect = chai.expect;
-
+import chai, {expect} from 'chai';
 import mongoose from 'mongoose';
-require('sinon-mongoose');
 
-import {Portfolio} from './Portfolio';
+import { withDb } from '../../spec/helpers/db-connect';
+import { Holding, IHoldingDocument } from '../holding/Holding';
+import { IPortfolioDocument, Portfolio } from './Portfolio';
 
-// describe('Portfolio', () => {
-//   let db;
+describe('Portfolio', withDb(() => {
+  let portfolio: IPortfolioDocument;
 
-//   before((done) => {
-//     mongoose.connect('mongodb://localhost:27017/stocks-test', { useNewUrlParser: true });
-//     mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-//     mongoose.connection.once('open', function () {
-//       done();
-//     });
-//   });
+  describe('adds a Holding', () => {
+    let precount: number,
+      postcount: number,
+      holding: IHoldingDocument;
 
-//   afterEach((done) => {
-//     mongoose.connection.db.dropDatabase(function() {
-//       done();
-//     });
-//   });
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.create({
+        name: 'Test Portfolio',
+        holdingIds: [],
+        tradeIds: []
+      });
+      // create test holding
+      holding = await Holding.create({
+        cost: 0.00,
+        portfolioId: null,
+        quantity: 0.00,
+        symbol: 'TEST',
+        tradeIds: [],
+      });
+      //
+      precount = portfolio.holdingIds.length;
+      // perform test
+      await portfolio.addHolding(holding.id);
+      //
+      postcount = portfolio.holdingIds.length;
+    });
 
-//   after((done) => {
-//     mongoose.connection.db.dropDatabase(function () {
-//       mongoose.connection.close(done);
-//     });
-//   });
+    it('increases the length of the holdings array', () => {
+      expect(postcount).to.eq(precount + 1);
+    });
+  });
 
 //   it ('creates a Portfolio', async () => {
 
@@ -52,4 +64,4 @@ import {Portfolio} from './Portfolio';
 //   xit ('updates a Portfolio', async () => {})
 //   xit ('deletes a Portfolio by id', async () => {})
 
-// });
+}));

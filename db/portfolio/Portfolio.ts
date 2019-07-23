@@ -6,7 +6,8 @@ export interface IPortfolioDocument extends mongoose.Document {
   holdingIds: Array<IHoldingDocument['_id']>;
   tradeIds: Array<ITradeDocument['_id']>;
   name: string;
-  addTrade ?: (id: ITradeDocument['_id']) => void;
+  addTrade?: (id: ITradeDocument['_id']) => void;
+  addHolding?: (id: IHoldingDocument['_id']) => void;
 }
 
 const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
@@ -15,8 +16,13 @@ const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
   tradeIds: Array, // String ids
 });
 
-portfolioSchema.methods.addTrade = async function(id: ITradeDocument['_id']) {
-  this.tradeIds.push(id);
+portfolioSchema.methods.addTrade = async function(trade: ITradeDocument) {
+  this.tradeIds.push(trade.id);
+  await this.save();
+};
+
+portfolioSchema.methods.addHolding = async function(holding: IHoldingDocument) {
+  this.holdingIds.push(holding.id);
   await this.save();
 };
 

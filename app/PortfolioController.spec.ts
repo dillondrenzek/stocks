@@ -178,6 +178,22 @@ describe('PortfolioController', withDb(() => {
           expect(result.length).to.eq(0);
         });
       });
+
+      describe('when it has multiple holdings', () => {
+        beforeEach(async () => {
+          // create test portfolio
+          portfolio = await DB.Portfolio.create({
+            name: 'Test Portfolio'
+          });
+          // create multiple holdings
+          portfolio;
+        });
+
+        it('returns an array equal to the number of holdings', async () => {
+          const result = await controller.getHoldingsForPortfolio(portfolio);
+          expect(result.length).to.eq(0);
+        });
+      });
     });
 
 //     xdescribe('get all Holdings for Portfolio', () => {
