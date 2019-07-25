@@ -34,4 +34,15 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/:id/holdings', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const portfolio = await controller.getPortfolioById(id);
+    const holdings = await controller.getHoldingsForPortfolio(portfolio);
+    res.json(holdings);
+  } catch (e) {
+    res.status(500).send('Error getting holdings for portfolio: ' + e);
+  }
+});
+
 export default router;
