@@ -1,6 +1,8 @@
 import mongoose = require('mongoose');
 import { IPortfolioDocument } from '../portfolio/Portfolio';
-import { IOptionTradeDocument, IStockTradeDocument, ITradeDocument } from '../trade/Trade';
+import { ITradeDocument } from '../trade';
+import { StockTrade, IStockTradeDocument } from '../trade/StockTrade';
+import { OptionTrade, IOptionTradeDocument } from '../trade/OptionTrade';
 
 // Documents
 

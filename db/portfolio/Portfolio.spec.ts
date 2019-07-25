@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import { withDb } from '../../spec/helpers/db-connect';
 import { Holding, IHoldingDocument } from '../holding/Holding';
-import { ITradeDocument } from '../trade/Trade';
+import { ITradeDocument } from '../trade';
 import { IPortfolioDocument, Portfolio } from './Portfolio';
 
 describe('Portfolio', withDb(() => {

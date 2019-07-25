@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { IHoldingDocument } from '../holding/Holding';
-import { ITradeDocument } from '../trade/Trade';
+import { ITradeDocument } from '../trade';
 
 export interface IPortfolioDocument extends mongoose.Document {
   holdingIds: Array<IHoldingDocument['_id']>;
