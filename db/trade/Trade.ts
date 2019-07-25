@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { BuyOrSell, StockOrOption } from '../types';
 
-export interface ITradeDocument extends mongoose.Document {
+export interface ITrade{
   price: number;
   quantity: number;
   side: BuyOrSell;
@@ -9,3 +9,5 @@ export interface ITradeDocument extends mongoose.Document {
   timestamp: Date;
   type: StockOrOption;
 }
+
+export type ITradeDocument = ITrade & mongoose.Document;

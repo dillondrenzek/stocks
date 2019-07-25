@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
-import { ITradeDocument } from './ITradeDocument';
+import { ITrade, ITradeDocument } from './Trade';
 
-export interface IStockTradeDocument extends ITradeDocument {
+export interface IStockTrade extends ITrade {
   type: 'stock';
 }
+
+export type IStockTradeDocument = IStockTrade & mongoose.Document;
 
 // Stock Trade
 
@@ -14,6 +16,15 @@ const stockTradeSchema = new mongoose.Schema<IStockTradeDocument>({
   symbol: String,
   timestamp: Date,
   type: String,
+});
+
+export const defaultStockTrade = (): IStockTrade => ({
+  price: 0.00,
+  quantity: 0,
+  side: null,
+  symbol: '',
+  timestamp: new Date(),
+  type: 'stock'
 });
 
 export const StockTrade = mongoose.model<IStockTradeDocument>('StockTrade', stockTradeSchema);

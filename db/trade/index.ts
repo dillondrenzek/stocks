@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
 
-export * from './ITradeDocument';
+export * from './Trade';
 export * from './OptionTrade';
 export * from './StockTrade';

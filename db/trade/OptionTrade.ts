@@ -1,15 +1,31 @@
 import mongoose from 'mongoose';
-import { ITradeDocument } from './ITradeDocument';
+import { ITrade, ITradeDocument } from './Trade';
 import { CallOrPut, OpenOrClose } from '../types';
 
-
-export interface IOptionTradeDocument extends ITradeDocument {
+export interface IOptionTrade extends ITrade {
   callPut: CallOrPut;
   expDate: Date;
   openClose: OpenOrClose;
   strikePrice: number;
   type: 'option';
 }
+
+export const defaultOptionTrade = (): IOptionTrade => ({
+  price: 0.00,
+  quantity: 0,
+  side: null,
+  symbol: '',
+  timestamp: new Date(),
+  callPut: null,
+  expDate: new Date(),
+  openClose: null,
+  strikePrice: 0.00,
+  type: 'option',
+});
+
+export type IOptionTradeDocument = IOptionTrade & mongoose.Document;
+
+
 
 const optionTradeSchema = new mongoose.Schema<IOptionTradeDocument>({
   callPut: String,
