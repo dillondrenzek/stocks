@@ -58,13 +58,13 @@ export class PortfolioController {
     return holdings;
   }
 
-  public async createHolding({ cost, symbol, quantity, }: Partial<Holding>) {
-    return await DB.Holding.create({
-      cost,
-      quantity,
-      symbol,
-    });
-  }
+  // public async createHolding({ cost, symbol, quantity, }: Partial<Holding>) {
+  //   return await DB.Holding.create({
+  //     cost,
+  //     quantity,
+  //     symbol,
+  //   });
+  // }
 
   public async getHoldingBySymbol(symbol: string) {
     const holding = await DB.Holding.findBySymbol(symbol);

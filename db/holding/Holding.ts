@@ -11,18 +11,6 @@ export interface IHoldingDocument extends mongoose.Document {
   addTrade?: (trade: ITradeDocument) => void;
 }
 
-export interface IStockHoldingDocument extends IHoldingDocument {
-  trades: Array<IStockTradeDocument['_id']>;
-  type: 'stock';
-  addTrade?: (trade: IStockTradeDocument) => void;
-}
-
-export interface IOptionHoldingDocument extends IHoldingDocument {
-  trades: Array<IOptionTradeDocument['_id']>;
-  type: 'option';
-  addTrade?: (trade: IOptionTradeDocument) => void;
-}
-
 // Models
 
 export interface IHoldingModel extends mongoose.Model<IHoldingDocument> {
