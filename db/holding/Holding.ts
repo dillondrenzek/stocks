@@ -1,4 +1,5 @@
 import mongoose = require('mongoose');
+import { StockOrOption } from '../types';
 import { IPortfolioDocument } from '../portfolio/Portfolio';
 import { ITradeDocument } from '../trade';
 import { StockTrade, IStockTradeDocument } from '../trade/StockTrade';
@@ -9,7 +10,7 @@ import { OptionTrade, IOptionTradeDocument } from '../trade/OptionTrade';
 export interface IHoldingDocument extends mongoose.Document {
   symbol: string;
   trades: Array<ITradeDocument['_id']>;
-  type: 'stock' | 'option';
+  type: StockOrOption;
   addTrade?: (trade: ITradeDocument) => void;
 }
 
