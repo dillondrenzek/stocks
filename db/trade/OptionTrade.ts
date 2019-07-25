@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 import { ITradeDocument } from './ITradeDocument';
+import { CallOrPut, OpenOrClose } from '../types';
+
 
 export interface IOptionTradeDocument extends ITradeDocument {
-  callPut: 'call' | 'put';
+  callPut: CallOrPut;
   expDate: Date;
-  openClose: 'open' | 'close';
+  openClose: OpenOrClose;
   strikePrice: number;
   type: 'option';
 }
