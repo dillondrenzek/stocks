@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { BuyOrSell, StockOrOption } from '../types';
 
-export interface ITrade{
+export interface ITrade {
   price: number;
   quantity: number;
   side: BuyOrSell;

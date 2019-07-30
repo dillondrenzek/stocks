@@ -1,12 +1,9 @@
 import express from 'express';
-// import path from 'path';
-// import bodyParser from 'body-parser';
-
 import { Logger } from './util';
 
-import portfoliosApi from '../api/portfolio';
-// import holdingsApi = require('./holdings');
-// import tradesApi = require('./trades');
+import portfoliosApi from './portfolios';
+// import holdingsApi from './holdings';
+// import tradesApi from './trades';
 
 // Export Router
 const router = express();
