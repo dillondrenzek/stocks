@@ -22,13 +22,9 @@ export const defaultPortfolio = (): IPortfolio => ({
 
 export type IPortfolioDocument = IPortfolio & mongoose.Document;
 
-interface IPortfolioModel {
-  createDefault?: () => IPortfolioDocument;
-}
-
 // Schema
 
-const portfolioSchema = new mongoose.Schema<IPortfolioDocument, IPortfolioModel>({
+const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
   holdingIds: Array, // Object Ids
   name: String,
   optionTrades: Array,
