@@ -1,11 +1,11 @@
-import * as MUI from "@material-ui/core";
-import React from "react";
-import "./App.scss";
+import * as MUI from '@material-ui/core';
+import React from 'react';
+import './App.scss';
 
-import { HoldingsTable } from "./components/holdings-table/holdings-table";
+import { HoldingsTable } from './components/holdings-table/holdings-table';
 
-import Holdings from "./spec/get-holdings.json";
-import Quotes from "./spec/get-quotes.json";
+import Holdings from './spec/get-holdings.json';
+import Quotes from './spec/get-quotes.json';
 
 export class App extends React.Component {
   public render() {
