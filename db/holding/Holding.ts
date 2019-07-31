@@ -1,48 +1,47 @@
 import mongoose = require('mongoose');
+import { StockOrOption } from '../types';
 import { IPortfolioDocument } from '../portfolio/Portfolio';
-import { ITradeDocument } from '../trade/Trade';
+import { ITradeDocument } from '../trade';
+import { StockTrade, IStockTradeDocument } from '../trade/StockTrade';
+import { OptionTrade, IOptionTradeDocument } from '../trade/OptionTrade';
+
+// Documents
 
 export interface IHoldingDocument extends mongoose.Document {
-    cost: number;
-    portfolioId: IPortfolioDocument['_id'];
-    quantity: number;
-    symbol: string;
-    tradeIds: Array<ITradeDocument['_id']>;
-    addPortfolio?: (portfolioId: IPortfolioDocument['_id']) => void;
-    addTrade?: (tradeId: ITradeDocument['_id']) => void;
+  symbol: string;
+  trades: Array<ITradeDocument['_id']>;
+  type: StockOrOption;
+  addTrade?: (trade: ITradeDocument) => void;
 }
 
+// Models
+
 export interface IHoldingModel extends mongoose.Model<IHoldingDocument> {
-    findBySymbol?: (symbol: string) => mongoose.Model<IHoldingDocument>;
+  findBySymbol?: (symbol: string) => mongoose.Model<IHoldingDocument>;
 }
 
 // Schema
+
 const holdingSchema = new mongoose.Schema<IHoldingDocument>({
-    cost: Number,
-    portfolioId: String,
-    quantity: Number,
-    symbol: String,
-    tradeIds: Array, // Trade._id[]
+  symbol: String,
+  trades: { type: [mongoose.Schema.Types.ObjectId] },
+  type: String,
 });
 
 // Static Methods
+
 holdingSchema.statics.findBySymbol = async function(symbol: string) {
-    return await this.find({
-        symbol
-    });
-};
-
-holdingSchema.methods.addPortfolio = async function(portfolioId: string) {
-    this.portfolioId = portfolioId;
-    return await this.save();
-};
-
-holdingSchema.methods.addTrade = async function(tradeId: string) {
-    this.tradeIds.push(tradeId);
-    return await this.save();
+  return await this.find({
+    symbol
+  });
 };
 
 // Instance Methods
+
+holdingSchema.methods.addTrade = async function(trade: ITradeDocument) {
+  this.tradeIds.push(trade.id);
+  return await this.save();
+};
 
 // Export
 export const Holding: IHoldingModel = mongoose.model<IHoldingDocument, IHoldingModel>('Holding', holdingSchema);

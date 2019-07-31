@@ -1,13 +1,12 @@
-import chai from 'chai';
-const expect = chai.expect;
-
+import chai, { expect } from 'chai';
 import mongoose from 'mongoose';
-import 'sinon-mongoose';
+import { withDb } from '../../spec/helpers/db-connect';
+import { Portfolio } from '../portfolio/Portfolio';
+import { Holding } from './Holding';
 
-// Importing our todo model for our unit testing.
-import {Portfolio} from '../portfolio/Portfolio';
-import {Trade} from '../trade/Trade';
-import {Holding} from './Holding';
+// xdescribe('Holding', withDb(() => {
+
+// }));
 
 // describe('Holding', () => {
 

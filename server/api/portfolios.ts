@@ -5,14 +5,22 @@ import { PortfolioController } from '../../app/PortfolioController';
 const controller = new PortfolioController();
 const router = express();
 
+// Routes
+router.get('/',             getPortfolios);
+router.post('/',            createPortfolio);
+router.delete('/:id',       deletePortfolioById);
+router.get('/:id/holdings', getPortfolioHoldings);
+
+// API Methods
+
 // Get Portfolios
-router.get('/', async (req: Request, res: Response) => {
+export async function getPortfolios(req: Request, res: Response) {
   const portfolios = await controller.getPortfolios();
   res.json(portfolios);
-});
+}
 
 // Create Portfolio
-router.post('/', async (req: Request, res: Response) => {
+export async function createPortfolio(req: Request, res: Response) {
   const body = req.body;
   try {
     const portfolioName = body.name;
@@ -21,10 +29,10 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).send('Error creating portfolio: ' + e);
   }
-});
+}
 
 // Delete Portfolio by Id
-router.delete('/:id', async (req: Request, res: Response) => {
+export async function deletePortfolioById(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const deleted = await controller.deletePortfolioById(id);
@@ -32,9 +40,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).send('Error deleting portfolio: ' + e);
   }
-});
+}
 
-router.get('/:id/holdings', async (req: Request, res: Response) => {
+// Get a Portfolio's Holdings
+export async function getPortfolioHoldings(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const portfolio = await controller.getPortfolioById(id);
@@ -43,6 +52,6 @@ router.get('/:id/holdings', async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).send('Error getting holdings for portfolio: ' + e);
   }
-});
+}
 
 export default router;
