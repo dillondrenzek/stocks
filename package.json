@@ -16,11 +16,11 @@
 
         "clean": "rm -rf dist",
         "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
-        
-        "dev": "concurrently \"npm run server:dev\" \"npm run web:dev\"",
-        "preserver:dev": "npm run build",
-        "server:dev": "node-dev ./bin/server",
-        "web:dev": "cd frontend && npm run start",
+
+        "dev": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
+        "predev:server": "npm run build",
+        "dev:server": "node-dev ./bin/server",
+        "dev:web": "cd frontend && npm run start",
         "start": "node ./bin/www",
         "pretest": "npm run build:test",
         "test": "mocha"
