@@ -61,8 +61,8 @@ const formatMap = {
 
 function col(label: string, key: keyof Quote, options?: TableColumnOptions) {
     return {
+      key,
         label,
-        key,
         options
     };
 }
