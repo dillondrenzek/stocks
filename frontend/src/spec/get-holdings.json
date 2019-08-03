@@ -1,19 +1,13 @@
-{
-    "status": {
-        "code": 200,
-        "message": "Success."
-    },
-    "results": [{
-        "symbol": "MRNA",
-        "quantity": 3,
-        "avgCost": 17.00
-    }, {
-        "symbol": "V",
-        "quantity": 1,
-        "avgCost": 147.32
-    }, {
-        "symbol": "XYZ",
-        "quantity": 123,
-        "avgCost": 14.97
-    }]
-}
+[{
+    "symbol": "MRNA",
+    "quantity": 3,
+    "avgCost": 17.00
+}, {
+    "symbol": "V",
+    "quantity": 1,
+    "avgCost": 147.32
+}, {
+    "symbol": "XYZ",
+    "quantity": 123,
+    "avgCost": 14.97
+}]

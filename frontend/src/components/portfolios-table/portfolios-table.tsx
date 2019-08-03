@@ -1,9 +1,9 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
-import { Holding } from '../../types/holding';
+import { Portfolio } from '../../types/portfolio';
 
-export interface HoldingsTableProps {
-  holdings?: Holding[];
+export interface PortfoliosTableProps {
+  portfolios?: Portfolio[];
 }
 
 type TableHeaders<T> = {
@@ -13,16 +13,21 @@ type TableHeaders<T> = {
   }
 };
 
-export class HoldingsTable extends React.Component<HoldingsTableProps> {
+export class PortfoliosTable extends React.Component<PortfoliosTableProps> {
 
-  private tableHeaders: TableHeaders<Holding> = {
-    avgCost: { key: 'avgCost', label: 'Avg. Cost' },
-    quantity: { key: 'quantity', label: 'Quantity' },
-    symbol: { key: 'symbol', label: 'Symbol' },
+  private tableHeaders: TableHeaders<Portfolio> = {
+    _id: {
+      key: '_id',
+      label: 'Id'
+    },
+    name: {
+      key: 'name',
+      label: 'Name'
+    }
   };
 
   private get tableRows() {
-    return this.props.holdings ? this.props.holdings.map(
+    return this.props.portfolios ? this.props.portfolios.map(
       (h) => {
         return {
 
@@ -33,7 +38,7 @@ export class HoldingsTable extends React.Component<HoldingsTableProps> {
 
   public render() {
     const {
-      holdings
+      portfolios
     } = this.props;
     return (
       <MUI.Table size='small'>
@@ -42,14 +47,18 @@ export class HoldingsTable extends React.Component<HoldingsTableProps> {
             {Object.keys(this.tableHeaders).map((key, i) => (
               <MUI.TableCell key={i}>{this.tableHeaders[key].label}</MUI.TableCell>
             ))}
+            <MUI.TableCell></MUI.TableCell>
           </MUI.TableRow>
         </MUI.TableHead>
         <MUI.TableBody>
-          {holdings.map((holding, j) => (
+          {portfolios.map((holding, j) => (
             <MUI.TableRow key={j}>
               {Object.keys(this.tableHeaders).map((key, i) => (
                 <MUI.TableCell key={i}>{holding[key]}</MUI.TableCell>
               ))}
+              <MUI.TableCell>
+                <MUI.Link>Visit</MUI.Link>
+              </MUI.TableCell>
             </MUI.TableRow>
           ))}
         </MUI.TableBody>
