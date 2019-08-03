@@ -1,7 +1,8 @@
 import * as MUI from '@material-ui/core';
-import axios from 'axios';
 import React from 'react';
 import './App.scss';
+
+import http from './lib/http';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
@@ -62,7 +63,7 @@ export class App extends React.Component<{}, AppState> {
   }
 
   private loadPortfolios = () => {
-    axios.get<Portfolio[]>('http://localhost:7000/api/portfolios')
+    http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
       .then((res) => {
         this.setState({
           portfolios: res.data,
@@ -76,7 +77,7 @@ export class App extends React.Component<{}, AppState> {
 
   private loadHoldings = () => {
     const id = this.state.selectedPortfolio._id;
-    axios.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
+    http.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
       .then((res) => {
         console.log('res:', res);
         // this.setState({
