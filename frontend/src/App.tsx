@@ -15,7 +15,7 @@ import Quotes from './spec/get-quotes.json';
 export interface AppState {
   holdings?: Holding[];
   portfolios?: Portfolio[];
-  selectedPortfolio?: string;
+  selectedPortfolio?: Portfolio;
 }
 
 export class App extends React.Component<{}, AppState> {
@@ -25,13 +25,13 @@ export class App extends React.Component<{}, AppState> {
     this.state = {
       holdings: Holdings,
       portfolios: Portfolios,
-      selectedPortfolio: Portfolios[0]._id
+      selectedPortfolio: Portfolios[0]
     };
   }
 
   public componentDidMount() {
     this.setState({
-      selectedPortfolio: Portfolios[0]._id
+      selectedPortfolio: Portfolios[0]
     });
   }
 
@@ -40,7 +40,7 @@ export class App extends React.Component<{}, AppState> {
     return (
       <MUI.Container>
         <MUI.Grid container spacing={3}>
-          <MUI.Tabs value={selectedPortfolio} onChange={this.onSelectPortfolio}>
+          <MUI.Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
             {portfolios.map((portfolio, i) => (
               <MUI.Tab key={i} label={portfolio.name} value={portfolio._id} />
             ))}
@@ -49,7 +49,7 @@ export class App extends React.Component<{}, AppState> {
             <MUI.Box>
               <MUI.Grid item xs={12}>
                 <MUI.Typography variant='h4'>
-                  Holdings
+                  Holdings for {selectedPortfolio.name}
                 </MUI.Typography>
               </MUI.Grid>
               <MUI.Grid item xs={12}>
@@ -59,15 +59,15 @@ export class App extends React.Component<{}, AppState> {
               </MUI.Grid>
             </MUI.Box>
           </MUI.Grid>
-
         </MUI.Grid>
       </MUI.Container>
     );
   }
 
   private onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
+    const portfolio = this.state.portfolios.find((p) => p._id === value);
     this.setState({
-      selectedPortfolio: value
+      selectedPortfolio: portfolio
     });
   }
 }
