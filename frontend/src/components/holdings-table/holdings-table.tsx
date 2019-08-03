@@ -1,35 +1,23 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
-import { Holding } from './holding';
+import { Holding } from '../../types/holding';
 
 export interface HoldingsTableProps {
   holdings?: Holding[];
 }
 
-type TableHeaders<T> = {
-  [key in keyof Partial<T>]: {
-    key,
+type TableHeaders<T> = Array<{
+    key: keyof Partial<T>,
     label: string;
-  }
-};
+  }>;
 
 export class HoldingsTable extends React.Component<HoldingsTableProps> {
 
-  private tableHeaders: TableHeaders<Holding> = {
-    avgCost: { key: 'avgCost', label: 'Avg. Cost' },
-    quantity: { key: 'quantity', label: 'Quantity' },
-    symbol: { key: 'symbol', label: 'Symbol' },
-  };
-
-  private get tableRows() {
-    return this.props.holdings ? this.props.holdings.map(
-      (h) => {
-        return {
-
-        };
-      }
-    ) : [];
-  }
+  private tableHeaders: TableHeaders<Holding> = [
+    { key: 'symbol', label: 'Symbol' },
+    { key: 'quantity', label: 'Quantity' },
+    { key: 'avgCost', label: 'Avg. Cost' },
+  ];
 
   public render() {
     const {
@@ -39,16 +27,16 @@ export class HoldingsTable extends React.Component<HoldingsTableProps> {
       <MUI.Table size='small'>
         <MUI.TableHead>
           <MUI.TableRow>
-            {Object.keys(this.tableHeaders).map((key, i) => (
-              <MUI.TableCell key={i}>{this.tableHeaders[key].label}</MUI.TableCell>
+            {this.tableHeaders.map(({label}, i) => (
+              <MUI.TableCell key={i}>{label}</MUI.TableCell>
             ))}
           </MUI.TableRow>
         </MUI.TableHead>
         <MUI.TableBody>
           {holdings.map((holding, j) => (
             <MUI.TableRow key={j}>
-              {Object.keys(this.tableHeaders).map((key, i) => (
-                <MUI.TableCell key={i}>{holding[key]}</MUI.TableCell>
+              {this.tableHeaders.map(({key}) => (
+                <MUI.TableCell key={key}>{holding[key]}</MUI.TableCell>
               ))}
             </MUI.TableRow>
           ))}
