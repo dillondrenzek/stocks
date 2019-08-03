@@ -64,9 +64,19 @@ export class App extends React.Component<{}, AppState> {
     );
   }
 
-  private onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
+  private getHoldings = async () => {
+    return await [
+      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'TEST' },
+      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'V' },
+      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'MRNA' },
+    ];
+  }
+
+  private onSelectPortfolio = async (ev: React.ChangeEvent, value: string) => {
+    const holdings = await this.getHoldings();
     const portfolio = this.state.portfolios.find((p) => p._id === value);
     this.setState({
+      holdings,
       selectedPortfolio: portfolio
     });
   }
