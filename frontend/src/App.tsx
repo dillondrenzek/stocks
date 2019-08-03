@@ -1,4 +1,5 @@
 import * as MUI from '@material-ui/core';
+import axios from 'axios';
 import React from 'react';
 import './App.scss';
 
@@ -7,10 +8,6 @@ import { PortfoliosTable } from './components/portfolios-table/portfolios-table'
 
 import { Holding } from './types/holding';
 import { Portfolio } from './types/portfolio';
-
-import Holdings from './spec/get-holdings.json';
-import Portfolios from './spec/get-portfolios.json';
-import Quotes from './spec/get-quotes.json';
 
 export interface AppState {
   holdings?: Holding[];
@@ -23,61 +20,79 @@ export class App extends React.Component<{}, AppState> {
   constructor(props) {
     super(props);
     this.state = {
-      holdings: Holdings,
-      portfolios: Portfolios,
-      selectedPortfolio: Portfolios[0]
+      holdings: [],
+      portfolios: [],
+      selectedPortfolio: null
     };
   }
 
   public componentDidMount() {
-    this.setState({
-      selectedPortfolio: Portfolios[0]
-    });
+    this.loadPortfolios();
   }
 
   public render() {
     const { holdings, portfolios, selectedPortfolio } = this.state;
     return (
-      <MUI.Container>
-        <MUI.Grid container spacing={3}>
-          <MUI.Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
-            {portfolios.map((portfolio, i) => (
-              <MUI.Tab key={i} label={portfolio.name} value={portfolio._id} />
-            ))}
-          </MUI.Tabs>
-          <MUI.Grid item xs={12}>
-            <MUI.Box>
-              <MUI.Grid item xs={12}>
-                <MUI.Typography variant='h4'>
-                  Holdings for {selectedPortfolio.name}
-                </MUI.Typography>
-              </MUI.Grid>
-              <MUI.Grid item xs={12}>
-                <HoldingsTable
-                  holdings={holdings}
-                />
-              </MUI.Grid>
-            </MUI.Box>
+      portfolios.length ? (
+        <MUI.Container>
+          <MUI.Grid container spacing={3}>
+            <MUI.Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
+              {portfolios.map((portfolio, i) => (
+                <MUI.Tab key={i} label={portfolio.name} value={portfolio._id} />
+              ))}
+            </MUI.Tabs>
+            <MUI.Grid item xs={12}>
+              <MUI.Box>
+                <MUI.Grid item xs={12}>
+                  <MUI.Typography variant='h4'>
+                    Holdings for {selectedPortfolio.name}
+                  </MUI.Typography>
+                </MUI.Grid>
+                <MUI.Grid item xs={12}>
+                  <HoldingsTable
+                    holdings={holdings}
+                  />
+                </MUI.Grid>
+              </MUI.Box>
+            </MUI.Grid>
           </MUI.Grid>
-        </MUI.Grid>
-      </MUI.Container>
+        </MUI.Container>
+      ) : null
     );
   }
 
-  private getHoldings = async () => {
-    return await [
-      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'TEST' },
-      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'V' },
-      { avgCost: Math.random() * 200, quantity: Math.floor(Math.random() * 10) + 1, symbol: 'MRNA' },
-    ];
+  private loadPortfolios = () => {
+    axios.get<Portfolio[]>('http://localhost:7000/api/portfolios')
+      .then((res) => {
+        this.setState({
+          portfolios: res.data,
+          selectedPortfolio: res.data[0]
+        });
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
   }
 
-  private onSelectPortfolio = async (ev: React.ChangeEvent, value: string) => {
-    const holdings = await this.getHoldings();
+  private loadHoldings = () => {
+    const id = this.state.selectedPortfolio._id;
+    axios.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
+      .then((res) => {
+        console.log('res:', res);
+        // this.setState({
+        //   portfolios: res.data,
+        //   selectedPortfolio: res.data[0]
+        // });
+      })
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  }
+
+  private onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
     const portfolio = this.state.portfolios.find((p) => p._id === value);
     this.setState({
-      holdings,
       selectedPortfolio: portfolio
-    });
+    }, this.loadHoldings);
   }
 }
