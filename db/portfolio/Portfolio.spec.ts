@@ -2,22 +2,33 @@ import chai, {expect} from 'chai';
 import mongoose from 'mongoose';
 import { withDb } from '../../spec/helpers/db-connect';
 import { Holding, IHoldingDocument } from '../holding/Holding';
-import { IOptionTradeDocument, IStockTradeDocument, StockTrade, OptionTrade, defaultStockTrade, defaultOptionTrade } from '../trade';
-import { IPortfolioDocument, Portfolio, defaultPortfolio } from './Portfolio';
+import {
+  defaultOptionTrade,
+  defaultStockTrade,
+  IOptionTradeDocument,
+  IStockTradeDocument,
+  OptionTrade,
+  StockTrade,
+} from '../trade';
+import {
+  defaultPortfolio,
+  IPortfolioDocument,
+  Portfolio,
+} from './Portfolio';
 
 describe('Portfolio', withDb(() => {
   let portfolio: IPortfolioDocument;
 
   describe('adds a Holding', () => {
-    let precount: number,
-      postcount: number,
-      holding: IHoldingDocument;
+    let precount: number;
+    let postcount: number;
+    let holding: IHoldingDocument;
 
     beforeEach(async () => {
       // create test portfolio
       portfolio = await Portfolio.create({
-        name: 'Test Portfolio',
         holdingIds: [],
+        name: 'Test Portfolio',
         tradeIds: []
       });
       // create test holding
@@ -42,16 +53,16 @@ describe('Portfolio', withDb(() => {
   });
 
   describe('adds a StockTrade', () => {
-    let precount: number,
-      postcount: number,
-      trade: IStockTradeDocument;
+    let precount: number;
+    let postcount: number;
+    let trade: IStockTradeDocument;
 
     beforeEach(async () => {
       // create test portfolio
       portfolio = await Portfolio.create(defaultPortfolio());
       // create test trade
       trade = await StockTrade.create(defaultStockTrade());
-      
+
       precount = portfolio.stockTrades.length;
       // perform test
       await portfolio.addTrade(trade);
