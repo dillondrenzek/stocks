@@ -75,6 +75,23 @@ describe('Portfolio', withDb(() => {
     });
   });
 
+  describe('gets all StockTrades', () => {
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.create(defaultPortfolio());
+      // create test trades
+      await portfolio.addTrade(await StockTrade.create(defaultStockTrade()));
+      await portfolio.addTrade(await StockTrade.create(defaultStockTrade()));
+      await portfolio.addTrade(await StockTrade.create(defaultStockTrade()));
+    });
+
+    it('returns the appropriate number of StockTrades', async () => {
+      const result = await portfolio.getAllStockTrades();
+      expect(result.length).to.eq(3);
+    });
+  });
+
   describe('adds a OptionTrade', () => {
     let precount: number,
       postcount: number,
@@ -83,7 +100,7 @@ describe('Portfolio', withDb(() => {
     beforeEach(async () => {
       // create test portfolio
       portfolio = await Portfolio.create(defaultPortfolio());
-      // create test holding
+      // create test trades
       trade = await OptionTrade.create(defaultOptionTrade());
       
       precount = portfolio.optionTrades.length;
@@ -95,6 +112,23 @@ describe('Portfolio', withDb(() => {
 
     it('increases the length of the trades array', () => {
       expect(postcount).to.eq(precount + 1);
+    });
+  });
+
+  describe('gets all OptionTrades', () => {
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.create(defaultPortfolio());
+      // create test trades
+      await portfolio.addTrade(await OptionTrade.create(defaultOptionTrade()));
+      await portfolio.addTrade(await OptionTrade.create(defaultOptionTrade()));
+      await portfolio.addTrade(await OptionTrade.create(defaultOptionTrade()));
+    });
+
+    it('returns the appropriate number of OptionTrades', async () => {
+      const result = await portfolio.getAllOptionTrades();
+      expect(result.length).to.eq(3);
     });
   });
 

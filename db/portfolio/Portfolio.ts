@@ -11,6 +11,8 @@ export interface IPortfolio {
   stockTrades: Array<IStockTradeDocument['_id']>;
   addTrade?: (doc: ITradeDocument) => void;
   addHolding?: (doc: IHoldingDocument) => void;
+  getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
+  getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -53,6 +55,14 @@ portfolioSchema.methods.addTrade = async function(trade: ITradeDocument) {
 portfolioSchema.methods.addHolding = async function(holding: IHoldingDocument) {
   this.holdingIds.push(holding.id);
   await this.save();
+};
+
+portfolioSchema.methods.getAllStockTrades = async function() {
+  return await [];
+};
+
+portfolioSchema.methods.getAllOptionTrades = async function () {
+  return await [];
 };
 
 // Export Model
