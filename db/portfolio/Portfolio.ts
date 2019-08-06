@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { IHoldingDocument } from '../holding/Holding';
-import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument } from '../trade';
+import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade } from '../trade';
 
 // Interface
 
@@ -58,11 +58,17 @@ portfolioSchema.methods.addHolding = async function(holding: IHoldingDocument) {
 };
 
 portfolioSchema.methods.getAllStockTrades = async function() {
-  return await [];
+  const trades: IStockTradeDocument[] = await StockTrade.find({
+    _id: { $in: this.stockTrades }
+  });
+  return trades;
 };
 
 portfolioSchema.methods.getAllOptionTrades = async function () {
-  return await [];
+  const trades: IOptionTradeDocument[] = await OptionTrade.find({
+    _id: { $in: this.optionTrades }
+  });
+  return trades;
 };
 
 // Export Model
