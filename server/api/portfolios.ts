@@ -10,6 +10,8 @@ router.get('/',             getPortfolios);
 router.post('/',            createPortfolio);
 router.delete('/:id',       deletePortfolioById);
 router.get('/:id/holdings', getPortfolioHoldings);
+router.get('/:id/trades/stock', getStockTradesForPortfolio);
+router.post('/:id/trades',  addTradeToPortfolio);
 
 // API Methods
 
@@ -51,6 +53,30 @@ export async function getPortfolioHoldings(req: Request, res: Response) {
     res.json(holdings);
   } catch (e) {
     res.status(500).send('Error getting holdings for portfolio: ' + e);
+  }
+}
+
+// Add a Trade to Portfolio
+export async function addTradeToPortfolio(req: Request, res: Response) {
+  const { id } = req.params;
+  const body = req.body;
+  try {
+    const portfolio = await controller.getPortfolioById(id);
+    const added = await controller.addTradeToPortfolio(body, portfolio);
+    res.json('Ok');
+  } catch (e) {
+    res.status(500).send('Error adding trade to portfolio: ' + e);
+  }
+}
+
+// Get Portfolio's stock trades
+export async function getStockTradesForPortfolio(req: Request, res: Response) {
+  const { id } = req.params;
+  try {
+    const trades = await controller.getStockTradesForPortfolioById(id);
+    res.json(trades);
+  } catch (e) {
+    res.status(500).send('Error adding trade to portfolio: ' + e);
   }
 }
 
