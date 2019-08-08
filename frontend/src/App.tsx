@@ -1,7 +1,8 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
+import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useEffect, useState, } from 'react';
 
 import http from './lib/http';
 
@@ -24,22 +25,92 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Layout({ portfolios, selectedPortfolio, stockTradeFormValue, stockTrades }: AppState) {
+const PortfolioAPI = {
+  addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
+    const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
+    const params = new URLSearchParams();
+    Object.keys(trade).forEach((key) => {
+      params.append(key, trade[key].toString());
+    });
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    http.post(url, params, config)
+      .then(cb)
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  getPortfolios: (cb: (portfolios: Portfolio[]) => void) => {
+    http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
+      .then((res) => cb(res.data))
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  getStockTradesForPortfolio: (id: string, cb: (trades: StockTrade[]) => void) => {
+    http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
+      .then((res) => cb(res.data))
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+};
+
+export interface AppState {
+  holdings: Holding[];
+  portfolios: Portfolio[];
+  stockTrades: StockTrade[];
+  stockTradeFormValue: StockTrade;
+  selectedPortfolio: Portfolio;
+}
+
+export default function App() {
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio>(null);
+  const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTrade>(new StockTrade());
+  const [stockTrades, setStockTrades] = useState([]);
+
   const classes = useStyles({});
+
+  // get portfolios
+  useEffect(() => {
+    if (!portfolios.length) {
+      PortfolioAPI.getPortfolios((data) => {
+        setPortfolios(data);
+        setSelectedPortfolio(data[0]);
+        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+      });
+    }
+  });
+
+  const onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
+    const portfolio = portfolios.find((p) => p._id === value);
+    setSelectedPortfolio(portfolio);
+    PortfolioAPI.getStockTradesForPortfolio(portfolio._id, setStockTrades);
+  };
+
+  const handleStockTradeFormSubmit = (value: StockTrade) => {
+    PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, () => {
+      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    });
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-
       <Container>
         <Grid container spacing={3}>
-          <Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
+          <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
             {portfolios.map((portfolio, i) => (
               <Tab key={i} label={portfolio.name} value={portfolio._id} />
             ))}
           </Tabs>
           <Grid item xs={12}>
             <StockTradeForm
-              onSubmit={this.handleStockTradeFormSubmit}
+              onSubmit={handleStockTradeFormSubmit}
               value={stockTradeFormValue}
             />
           </Grid>
@@ -48,7 +119,7 @@ export default function Layout({ portfolios, selectedPortfolio, stockTradeFormVa
               <Grid item xs={12}>
                 <Typography variant='h4'>
                   Stock Trades
-                  </Typography>
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <StockTradesTable
@@ -61,122 +132,4 @@ export default function Layout({ portfolios, selectedPortfolio, stockTradeFormVa
       </Container>
     </div>
   );
-}
-
-export interface AppState {
-  holdings: Holding[];
-  portfolios: Portfolio[];
-  stockTrades: StockTrade[];
-  stockTradeFormValue: StockTrade;
-  selectedPortfolio: Portfolio;
-}
-
-export class App extends React.Component<{}, AppState> {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      holdings: [],
-      portfolios: [],
-      selectedPortfolio: null,
-      stockTradeFormValue: new StockTrade(),
-      stockTrades: [],
-    };
-  }
-
-  public componentDidMount() {
-    this.loadPortfolios();
-  }
-
-  public render() {
-    const {
-      // holdings,
-      portfolios,
-      // selectedPortfolio,
-      // stockTrades,
-      // stockTradeFormValue
-    } = this.state;
-    return (
-      portfolios.length ? (
-        <Layout
-          {...this.state}
-        />
-      ) : null
-    );
-  }
-
-  private handleStockTradeFormSubmit = (trade: StockTrade) => {
-    const id = this.state.selectedPortfolio._id;
-    const url = 'http://localhost:7000/api/portfolios/' + id + '/trades';
-    const params = new URLSearchParams();
-    Object.keys(trade).forEach((key) => {
-      params.append(key, trade[key].toString());
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-    http.post(url, params, config)
-      .then(() => {
-        this.loadStockTrades();
-        this.resetStockTradeFormValue();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  private resetStockTradeFormValue = () => {
-    this.setState({
-      stockTradeFormValue: new StockTrade()
-    });
-  }
-
-  private loadPortfolios = () => {
-    http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
-      .then((res) => {
-        this.setState({
-          portfolios: res.data,
-          selectedPortfolio: res.data[0]
-        });
-        this.loadStockTrades();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  private loadHoldings = () => {
-    const id = this.state.selectedPortfolio._id;
-    http.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
-      .then((res) => {
-        console.log('res:', res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  private loadStockTrades = () => {
-    const id = this.state.selectedPortfolio._id;
-    http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
-      .then((res) => {
-        this.setState({
-          stockTrades: res.data
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  private onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
-    const portfolio = this.state.portfolios.find((p) => p._id === value);
-    this.setState({
-      selectedPortfolio: portfolio
-    }, () => {
-      this.loadStockTrades();
-    });
-  }
 }
