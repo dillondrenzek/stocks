@@ -23,6 +23,25 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
   },
+  title: {
+    flexGrow: 1,
+  },
+  toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  }
 }));
 
 const PortfolioAPI = {
@@ -101,35 +120,46 @@ export default function App() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Container>
-        <Grid container spacing={3}>
-          <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
-            {portfolios.map((portfolio, i) => (
-              <Tab key={i} label={portfolio.name} value={portfolio._id} />
-            ))}
-          </Tabs>
-          <Grid item xs={12}>
-            <StockTradeForm
-              onSubmit={handleStockTradeFormSubmit}
-              value={stockTradeFormValue}
-            />
+      <AppBar position='absolute' className={clsx(classes.appBar)}>
+        <Toolbar className={classes.toolbar}>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container>
+          <Grid container spacing={3}>
+            <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
+              {portfolios.map((portfolio, i) => (
+                <Tab key={i} label={portfolio.name} value={portfolio._id} />
+              ))}
+            </Tabs>
+            <Grid item xs={12}>
+              <StockTradeForm
+                onSubmit={handleStockTradeFormSubmit}
+                value={stockTradeFormValue}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
+                    Stock Trades
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <StockTradesTable
+                    trades={stockTrades}
+                  />
+                </Grid>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Box>
-              <Grid item xs={12}>
-                <Typography variant='h4'>
-                  Stock Trades
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <StockTradesTable
-                  trades={stockTrades}
-                />
-              </Grid>
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+
+      </main>
     </div>
   );
 }
