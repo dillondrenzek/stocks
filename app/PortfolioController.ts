@@ -1,5 +1,5 @@
 import * as DB from '../db';
-import { Holding, Portfolio, Trade } from './types';
+import { Holding, Portfolio, Trade, OptionTrade, StockTrade } from './types';
 
 export class PortfolioController {
 
@@ -33,13 +33,37 @@ export class PortfolioController {
 
   // addTradeToPortfolio?
   public async addTradeToPortfolio(trade: Trade, portfolio: Portfolio) {
-    // // save trade
-    // const trade = await DB.Trade.create({
+
+    // save trade
+    let newTrade: DB.ITradeDocument;
+
+    try {
+      switch (trade.type) {
+        case 'stock':
+          newTrade = await DB.StockTrade.create(trade);
+          portfolio.stockTrades.push(newTrade._id);
+          portfolio.save();
+          break;
+        case 'option':
+          newTrade = await DB.OptionTrade.create(trade);
+          portfolio.optionTrades.push(newTrade._id);
+          portfolio.save();
+          break;
+        default:
+          break;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    // save trade
+    // const newTrade = await DB.Trade.create({
     //     quantity,
     //     price,
     //     side,
     //     symbol,
     // });
+
     // // get Holding by symbols
     // const holding = await DB.Holding.findBySymbol(symbol);
 
@@ -53,18 +77,22 @@ export class PortfolioController {
     // }
   }
 
+  public async getStockTradesForPortfolioById(id: string): Promise<StockTrade[]> {
+    const portfolio = await DB.Portfolio.findById(id);
+    const trades = await portfolio.getAllStockTrades();
+    return trades;
+  }
+
+  public async getOptionTradesForPortfolioById(id: string): Promise<OptionTrade[]> {
+    const portfolio = await DB.Portfolio.findById(id);
+    const trades = await portfolio.getAllOptionTrades();
+    return trades;
+  }
+
   public async getHoldingsForPortfolio(portfolio: Portfolio): Promise<Holding[]> {
     const holdings = await DB.Holding.find({ _id: { $in: portfolio.holdingIds }});
     return holdings;
   }
-
-  // public async createHolding({ cost, symbol, quantity, }: Partial<Holding>) {
-  //   return await DB.Holding.create({
-  //     cost,
-  //     quantity,
-  //     symbol,
-  //   });
-  // }
 
   public async getHoldingBySymbol(symbol: string) {
     const holding = await DB.Holding.findBySymbol(symbol);
@@ -75,13 +103,5 @@ export class PortfolioController {
     const holdings = await DB.Holding.find();
     return holdings;
   }
-
-  // public async addTradeToHolding(trade: any, holding: any) {
-
-  // }
-
-  // public async getTradesForHolding() {
-
-  // }
 
 }
