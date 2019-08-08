@@ -1,9 +1,11 @@
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import React from 'react';
-import './App.scss';
 
 import http from './lib/http';
 
-import { Box, Container, Grid, Tab, Tabs, Typography } from './components/shared';
+import { AppBar, Box, Container, Grid, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
@@ -13,6 +15,53 @@ import { StockTradesTable } from './components/trades-table/stock-trades-table';
 import { Holding } from './types/holding';
 import { Portfolio } from './types/portfolio';
 import { StockTrade } from './types/trade';
+
+import './App.scss';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex'
+  },
+}));
+
+export default function Layout({ portfolios, selectedPortfolio, stockTradeFormValue, stockTrades }: AppState) {
+  const classes = useStyles({});
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+
+      <Container>
+        <Grid container spacing={3}>
+          <Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
+            {portfolios.map((portfolio, i) => (
+              <Tab key={i} label={portfolio.name} value={portfolio._id} />
+            ))}
+          </Tabs>
+          <Grid item xs={12}>
+            <StockTradeForm
+              onSubmit={this.handleStockTradeFormSubmit}
+              value={stockTradeFormValue}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Box>
+              <Grid item xs={12}>
+                <Typography variant='h4'>
+                  Stock Trades
+                  </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <StockTradesTable
+                  trades={stockTrades}
+                />
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </div>
+  );
+}
 
 export interface AppState {
   holdings: Holding[];
@@ -40,58 +89,18 @@ export class App extends React.Component<{}, AppState> {
   }
 
   public render() {
-    const { 
-      holdings, 
-      portfolios, 
-      selectedPortfolio, 
-      stockTrades,
-      stockTradeFormValue
+    const {
+      // holdings,
+      portfolios,
+      // selectedPortfolio,
+      // stockTrades,
+      // stockTradeFormValue
     } = this.state;
     return (
       portfolios.length ? (
-        <Container>
-          <Grid container spacing={3}>
-            <Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
-              {portfolios.map((portfolio, i) => (
-                <Tab key={i} label={portfolio.name} value={portfolio._id} />
-              ))}
-            </Tabs>
-            {/* <Grid item xs={12}>
-              <Box>
-                <Grid item xs={12}>
-                  <Typography variant='h4'>
-                    Holdings for {selectedPortfolio.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <HoldingsTable
-                    holdings={holdings}
-                  />
-                </Grid>
-              </Box>
-            </Grid> */}
-            <Grid item xs={12}>
-              <StockTradeForm
-                onSubmit={this.handleStockTradeFormSubmit}
-                value={stockTradeFormValue}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Box>
-                <Grid item xs={12}>
-                  <Typography variant='h4'>
-                    Stock Trades
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <StockTradesTable
-                    trades={stockTrades}
-                  />
-                </Grid>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
+        <Layout
+          {...this.state}
+        />
       ) : null
     );
   }
@@ -142,7 +151,8 @@ export class App extends React.Component<{}, AppState> {
     const id = this.state.selectedPortfolio._id;
     http.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
       .then((res) => {
-        console.log('res:', res);})
+        console.log('res:', res);
+      })
       .catch((err) => {
         console.error(err);
       });

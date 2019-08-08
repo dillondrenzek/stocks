@@ -1,5 +1,6 @@
 import * as Mui from '@material-ui/core';
 
+export const AppBar = Mui.AppBar;
 export const Box = Mui.Box;
 export const Button = Mui.Button;
 export const Container = Mui.Container;
@@ -12,4 +13,5 @@ export const TableRow = Mui.TableRow;
 export const Tab = Mui.Tab;
 export const Tabs = Mui.Tabs;
 export const TextField = Mui.TextField;
+export const Toolbar = Mui.Toolbar;
 export const Typography = Mui.Typography;
