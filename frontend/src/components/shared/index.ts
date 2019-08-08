@@ -5,6 +5,7 @@ export const Box = Mui.Box;
 export const Button = Mui.Button;
 export const Container = Mui.Container;
 export const Grid = Mui.Grid;
+export const Paper = Mui.Paper;
 export const Table = Mui.Table;
 export const TableBody = Mui.TableBody;
 export const TableCell = Mui.TableCell;

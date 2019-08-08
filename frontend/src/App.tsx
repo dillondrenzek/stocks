@@ -6,7 +6,7 @@ import React, { useEffect, useState, } from 'react';
 
 import http from './lib/http';
 
-import { AppBar, Box, Container, Grid, Tab, Tabs, Toolbar, Typography } from './components/shared';
+import { AppBar, Box, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
@@ -41,7 +41,14 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
-  }
+  },
+  paper: {
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(3),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
 }));
 
 const PortfolioAPI = {
@@ -130,20 +137,22 @@ export default function App() {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container>
-          <Grid container spacing={3}>
+          <Grid container>
             <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
               {portfolios.map((portfolio, i) => (
                 <Tab key={i} label={portfolio.name} value={portfolio._id} />
               ))}
             </Tabs>
             <Grid item xs={12}>
-              <StockTradeForm
-                onSubmit={handleStockTradeFormSubmit}
-                value={stockTradeFormValue}
-              />
+              <Paper className={classes.paper}>
+                <StockTradeForm
+                  onSubmit={handleStockTradeFormSubmit}
+                  value={stockTradeFormValue}
+                />
+              </Paper>
             </Grid>
             <Grid item xs={12}>
-              <Box>
+              <Paper className={classes.paper}>
                 <Grid item xs={12}>
                   <Typography variant='h4'>
                     Stock Trades
@@ -154,11 +163,10 @@ export default function App() {
                     trades={stockTrades}
                   />
                 </Grid>
-              </Box>
+              </Paper>
             </Grid>
           </Grid>
         </Container>
-
       </main>
     </div>
   );
