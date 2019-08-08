@@ -1,6 +1,6 @@
-import * as MUI from '@material-ui/core';
 import React from 'react';
 import { StockTrade } from '../../types/trade';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
 
 export interface StockTradesTableProps {
   trades?: StockTrade[];
@@ -25,24 +25,24 @@ export class StockTradesTable extends React.Component<StockTradesTableProps> {
       trades
     } = this.props;
     return (
-      <MUI.Table size='small'>
-        <MUI.TableHead>
-          <MUI.TableRow>
+      <Table size='small'>
+        <TableHead>
+          <TableRow>
             {this.tableHeaders.map(({label}, i) => (
-              <MUI.TableCell key={i}>{label}</MUI.TableCell>
+              <TableCell key={i}>{label}</TableCell>
             ))}
-          </MUI.TableRow>
-        </MUI.TableHead>
-        <MUI.TableBody>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {trades.map((trade, j) => (
-            <MUI.TableRow key={j}>
+            <TableRow key={j}>
               {this.tableHeaders.map(({key}) => (
-                <MUI.TableCell key={key}>{trade[key]}</MUI.TableCell>
+                <TableCell key={key}>{trade[key]}</TableCell>
               ))}
-            </MUI.TableRow>
+            </TableRow>
           ))}
-        </MUI.TableBody>
-      </MUI.Table>
+        </TableBody>
+      </Table>
     );
   }
 }

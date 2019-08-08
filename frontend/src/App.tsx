@@ -1,13 +1,14 @@
-import * as MUI from '@material-ui/core';
 import React from 'react';
 import './App.scss';
 
 import http from './lib/http';
 
-import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
-import { StockTradesTable } from './components/trades-table/stock-trades-table';
+import { Box, Container, Grid, Tab, Tabs, Typography } from './components/shared';
+
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
+import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
+import { StockTradesTable } from './components/trades-table/stock-trades-table';
 
 import { Holding } from './types/holding';
 import { Portfolio } from './types/portfolio';
@@ -28,9 +29,9 @@ export class App extends React.Component<{}, AppState> {
     this.state = {
       holdings: [],
       portfolios: [],
-      stockTrades: [],
+      selectedPortfolio: null,
       stockTradeFormValue: new StockTrade(),
-      selectedPortfolio: null
+      stockTrades: [],
     };
   }
 
@@ -48,49 +49,49 @@ export class App extends React.Component<{}, AppState> {
     } = this.state;
     return (
       portfolios.length ? (
-        <MUI.Container>
-          <MUI.Grid container spacing={3}>
-            <MUI.Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
+        <Container>
+          <Grid container spacing={3}>
+            <Tabs value={selectedPortfolio._id} onChange={this.onSelectPortfolio}>
               {portfolios.map((portfolio, i) => (
-                <MUI.Tab key={i} label={portfolio.name} value={portfolio._id} />
+                <Tab key={i} label={portfolio.name} value={portfolio._id} />
               ))}
-            </MUI.Tabs>
-            {/* <MUI.Grid item xs={12}>
-              <MUI.Box>
-                <MUI.Grid item xs={12}>
-                  <MUI.Typography variant='h4'>
+            </Tabs>
+            {/* <Grid item xs={12}>
+              <Box>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
                     Holdings for {selectedPortfolio.name}
-                  </MUI.Typography>
-                </MUI.Grid>
-                <MUI.Grid item xs={12}>
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
                   <HoldingsTable
                     holdings={holdings}
                   />
-                </MUI.Grid>
-              </MUI.Box>
-            </MUI.Grid> */}
-            <MUI.Grid item xs={12}>
+                </Grid>
+              </Box>
+            </Grid> */}
+            <Grid item xs={12}>
               <StockTradeForm
                 onSubmit={this.handleStockTradeFormSubmit}
                 value={stockTradeFormValue}
               />
-            </MUI.Grid>
-            <MUI.Grid item xs={12}>
-              <MUI.Box>
-                <MUI.Grid item xs={12}>
-                  <MUI.Typography variant='h4'>
+            </Grid>
+            <Grid item xs={12}>
+              <Box>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
                     Stock Trades
-                  </MUI.Typography>
-                </MUI.Grid>
-                <MUI.Grid item xs={12}>
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
                   <StockTradesTable
                     trades={stockTrades}
                   />
-                </MUI.Grid>
-              </MUI.Box>
-            </MUI.Grid>
-          </MUI.Grid>
-        </MUI.Container>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
       ) : null
     );
   }
@@ -109,11 +110,18 @@ export class App extends React.Component<{}, AppState> {
     };
     http.post(url, params, config)
       .then(() => {
-        this.loadStockTrades()
+        this.loadStockTrades();
+        this.resetStockTradeFormValue();
       })
       .catch((err) => {
         console.error(err);
       });
+  }
+
+  private resetStockTradeFormValue = () => {
+    this.setState({
+      stockTradeFormValue: new StockTrade()
+    });
   }
 
   private loadPortfolios = () => {

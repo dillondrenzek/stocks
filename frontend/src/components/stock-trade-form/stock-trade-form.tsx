@@ -1,6 +1,11 @@
+import { spacing } from '@material-ui/system';
 import React from 'react';
-import * as MUI from '@material-ui/core';
 import { StockTrade } from '../../types/trade';
+import { Button, Grid, TextField } from '../shared';
+
+const theme = {
+  spacing: 8
+};
 
 export interface StockTradeFormProps {
   onSubmit: (value: StockTrade) => void;
@@ -18,53 +23,55 @@ export class StockTradeForm extends React.Component<StockTradeFormProps, StockTr
 
     this.state = {
       value: new StockTrade({ side: 'buy' })
-    }
-  }
-
-  public componentDidMount() {
-
+    };
   }
 
   public render() {
     const {value} = this.state;
     return (
       <form onSubmit={this.handleSubmit}>
-        {/* <MUI.TextField label={'Date'} name='date' value={value}/> */}
-        <MUI.TextField 
-          label={'Symbol'} 
-          name='symbol' 
-          onChange={this.onFieldChange('symbol')}
-          value={value.symbol}
-        />
-        <MUI.TextField 
-          label={'Quantity'} 
-          name='quantity' 
-          onChange={this.onFieldChange('quantity')}
-          value={value.quantity}
-        />
-        <MUI.TextField 
-          label={'Price'} 
-          name='price'
-          onChange={this.onFieldChange('price')}
-          value={value.price}
-        />
-        <MUI.FormControl>
-          <MUI.InputLabel htmlFor='stock-trade-form-side'>Side</MUI.InputLabel>
-          <MUI.Select 
-            input={<MUI.Input name='side' id='stock-trade-form-side' />} 
-            onChange={this.onFieldChange('side')}
-            value={value.side}
-          >
-            <MUI.MenuItem value='buy'>Buy</MUI.MenuItem>
-            <MUI.MenuItem value='sell'>Sell</MUI.MenuItem>
-          </MUI.Select>
-        </MUI.FormControl>
-        <MUI.Button 
-          type='submit' 
-          variant='contained'
-        >
-          Save
-        </MUI.Button>
+        <Grid container direction={'row'} spacing={2}>
+          <Grid item>
+            <TextField
+              label={'Symbol'}
+              name='symbol'
+              onChange={this.onFieldChange('symbol')}
+              value={value.symbol}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              label={'Quantity'}
+              name='quantity'
+              onChange={this.onFieldChange('quantity')}
+              value={value.quantity}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              label={'Price'}
+              name='price'
+              onChange={this.onFieldChange('price')}
+              value={value.price}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              label={'Side'}
+              name='side'
+              onChange={this.onFieldChange('side')}
+              value={value.side}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              type='submit'
+              variant='contained'
+            >
+              Save
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     );
   }
