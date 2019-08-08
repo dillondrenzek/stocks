@@ -131,6 +131,7 @@ export class App extends React.Component<{}, AppState> {
           portfolios: res.data,
           selectedPortfolio: res.data[0]
         });
+        this.loadStockTrades();
       })
       .catch((err) => {
         console.error(err);
@@ -141,12 +142,7 @@ export class App extends React.Component<{}, AppState> {
     const id = this.state.selectedPortfolio._id;
     http.get<Holding[]>('http://localhost:7000/api/portfolios/' + id + '/holdings')
       .then((res) => {
-        console.log('res:', res);
-        // this.setState({
-        //   portfolios: res.data,
-        //   selectedPortfolio: res.data[0]
-        // });
-      })
+        console.log('res:', res);})
       .catch((err) => {
         console.error(err);
       });
@@ -156,7 +152,6 @@ export class App extends React.Component<{}, AppState> {
     const id = this.state.selectedPortfolio._id;
     http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
       .then((res) => {
-        console.log('res:', res);
         this.setState({
           stockTrades: res.data
         });
@@ -171,7 +166,6 @@ export class App extends React.Component<{}, AppState> {
     this.setState({
       selectedPortfolio: portfolio
     }, () => {
-      // this.loadHoldings();
       this.loadStockTrades();
     });
   }
