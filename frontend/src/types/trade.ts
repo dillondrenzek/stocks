@@ -1,4 +1,5 @@
 export interface Trade {
+  _id?: string;
   price: number;
   quantity: number;
   side: 'buy' | 'sell';

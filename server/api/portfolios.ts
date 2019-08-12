@@ -11,8 +11,8 @@ router.post('/',            createPortfolio);
 router.delete('/:id',       deletePortfolioById);
 router.get('/:id/holdings', getPortfolioHoldings);
 router.get('/:id/trades/stock', getStockTradesForPortfolio);
+router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
 router.post('/:id/trades',  addTradeToPortfolio);
-router.delete(':portfolioId/trades/:tradeId', deleteStockTradeForPortfolio);
 
 // API Methods
 

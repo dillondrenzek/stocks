@@ -83,6 +83,13 @@ const PortfolioAPI = {
         console.error(err);
       });
   },
+  deleteStockTradeFromPortfolio: (stockTradeId: string, portfolioId: string, cb: () => void) => {
+    http.post('http://localhost:7000/api/portfolios/' + portfolioId + '/trades/' + stockTradeId + '/delete')
+      .then((res) => cb())
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 };
 
 export interface AppState {
@@ -124,6 +131,12 @@ export default function App() {
     });
   };
 
+  const onDeleteStockTrade = (trade: StockTrade) => {
+    PortfolioAPI.deleteStockTradeFromPortfolio(trade._id, selectedPortfolio._id, () => {
+      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    });
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -161,6 +174,7 @@ export default function App() {
                 <Grid item xs={12}>
                   <StockTradesTable
                     trades={stockTrades}
+                    onClickDelete={onDeleteStockTrade}
                   />
                 </Grid>
               </Paper>
