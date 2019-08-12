@@ -9,6 +9,7 @@ import {
   IStockTradeDocument,
   OptionTrade,
   StockTrade,
+  IStockTrade,
 } from '../trade';
 import {
   defaultPortfolio,
@@ -132,4 +133,65 @@ describe('Portfolio', withDb(() => {
     });
   });
 
+  describe('deletes a StockTrade', () => {
+    let trade: IStockTradeDocument;
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.create(defaultPortfolio());
+      // create test trade
+      const _trade: IStockTrade = Object.assign({}, defaultStockTrade(), {
+        type: 'stock'
+      });
+      trade = await StockTrade.create(defaultStockTrade());
+      // add test trade to portfolio
+      await portfolio.addTrade(trade);
+    });
+
+    it('removes the trade from the trades array', async () => {
+      // delete stock trade
+      await portfolio.deleteTrade(trade);
+      portfolio = await Portfolio.findById(portfolio.id);
+      expect(portfolio.stockTrades).not.to.contain(trade.id);
+    });
+
+    it('deletes the StockTrade', async () => {
+      // delete Stock trade
+      await portfolio.deleteTrade(trade);
+      // expect not to find trade's id
+      const findTrade = await StockTrade.findById(trade.id);
+      expect(findTrade).not.to.exist;
+    });
+  });
+
+  describe('deletes a OptionTrade', () => {
+    let trade: IOptionTradeDocument;
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.create(defaultPortfolio());
+      // create test trade
+      trade = await OptionTrade.create(defaultOptionTrade());
+    });
+
+    it('removes the trade from the trades array', async () => {
+      // add test trade to portfolio
+      await portfolio.addTrade(trade);
+      expect(portfolio.optionTrades).to.contain(trade.id);
+      // delete option trade
+      await portfolio.deleteTrade(trade);
+      portfolio = await Portfolio.findById(portfolio.id);
+      expect(portfolio.optionTrades).not.to.contain(trade.id);
+    });
+
+    it('deletes the OptionTrade', async () => {
+      // add test trade to portfolio
+      await portfolio.addTrade(trade);
+      // delete option trade
+      await portfolio.deleteTrade(trade);
+      // expect not to find trade's id
+      const findTrade = await OptionTrade.findById(trade._id);
+      expect(findTrade).not.to.exist;
+    });
+  });
 }));
