@@ -23,10 +23,9 @@ export function StockTradesTable(props: StockTradesTableProps) {
     { key: 'price', label: 'Price', align: 'right' },
   ];
 
-  const { trades } = props;
+  const { onClickDelete, trades } = props;
 
   const handleStockTradeDelete = (trade: StockTrade) => (ev: React.MouseEvent) => {
-    const { onClickDelete } = this.props;
     if (typeof onClickDelete === 'function') {
       onClickDelete(trade);
     }

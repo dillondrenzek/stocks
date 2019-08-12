@@ -33,7 +33,7 @@ export const PortfolioAPI = {
   },
 
   deleteTradeFromPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
-    http.delete('http://localhost:7000/api/portfolios' + portfolioId + '/trade')
+    http.post('http://localhost:7000/api/portfolios/' + portfolioId + '/trades/' + trade._id + '/delete')
       .then(() => cb())
       .catch(console.error);
   }

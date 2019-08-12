@@ -101,7 +101,7 @@ export default function App() {
   };
 
   const onDeleteStockTrade = (trade: StockTrade) => {
-    PortfolioAPI.deleteStockTradeFromPortfolio(trade._id, selectedPortfolio._id, () => {
+    PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
       PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
     });
   };
