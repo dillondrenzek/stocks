@@ -9,6 +9,7 @@ import { PortfolioAPI } from './api/portfolio-api';
 import { AppBar, Box, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
+import { PortfolioForm } from './components/portfolio-form/portfolio-form';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
 import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
 import { StockTradesTable } from './components/trades-table/stock-trades-table';
@@ -60,6 +61,7 @@ export interface AppState {
 
 export default function App() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [portfolioFormValue, setPortfolioFormValue] = useState<Portfolio>(new Portfolio());
   const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio>(null);
   const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTrade>(new StockTrade());
   const [stockTrades, setStockTrades] = useState([]);
@@ -99,6 +101,15 @@ export default function App() {
     });
   };
 
+  const handlePortfolioFormSubmit = (value: Portfolio) => {
+    PortfolioAPI.createPortfolio(value, () => {
+      PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
+        setPortfolios(_portfolios);
+        setPortfolioFormValue(new Portfolio());
+      });
+    });
+  };
+
   const onDeleteStockTrade = (trade: StockTrade) => {
     PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
       PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
@@ -111,6 +122,19 @@ export default function App() {
       <main className={classes.content}>
         <Container>
           <Grid container>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
+                    New Portfolio
+                  </Typography>
+                </Grid>
+                <PortfolioForm
+                  onSubmit={handlePortfolioFormSubmit}
+                  value={portfolioFormValue}
+                />
+              </Paper>
+            </Grid>
             {portfolios && portfolios.length && selectedPortfolio && (
               <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
                 {portfolios.map((portfolio, i) => (
@@ -120,6 +144,11 @@ export default function App() {
             )}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
+                    New Trade
+                  </Typography>
+                </Grid>
                 <StockTradeForm
                   onSubmit={handleStockTradeFormSubmit}
                   value={stockTradeFormValue}

@@ -4,6 +4,22 @@ import { StockTrade } from '../types/trade';
 
 export const PortfolioAPI = {
 
+  createPortfolio: (portfolio: Portfolio, cb: () => void) => {
+    const url = 'http://localhost:7000/api/portfolios';
+    const params = new URLSearchParams();
+    Object.keys(portfolio).forEach((key) => {
+      params.append(key, portfolio[key].toString());
+    });
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    http.post(url, params, config)
+      .then(cb)
+      .catch(console.error);
+  },
+
   addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
     const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
     const params = new URLSearchParams();
