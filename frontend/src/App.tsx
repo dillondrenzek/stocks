@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
 import React, { useEffect, useState, } from 'react';
 
-import http from './lib/http';
+import { PortfolioAPI } from './api/portfolio-api';
 
 import { AppBar, Box, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 24, // keep right padding when drawer closed
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
     }),
+    zIndex: theme.zIndex.drawer + 1,
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -50,47 +50,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
 }));
-
-const PortfolioAPI = {
-  addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
-    const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
-    const params = new URLSearchParams();
-    Object.keys(trade).forEach((key) => {
-      params.append(key, trade[key].toString());
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-    http.post(url, params, config)
-      .then(cb)
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-  getPortfolios: (cb: (portfolios: Portfolio[]) => void) => {
-    http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
-      .then((res) => cb(res.data))
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-  getStockTradesForPortfolio: (id: string, cb: (trades: StockTrade[]) => void) => {
-    http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
-      .then((res) => cb(res.data))
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-  deleteStockTradeFromPortfolio: (stockTradeId: string, portfolioId: string, cb: () => void) => {
-    http.post('http://localhost:7000/api/portfolios/' + portfolioId + '/trades/' + stockTradeId + '/delete')
-      .then((res) => cb())
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-};
 
 export interface AppState {
   holdings: Holding[];

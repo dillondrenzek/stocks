@@ -18,11 +18,10 @@ const defaultValues: StockTrade = {
   side: null,
   symbol: '',
   type: 'stock'
-}
+};
 
 export class StockTrade {
   constructor(values: Partial<StockTrade> = defaultValues) {
     return Object.assign({}, defaultValues, values);
   }
 }
-
