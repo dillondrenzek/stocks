@@ -1,48 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { PortfolioAPI } from '../../api/portfolio-api';
 import { StockTrade } from '../../types/trade';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
 
 export interface StockTradesTableProps {
+  onClickDelete?: (trade: StockTrade) => void;
   trades?: StockTrade[];
 }
 
 type TableHeaders<T> = Array<{
-    key: keyof Partial<T>,
-    label: string;
-  }>;
+  key: keyof Partial<T>,
+  label: string;
+  align?: 'right' | 'left' | 'center';
+}>;
 
-export class StockTradesTable extends React.Component<StockTradesTableProps> {
+export function StockTradesTable(props: StockTradesTableProps) {
 
-  private tableHeaders: TableHeaders<StockTrade> = [
-    { key: 'symbol', label: 'Symbol' },
-    { key: 'quantity', label: 'Quantity' },
-    { key: 'price', label: 'Price' },
+  const tableHeaders: TableHeaders<StockTrade> = [
     { key: 'side', label: 'Side' },
+    { key: 'symbol', label: 'Symbol' },
+    { key: 'quantity', label: 'Quantity', align: 'right' },
+    { key: 'price', label: 'Price', align: 'right' },
   ];
 
-  public render() {
-    const {
-      trades
-    } = this.props;
-    return (
-      <Table size='small'>
-        <TableHead>
-          <TableRow>
-            {this.tableHeaders.map(({label}, i) => (
-              <TableCell key={i}>{label}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {trades.map((trade, j) => (
-            <TableRow key={j}>
-              {this.tableHeaders.map(({key}) => (
-                <TableCell key={key}>{trade[key]}</TableCell>
-              ))}
-            </TableRow>
+  const { trades } = props;
+
+  const handleStockTradeDelete = (trade: StockTrade) => (ev: React.MouseEvent) => {
+    const { onClickDelete } = this.props;
+    if (typeof onClickDelete === 'function') {
+      onClickDelete(trade);
+    }
+  };
+
+  return (
+    <Table size='small'>
+      <TableHead>
+        <TableRow>
+          {tableHeaders.map(({ label, align }, i) => (
+            <TableCell key={i} align={align}>{label}</TableCell>
           ))}
-        </TableBody>
-      </Table>
-    );
-  }
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {trades.map((trade, j) => (
+          <TableRow key={j}>
+            {tableHeaders.map(({ key, align }) => (
+              <TableCell key={key} align={align}>{trade[key]}</TableCell>
+            ))}
+            <TableCell align='right'>
+              <Button color='secondary' onClick={handleStockTradeDelete(trade)}>Delete</Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 }

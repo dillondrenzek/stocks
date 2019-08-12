@@ -1,4 +1,5 @@
 export interface Trade {
+  _id?: string;
   price: number;
   quantity: number;
   side: 'buy' | 'sell';
@@ -17,11 +18,10 @@ const defaultValues: StockTrade = {
   side: null,
   symbol: '',
   type: 'stock'
-}
+};
 
 export class StockTrade {
   constructor(values: Partial<StockTrade> = defaultValues) {
     return Object.assign({}, defaultValues, values);
   }
 }
-
