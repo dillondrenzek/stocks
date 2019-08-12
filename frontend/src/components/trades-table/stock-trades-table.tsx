@@ -1,8 +1,9 @@
 import React from 'react';
 import { StockTrade } from '../../types/trade';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
 
 export interface StockTradesTableProps {
+  onClickDelete?: (trade: StockTrade) => void;
   trades?: StockTrade[];
 }
 
@@ -31,6 +32,7 @@ export class StockTradesTable extends React.Component<StockTradesTableProps> {
             {this.tableHeaders.map(({label}, i) => (
               <TableCell key={i}>{label}</TableCell>
             ))}
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -39,10 +41,20 @@ export class StockTradesTable extends React.Component<StockTradesTableProps> {
               {this.tableHeaders.map(({key}) => (
                 <TableCell key={key}>{trade[key]}</TableCell>
               ))}
+              <TableCell align='right'>
+                <Button color='secondary' onClick={this.handleClickDelete(trade)}>Delete</Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     );
+  }
+
+  private handleClickDelete = (trade: StockTrade) => (ev: React.MouseEvent) => {
+    const { onClickDelete } = this.props;
+    if (typeof onClickDelete === 'function') {
+      onClickDelete(trade);
+    }
   }
 }
