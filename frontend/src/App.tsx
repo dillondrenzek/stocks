@@ -140,13 +140,6 @@ export default function App() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position='absolute' className={clsx(classes.appBar)}>
-        <Toolbar className={classes.toolbar}>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container>
