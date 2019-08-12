@@ -1,5 +1,5 @@
 import * as DB from '../db';
-import { Holding, Portfolio, Trade, OptionTrade, StockTrade } from './types';
+import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from './types';
 
 export class PortfolioController {
 
@@ -87,6 +87,12 @@ export class PortfolioController {
     const portfolio = await DB.Portfolio.findById(id);
     const trades = await portfolio.getAllOptionTrades();
     return trades;
+  }
+
+  public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<void> {
+    const portfolio = await DB.Portfolio.findById(portfolioId);
+    const trade = await DB.StockTrade.findById(tradeId);
+    await portfolio.deleteTrade(trade);
   }
 
   public async getHoldingsForPortfolio(portfolio: Portfolio): Promise<Holding[]> {

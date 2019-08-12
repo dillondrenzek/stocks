@@ -67,7 +67,6 @@ export class StockTradeForm extends React.Component<StockTradeFormProps, StockTr
             <Button
               type='submit'
               variant='contained'
-              color='primary'
             >
               Save
             </Button>

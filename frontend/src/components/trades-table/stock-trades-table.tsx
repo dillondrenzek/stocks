@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { PortfolioAPI } from '../../api/portfolio-api';
 import { StockTrade } from '../../types/trade';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
-import { PortfolioAPI } from '../../api/portfolio-api';
 
 export interface StockTradesTableProps {
+  onClickDelete?: (trade: StockTrade) => void;
   trades?: StockTrade[];
 }
 
@@ -24,8 +25,11 @@ export function StockTradesTable(props: StockTradesTableProps) {
 
   const { trades } = props;
 
-  const handleStockTradeDelete = (id: string) => (ev: React.MouseEvent) => {
-    
+  const handleStockTradeDelete = (trade: StockTrade) => (ev: React.MouseEvent) => {
+    const { onClickDelete } = this.props;
+    if (typeof onClickDelete === 'function') {
+      onClickDelete(trade);
+    }
   };
 
   return (
@@ -35,7 +39,7 @@ export function StockTradesTable(props: StockTradesTableProps) {
           {tableHeaders.map(({ label, align }, i) => (
             <TableCell key={i} align={align}>{label}</TableCell>
           ))}
-          <TableCell></TableCell>
+          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
@@ -45,12 +49,11 @@ export function StockTradesTable(props: StockTradesTableProps) {
               <TableCell key={key} align={align}>{trade[key]}</TableCell>
             ))}
             <TableCell align='right'>
-              <Button color='secondary' onClick={handleStockTradeDelete(trade._id)}>Delete</Button>
+              <Button color='secondary' onClick={handleStockTradeDelete(trade)}>Delete</Button>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
-  // }
 }
