@@ -9,5 +9,5 @@ export interface OptionTrade extends Partial<DB.IOptionTradeDocument> {
 }
 
 export interface StockTrade extends Partial<DB.IStockTradeDocument> {
-  
+
 }

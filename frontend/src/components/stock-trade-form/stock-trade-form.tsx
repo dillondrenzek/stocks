@@ -84,7 +84,7 @@ export class StockTradeForm extends React.Component<StockTradeFormProps, StockTr
     this.setState({
       value: updatedFormValue
     });
-  };
+  }
 
   private handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
