@@ -12,6 +12,7 @@ router.delete('/:id',       deletePortfolioById);
 router.get('/:id/holdings', getPortfolioHoldings);
 router.get('/:id/trades/stock', getStockTradesForPortfolio);
 router.post('/:id/trades',  addTradeToPortfolio);
+router.delete(':portfolioId/trades/:tradeId', deleteStockTradeForPortfolio);
 
 // API Methods
 
@@ -77,7 +78,17 @@ export async function getStockTradesForPortfolio(req: Request, res: Response) {
     const trades = await controller.getStockTradesForPortfolioById(id);
     res.json(trades);
   } catch (e) {
-    res.status(500).send('Error adding trade to portfolio: ' + e);
+    res.status(500).send('Error getting stock trades for portfolio: ' + e);
+  }
+}
+
+export async function deleteStockTradeForPortfolio(req: Request, res: Response) {
+  const { portfolioId, tradeId } = req.params;
+  try {
+    await controller.deleteStockTradeForPortfolioById(tradeId, portfolioId);
+    res.status(200).send('Ok');
+  } catch (e) {
+    res.status(500).send('Error deleting trade to portfolio: ' + e);
   }
 }
 

@@ -89,6 +89,12 @@ export class PortfolioController {
     return trades;
   }
 
+  public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<void> {
+    const portfolio = await DB.Portfolio.findById(portfolioId);
+    const trade = await DB.StockTrade.findById(tradeId);
+    await portfolio.deleteTrade(trade);
+  }
+
   public async getHoldingsForPortfolio(portfolio: Portfolio): Promise<Holding[]> {
     const holdings = await DB.Holding.find({ _id: { $in: portfolio.holdingIds }});
     return holdings;

@@ -72,10 +72,6 @@ portfolioSchema.methods.getAllOptionTrades = async function () {
   return trades;
 };
 
-function removeTradeFromPortfolio(trade: ITradeDocument, portfolio: IPortfolio) {
-
-}
-
 portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {
   const optionTrades: string[] = this.optionTrades;
   const stockTrades: string[] = this.stockTrades;
