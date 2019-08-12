@@ -65,6 +65,16 @@ export default function App() {
   const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTrade>(new StockTrade());
   const [stockTrades, setStockTrades] = useState([]);
 
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     holdings: [],
+  //     portfolios: [],
+  //     selectedPortfolio: null,
+  //     stockTradeFormValue: new StockTrade(),
+  //     stockTrades: [],
+  //   };
+  // }
   const classes = useStyles({});
 
   // get portfolios
