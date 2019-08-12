@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     }),
     zIndex: theme.zIndex.drawer + 1,
   },
-  appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: '100vh',
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(3),
-    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
@@ -110,14 +109,15 @@ export default function App() {
     <div className={classes.root}>
       <CssBaseline />
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
         <Container>
           <Grid container>
-            <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
-              {portfolios.map((portfolio, i) => (
-                <Tab key={i} label={portfolio.name} value={portfolio._id} />
-              ))}
-            </Tabs>
+            {portfolios && portfolios.length && selectedPortfolio && (
+              <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
+                {portfolios.map((portfolio, i) => (
+                  <Tab key={i} label={portfolio.name} value={portfolio._id} />
+                ))}
+              </Tabs>
+            )}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <StockTradeForm
