@@ -3,10 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
 import React, { useEffect, useState, } from 'react';
-
-import http from './lib/http';
-
 import { AppBar, Box, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
+
+import { PortfolioAPI } from './api/portfolio-api';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
@@ -50,40 +49,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
 }));
-
-const PortfolioAPI = {
-  addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
-    const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
-    const params = new URLSearchParams();
-    Object.keys(trade).forEach((key) => {
-      params.append(key, trade[key].toString());
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-    http.post(url, params, config)
-      .then(cb)
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-  getPortfolios: (cb: (portfolios: Portfolio[]) => void) => {
-    http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
-      .then((res) => cb(res.data))
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-  getStockTradesForPortfolio: (id: string, cb: (trades: StockTrade[]) => void) => {
-    http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
-      .then((res) => cb(res.data))
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-};
 
 export interface AppState {
   holdings: Holding[];
@@ -129,9 +94,9 @@ export default function App() {
       <CssBaseline />
       <AppBar position='absolute' className={clsx(classes.appBar)}>
         <Toolbar className={classes.toolbar}>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+          {/* <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Dashboard
-          </Typography>
+          </Typography> */}
         </Toolbar>
       </AppBar>
       <main className={classes.content}>
