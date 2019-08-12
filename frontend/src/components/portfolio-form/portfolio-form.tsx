@@ -32,23 +32,24 @@ export function PortfolioForm(props: PortfolioFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container direction={'row'} spacing={2}>
-        <Grid item>
+      <Grid container direction={'row'} alignItems='center' spacing={2}>
+        {/* <Grid alignItems='center' item> */}
           <TextField
             label={'Name'}
             name='name'
             onChange={onFieldChange('name')}
             value={value.name}
           />
-        </Grid>
-        <Grid item>
+        {/* </Grid>
+        <Grid item> */}
           <Button
+            color='primary'
             type='submit'
-            variant='contained'
+            variant='text'
           >
-            Save
+            New Portfolio
           </Button>
-        </Grid>
+        {/* </Grid> */}
       </Grid>
     </form>
   );

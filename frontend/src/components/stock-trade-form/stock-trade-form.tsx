@@ -65,10 +65,11 @@ export class StockTradeForm extends React.Component<StockTradeFormProps, StockTr
           </Grid>
           <Grid item>
             <Button
+              color='primary'
               type='submit'
-              variant='contained'
+              variant='text'
             >
-              Save
+              New Stock Trade
             </Button>
           </Grid>
         </Grid>

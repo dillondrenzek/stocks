@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
+    background: '#e1e8ee'
   },
   paper: {
     padding: theme.spacing(3),
@@ -124,11 +125,11 @@ export default function App() {
           <Grid container>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Typography variant='h4'>
                     New Portfolio
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <PortfolioForm
                   onSubmit={handlePortfolioFormSubmit}
                   value={portfolioFormValue}
@@ -144,11 +145,11 @@ export default function App() {
             )}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Typography variant='h4'>
                     New Trade
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <StockTradeForm
                   onSubmit={handleStockTradeFormSubmit}
                   value={stockTradeFormValue}
