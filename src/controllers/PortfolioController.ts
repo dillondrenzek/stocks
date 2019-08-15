@@ -1,5 +1,5 @@
 import * as DB from '../db';
-import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from './types';
+import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../types';
 
 export class PortfolioController {
 

@@ -1,4 +1,4 @@
-import * as DB from '../../db';
+import * as DB from '../db';
 
 export interface Portfolio extends Partial<DB.IPortfolioDocument> {
   // holdingIds: string[];
