@@ -83,8 +83,8 @@ export default function App() {
   useEffect(() => {
     if (!portfolios.length) {
       PortfolioAPI.getPortfolios((data) => {
-        setPortfolios(data);
         setSelectedPortfolio(data[0]);
+        setPortfolios(data);
         PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
       });
     }
@@ -120,8 +120,8 @@ export default function App() {
   const onDeleteSelectedPortfolio = () => {
     PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
       PortfolioAPI.getPortfolios((data) => {
-        setPortfolios(data);
         setSelectedPortfolio(data[0]);
+        setPortfolios(data);
         PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
       });
     });
