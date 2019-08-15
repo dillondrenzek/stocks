@@ -9,6 +9,7 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc --build tsconfig.json; npm run build:copy-assets",
+    "build:ts": "tsc --build tsconfig.json",
     "build:copy-assets": "node ./copy-static-assets",
     "prebuild:test": "rm -rf dist",
     "build:test": "tsc --build tsconfig-spec.json",
@@ -21,20 +22,16 @@
     "frontend:dev": "cd frontend; npm run start",
     "start": "node ./bin/www",
     "pretest": "npm run build:test",
-    "test": "mocha"
+    "test": "mocha",
+    "watch": "npm-watch"
   },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.test.ts",
-      "**/*.spec.ts",
-      ".git",
-      "node_modules"
-    ],
-    "watch": [
-      "."
-    ],
-    "exec": "npm run build",
-    "ext": "ts"
+  "watch": {
+    "server:dev": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "ts,pug"
+    }
   },
   "author": "",
   "license": "ISC",
@@ -72,6 +69,7 @@
     "mocha": "6.1.4",
     "node-dev": "^3.1.3",
     "nodemon": "^1.19.1",
+    "npm-watch": "0.6.0",
     "sinon": "7.3.2",
     "sinon-mongoose": "2.3.0",
     "ts-node": "^8.3.0",

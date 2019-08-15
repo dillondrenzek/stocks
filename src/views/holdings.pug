@@ -11,6 +11,7 @@ block body
             .col-8
                 +table(tableColumns, data, getDeleteUrl)
             .col-4
+                h3 New Portfolio
                 form(action="/holdings", method="post")
 
                     +formGroup('Symbol', 'symbol')
