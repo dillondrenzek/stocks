@@ -8,7 +8,7 @@ const router = express();
 // Routes
 router.get('/',             getPortfolios);
 router.post('/',            createPortfolio);
-router.delete('/:id',       deletePortfolioById);
+router.post('/:id/delete',       deletePortfolioById);
 router.get('/:id/holdings', getPortfolioHoldings);
 router.get('/:id/trades/stock', getStockTradesForPortfolio);
 router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);

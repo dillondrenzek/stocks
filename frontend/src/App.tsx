@@ -6,7 +6,7 @@ import React, { useEffect, useState, } from 'react';
 
 import { PortfolioAPI } from './api/portfolio-api';
 
-import { AppBar, Box, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
+import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
 import { HoldingsTable } from './components/holdings-table/holdings-table';
 import { PortfolioForm } from './components/portfolio-form/portfolio-form';
@@ -117,6 +117,16 @@ export default function App() {
     });
   };
 
+  const onDeleteSelectedPortfolio = () => {
+    PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
+      PortfolioAPI.getPortfolios((data) => {
+        setPortfolios(data);
+        setSelectedPortfolio(data[0]);
+        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+      });
+    });
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -124,17 +134,25 @@ export default function App() {
         <Container>
           <Grid container>
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                {/* <Grid item xs={12}>
-                  <Typography variant='h4'>
-                    New Portfolio
-                  </Typography>
-                </Grid> */}
-                <PortfolioForm
-                  onSubmit={handlePortfolioFormSubmit}
-                  value={portfolioFormValue}
-                />
-              </Paper>
+                <Paper className={classes.paper}>
+              <Grid container spacing={2} alignItems='center'>
+                  <Grid item>
+                    <PortfolioForm
+                      onSubmit={handlePortfolioFormSubmit}
+                      value={portfolioFormValue}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      color='secondary'
+                      variant='text'
+                      onClick={onDeleteSelectedPortfolio}
+                    >
+                      Delete Selected Portfolio
+                    </Button>
+                  </Grid>
+              </Grid>
+                </Paper>
             </Grid>
             {portfolios && portfolios.length && selectedPortfolio && (
               <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>

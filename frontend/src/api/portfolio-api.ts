@@ -52,6 +52,12 @@ export const PortfolioAPI = {
     http.post('http://localhost:7000/api/portfolios/' + portfolioId + '/trades/' + trade._id + '/delete')
       .then(() => cb())
       .catch(console.error);
+  },
+
+  deletePortfolio: (portfolio: Portfolio, cb: () => void) => {
+    http.post('http://localhost:7000/api/portfolios/' + portfolio._id + '/delete')
+      .then(() => cb())
+      .catch(console.error);
   }
 
 };
