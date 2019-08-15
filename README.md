@@ -14,3 +14,19 @@ Milestone 4
 
 Milestone 5
 - send notifications on price movements
+
+## File Structure
+
+```
+/src
+  /api
+  /controllers
+  /db
+  /frontend
+  /lib
+  /public
+  /types
+  /views
+(/dist)
+
+```

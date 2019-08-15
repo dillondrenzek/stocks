@@ -1,4 +1,4 @@
-const server = require('../server');
+const server = require('../dist/src');
 
 module.exports = async function(input) {
 
