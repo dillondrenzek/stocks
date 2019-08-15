@@ -189,6 +189,24 @@ export default function App() {
                 </Grid>
               </Paper>
             </Grid>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
+                    Options Trades
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography align='center' variant='subtitle1'>
+                    No Options Trades table yet.
+                  </Typography>
+                  {/* <StockTradesTable
+                    trades={stockTrades}
+                    onClickDelete={onDeleteStockTrade}
+                  /> */}
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
         </Container>
       </main>
