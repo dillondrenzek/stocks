@@ -65,7 +65,7 @@ portfolioSchema.methods.getAllStockTrades = async function() {
   return trades;
 };
 
-portfolioSchema.methods.getAllOptionTrades = async function () {
+portfolioSchema.methods.getAllOptionTrades = async function() {
   const trades: IOptionTradeDocument[] = await OptionTrade.find({
     _id: { $in: this.optionTrades }
   });
