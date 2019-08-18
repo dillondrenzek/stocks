@@ -1,0 +1,10 @@
+{
+  "color": true,
+  "extension": [
+    "js"
+  ],
+  "spec": [
+    "./dist/src/app/**/*.spec.js"
+  ],
+  "recursive": true
+}

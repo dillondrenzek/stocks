@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { BuyOrSell, StockOrOption } from '../types';
+import { BuyOrSell, StockOrOption } from '../../app/types';
 
 export interface ITrade {
   price: number;
