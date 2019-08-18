@@ -11,22 +11,17 @@
     "build": "tsc --build tsconfig.json; npm run build:copy-assets",
     "build:copy-assets": "node ./copy-static-assets",
     "build:ts": "tsc --build tsconfig.json",
-
     "prebuild:test": "rm -rf dist",
     "build:test": "tsc --build tsconfig-spec.json",
-
     "clean": "rm -rf dist",
-
     "dev": "concurrently \"npm run server:dev\" \"npm run frontend:dev\"",
     "frontend:dev": "cd frontend; npm run start",
     "server:dev": "node-dev ./bin/server",
     "prefrontend:dev": "cd frontend; npm install",
     "preserver:dev": "npm run build",
-
     "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
     "pretest": "npm run build:test",
     "test": "mocha",
-
     "start": "node ./bin/www",
     "watch": "npm-watch"
   },
@@ -47,6 +42,7 @@
     "clsx": "1.0.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "http": "0.0.0",
     "https": "^1.0.0",
