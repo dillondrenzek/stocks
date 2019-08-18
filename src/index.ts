@@ -3,14 +3,15 @@ import express from 'express';
 import path from 'path';
 import api from './api';
 import { connectDb } from './db';
-const app = express();
 
 import portfolioRoutes from '../server/routes/portfolio';
 // import holdingsRoutes = require('./routes/holdings');
 // import quotesRoutes = require('./routes/quotes');
 
 export async function startServer() {
-  app.set('port', process.env.PORT || 7000);
+  const app = express();
+
+  app.set('port', process.env.PORT);
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'pug');
 
@@ -23,7 +24,7 @@ export async function startServer() {
   app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
   // Database
-  connectDb('mongodb://localhost:27017/stocks');
+  connectDb(process.env.MONGODB_URL);
 
   // Serve Static files
   app.use('/public', express.static(path.join(__dirname, 'public')));
