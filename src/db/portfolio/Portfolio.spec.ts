@@ -139,9 +139,6 @@ describe('Portfolio', withDb(() => {
       // create test portfolio
       portfolio = await Portfolio.create(defaultPortfolio());
       // create test trade
-      const _trade: IStockTrade = Object.assign({}, defaultStockTrade(), {
-        type: 'stock'
-      });
       trade = await StockTrade.create(defaultStockTrade());
       // add test trade to portfolio
       await portfolio.addTrade(trade);

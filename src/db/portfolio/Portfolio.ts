@@ -1,15 +1,11 @@
 import mongoose from 'mongoose';
+import * as Types from '../../types';
 import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade, ITrade } from '../trade';
 
 // Interface
-export interface Holding {
-  symbol: string;
-  averageCost: number;
-  quantity: number;
-}
 
 export interface IPortfolio {
-  holdings: Array<Holding>;
+  holdings: Types.Holding[];
   name: string;
   optionTrades: Array<IOptionTradeDocument['_id']>;
   stockTrades: Array<IStockTradeDocument['_id']>;
@@ -64,20 +60,22 @@ portfolioSchema.methods.addTrade = async function(trade: ITradeDocument) {
     this.optionTrades.push(trade._id);
   }
 
+  // // save
+  // await this.save();
 
-  // find holding
-  const existingHoldingIndex = this.holdings.findIndex((holding: Holding) => {
-    return holding.symbol === trade.symbol;
-  });
+  // // find holding
+  // const existingHoldingIndex = this.holdings.findIndex((holding: Types.Holding) => {
+  //   return holding.symbol === trade.symbol;
+  // });
 
-  if (existingHoldingIndex !== -1) {
-    const existingHolding: Holding = this.holdings[existingHoldingIndex];
-    const updatedHolding: Holding = Object.assign({}, existingHolding)
-    // update existing
-    this.holdings.splice(existingHoldingIndex, 1, updatedHolding);
-  } else {
+  // if (existingHoldingIndex !== -1) {
+  //   const existingHolding: Types.Holding = this.holdings[existingHoldingIndex];
+  //   const updatedHolding: Types.Holding = Object.assign({}, existingHolding)
+  //   // update existing
+  //   this.holdings.splice(existingHoldingIndex, 1, updatedHolding);
+  // } else {
 
-  }
+  // }
 
   // save
   await this.save();
@@ -104,20 +102,20 @@ portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {
   if (trade.type === 'stock') {
     // remove id from array
     this.stockTrades = this.stockTrades.filter((tradeId: any) => { 
-      return trade._id.toString() !== tradeId.toString();
+      return trade.id !== tradeId.toString();
     });
     // save portfolio
-    this.save();
+    await this.save();
     // delete stock trade
     await StockTrade.findByIdAndDelete(trade._id);
 
   } else if (trade.type === 'option') {
     // remove id from array
     this.optionTrades = optionTrades.filter((tradeId: any) => {
-      return trade._id.toString() !== tradeId.toString();
+      return trade.id !== tradeId.toString();
     });
     // save portfolio
-    this.save();
+    await this.save();
     // delete option trade
     await OptionTrade.findByIdAndDelete(trade.id);
   }
