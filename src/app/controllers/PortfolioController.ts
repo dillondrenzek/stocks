@@ -1,6 +1,7 @@
 import * as DB from '../../db';
 import * as Types from '../../types';
 // import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../../types';
+import { calculateHolding } from '../portfolio';
 
 export class PortfolioController {
 
@@ -56,13 +57,29 @@ export class PortfolioController {
 
     // get Holding by symbols
     const holding: Types.Holding = this.findHoldingBySymbol(trade.symbol, portfolio);
+    let newHolding: Types.Holding;
 
     // if holding doesn't exist, create it
     if (!holding) {
+      newHolding = calculateHolding([newTrade]);
+    } else {
+      newHolding = calculateHolding([newTrade], holding);
     }
+
+    portfolio = this.addOrUpdateHoldingForPortfolio(newHolding, portfolio);
 
     await portfolio.save();
   }
+
+  private addOrUpdateHoldingForPortfolio(holding: Types.Holding, portfolio: DB.IPortfolioDocument): DB.IPortfolioDocument {
+    let existingHolding = this.findHoldingBySymbol(holding.symbol, portfolio);
+    if (!existingHolding) {
+      portfolio.holdings.push(holding);
+    } else {
+      existingHolding = Object.assign(existingHolding, holding);
+    }
+    return portfolio;
+  } 
 
   private findHoldingBySymbol(symbol: string, portfolio: Types.Portfolio): Types.Holding {
     return portfolio.holdings.find((holding) => holding.symbol === symbol);

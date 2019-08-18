@@ -128,14 +128,16 @@ describe('PortfolioController', withDb(() => {
       const anotherTrade: StockTrade = defaultStockTrade();
 
       beforeEach(async () => {
-        // add another trade with the same symbol
-        anotherTrade.symbol = newTrade.symbol;
+        // add first trade
+        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
+        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
         // count before
         preDocumentCount = await DB.StockTrade.countDocuments();
         preTradeCount = savedPortfolio.stockTrades.length;
         preHoldingsCount = savedPortfolio.holdings.length;
         // perform test
-        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
+        // add another trade with the same symbol
+        anotherTrade.symbol = newTrade.symbol;
         await controller.addTradeToPortfolio(anotherTrade, savedPortfolio.id);
         savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
         // count after
@@ -144,42 +146,16 @@ describe('PortfolioController', withDb(() => {
         postHoldingsCount = savedPortfolio.holdings.length;
       });
 
-      it('creates the trade', async () => {
-        let preTradeCount: number, postTradeCount: number;
-        // count before
-        preTradeCount = await DB.StockTrade.countDocuments();
-        // perform test
-        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
-        // count after
-        postTradeCount = await DB.StockTrade.countDocuments();
-        // test
+      it('creates the StockTrade', () => {
+        expect(postDocumentCount).to.eq(preDocumentCount + 1);
+      });
+
+      it('adds the trade to the portfolio', () => {
         expect(postTradeCount).to.eq(preTradeCount + 1);
       });
 
-      it('adds the trade to the portfolio', async () => {
-        let preCount: number, postCount: number;
-        // count before
-        preCount = savedPortfolio.stockTrades.length;
-        // perform test
-        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
-        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
-        // count after
-        postCount = savedPortfolio.stockTrades.length;
-        // test
-        expect(postCount).to.eq(preCount + 1);
-      });
-
-      it('does not create a new Holding', async () => {
-        let preCount: number, postCount: number;
-        // count before
-        preCount = savedPortfolio.holdings.length;
-        // perform test
-        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
-        // refresh portfolio
-        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
-        // count after
-        postCount = savedPortfolio.holdings.length;
-        expect(postCount).to.eq(preCount);
+      it('does not create new Holding', () => {
+        expect(postHoldingsCount).to.eq(preHoldingsCount);
         expect(savedPortfolio.holdings.find((h) => h.symbol === newTrade.symbol)).not.to.be.undefined;
       });
     });
