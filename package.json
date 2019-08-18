@@ -9,20 +9,25 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc --build tsconfig.json; npm run build:copy-assets",
-    "build:ts": "tsc --build tsconfig.json",
     "build:copy-assets": "node ./copy-static-assets",
+    "build:ts": "tsc --build tsconfig.json",
+
     "prebuild:test": "rm -rf dist",
     "build:test": "tsc --build tsconfig-spec.json",
+
     "clean": "rm -rf dist",
-    "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
+
     "dev": "concurrently \"npm run server:dev\" \"npm run frontend:dev\"",
-    "preserver:dev": "npm run build",
+    "frontend:dev": "cd frontend; npm run start",
     "server:dev": "node-dev ./bin/server",
     "prefrontend:dev": "cd frontend; npm install",
-    "frontend:dev": "cd frontend; npm run start",
-    "start": "node ./bin/www",
+    "preserver:dev": "npm run build",
+
+    "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
     "pretest": "npm run build:test",
     "test": "mocha",
+
+    "start": "node ./bin/www",
     "watch": "npm-watch"
   },
   "watch": {
