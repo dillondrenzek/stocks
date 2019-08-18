@@ -5,6 +5,7 @@ import { PortfolioController } from './PortfolioController';
 import { Portfolio, Trade, StockTrade } from '../../types';
 // import {} from '../../spec/helpers/db-generators';
 import {defaultStockTrade} from '../../spec/helpers/type-defaults';
+import { Types } from 'mongoose';
 
 describe('PortfolioController', withDb(() => {
   let controller: PortfolioController;
@@ -82,12 +83,66 @@ describe('PortfolioController', withDb(() => {
   describe('add stock trade to portfolio', () => {
     const newTrade: StockTrade = defaultStockTrade();
     let savedPortfolio: DB.IPortfolioDocument;
+    let preDocumentCount: number, postDocumentCount: number;
+    let preTradeCount: number, postTradeCount: number;
+    let preHoldingsCount: number, postHoldingsCount: number;
 
     beforeEach(async () => {
+      newTrade.symbol = 'TEST';
+      // create the test portfolio
       savedPortfolio = await DB.Portfolio.createByName('Test');
     });
 
     describe('with a symbol that does not have a holding', () => {
+
+      beforeEach(async () => {
+        // count before
+        preDocumentCount = await DB.StockTrade.countDocuments();
+        preTradeCount = savedPortfolio.stockTrades.length;
+        preHoldingsCount = savedPortfolio.holdings.length;
+        // perform test
+        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
+        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
+        // count after
+        postDocumentCount = await DB.StockTrade.countDocuments();
+        postTradeCount = savedPortfolio.stockTrades.length;
+        postHoldingsCount = savedPortfolio.holdings.length;
+      });
+
+      it('creates the StockTrade', () => {
+        expect(postDocumentCount).to.eq(preDocumentCount + 1);
+      });
+
+      it('adds the trade to the portfolio', () => {
+        expect(postTradeCount).to.eq(preTradeCount + 1);
+      });
+
+      it('adds a new Holding', () => {
+        expect(postHoldingsCount).to.eq(preHoldingsCount + 1);
+        expect(savedPortfolio.holdings.find((h) => h.symbol === newTrade.symbol)).not.to.be.undefined;
+      });
+
+    });
+
+    describe('with a symbol that already has a holding', () => {
+      const anotherTrade: StockTrade = defaultStockTrade();
+
+      beforeEach(async () => {
+        // add another trade with the same symbol
+        anotherTrade.symbol = newTrade.symbol;
+        // count before
+        preDocumentCount = await DB.StockTrade.countDocuments();
+        preTradeCount = savedPortfolio.stockTrades.length;
+        preHoldingsCount = savedPortfolio.holdings.length;
+        // perform test
+        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
+        await controller.addTradeToPortfolio(anotherTrade, savedPortfolio.id);
+        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
+        // count after
+        postDocumentCount = await DB.StockTrade.countDocuments();
+        postTradeCount = savedPortfolio.stockTrades.length;
+        postHoldingsCount = savedPortfolio.holdings.length;
+      });
 
       it('creates the trade', async () => {
         let preTradeCount: number, postTradeCount: number;
@@ -114,8 +169,20 @@ describe('PortfolioController', withDb(() => {
         expect(postCount).to.eq(preCount + 1);
       });
 
+      it('does not create a new Holding', async () => {
+        let preCount: number, postCount: number;
+        // count before
+        preCount = savedPortfolio.holdings.length;
+        // perform test
+        await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
+        // refresh portfolio
+        savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
+        // count after
+        postCount = savedPortfolio.holdings.length;
+        expect(postCount).to.eq(preCount);
+        expect(savedPortfolio.holdings.find((h) => h.symbol === newTrade.symbol)).not.to.be.undefined;
+      });
     });
-
   });
 
 }));

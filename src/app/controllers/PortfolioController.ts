@@ -55,7 +55,7 @@ export class PortfolioController {
     await portfolio.addTrade(newTrade);
 
     // get Holding by symbols
-    const holding: Types.Holding = null;
+    const holding: Types.Holding = this.findHoldingBySymbol(trade.symbol, portfolio);
 
     // if holding doesn't exist, create it
     if (!holding) {
@@ -65,7 +65,7 @@ export class PortfolioController {
   }
 
   private findHoldingBySymbol(symbol: string, portfolio: Types.Portfolio): Types.Holding {
-    return null;
+    return portfolio.holdings.find((holding) => holding.symbol === symbol);
   }
 
   public async getStockTradesForPortfolioById(id: string): Promise<Types.StockTrade[]> {
