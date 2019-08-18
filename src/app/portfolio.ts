@@ -1,4 +1,6 @@
-import { Holding, Trade } from './types';
+import { Holding, Trade } from '../types';
+
+
 
 // - currentState: Holding
 // - trades: Trade[] (sorted by Date)

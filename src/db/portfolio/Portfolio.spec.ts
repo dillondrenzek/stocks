@@ -1,7 +1,6 @@
 import chai, {expect} from 'chai';
 import mongoose from 'mongoose';
 import { withDb } from '../../spec/helpers/db-connect';
-import { Holding, IHoldingDocument } from '../holding/Holding';
 import {
   defaultOptionTrade,
   defaultStockTrade,
@@ -20,38 +19,38 @@ import {
 describe('Portfolio', withDb(() => {
   let portfolio: IPortfolioDocument;
 
-  describe('adds a Holding', () => {
-    let precount: number;
-    let postcount: number;
-    let holding: IHoldingDocument;
+  // xdescribe('adds a Holding', () => {
+  //   let precount: number;
+  //   let postcount: number;
+  //   let holding: IHoldingDocument;
 
-    beforeEach(async () => {
-      // create test portfolio
-      portfolio = await Portfolio.create({
-        holdingIds: [],
-        name: 'Test Portfolio',
-        tradeIds: []
-      });
-      // create test holding
-      holding = await Holding.create({
-        cost: 0.00,
-        portfolioId: null,
-        quantity: 0.00,
-        symbol: 'TEST',
-        tradeIds: [],
-      });
-      //
-      precount = portfolio.holdingIds.length;
-      // perform test
-      await portfolio.addHolding(holding);
-      //
-      postcount = portfolio.holdingIds.length;
-    });
+  //   beforeEach(async () => {
+  //     // create test portfolio
+  //     portfolio = await Portfolio.create({
+  //       holdingIds: [],
+  //       name: 'Test Portfolio',
+  //       tradeIds: []
+  //     });
+  //     // create test holding
+  //     holding = await Holding.create({
+  //       cost: 0.00,
+  //       portfolioId: null,
+  //       quantity: 0.00,
+  //       symbol: 'TEST',
+  //       tradeIds: [],
+  //     });
+  //     //
+  //     precount = portfolio.holdingIds.length;
+  //     // perform test
+  //     await portfolio.addHolding(holding);
+  //     //
+  //     postcount = portfolio.holdingIds.length;
+  //   });
 
-    it('increases the length of the holdings array', () => {
-      expect(postcount).to.eq(precount + 1);
-    });
-  });
+  //   it('increases the length of the holdings array', () => {
+  //     expect(postcount).to.eq(precount + 1);
+  //   });
+  // });
 
   describe('adds a StockTrade', () => {
     let precount: number;

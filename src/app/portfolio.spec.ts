@@ -1,5 +1,5 @@
 import chai, { expect } from 'chai';
-import {Trade, Holding} from './types';
+import {Trade, Holding} from '../types';
 import {calculateHolding} from './portfolio';
 
 

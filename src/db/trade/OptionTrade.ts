@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { ITrade, ITradeDocument } from './Trade';
-import { CallOrPut, OpenOrClose } from '../../app/types';
+import { CallOrPut, OpenOrClose } from '../../types';
 
 export interface IOptionTrade extends ITrade {
   callPut: CallOrPut;

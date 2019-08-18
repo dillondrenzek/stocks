@@ -1,13 +1,11 @@
 // import { DBRef } from 'bson';
 import { expect } from 'chai';
 // import mongoose from 'mongoose';
-import * as DB from '../db';
+import * as DB from '../../db';
 // import { getMockDateString } from '../spec/helpers/date';
-import { withDb } from '../spec/helpers/db-connect';
+import { withDb } from '../../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
-import { Portfolio, Trade, StockTrade } from '../types';
-import { defaultStockTrade } from '../db/trade';
-import { defaultPortfolio } from '../db/portfolio/Portfolio';
+import { Portfolio, Trade, StockTrade } from '../../types';
 
 describe('PortfolioController', withDb(() => {
   let controller: PortfolioController;
@@ -59,7 +57,7 @@ describe('PortfolioController', withDb(() => {
 
   describe('delete portfolios', () => {
     describe('that exist', () => {
-      let existing: Portfolio;
+      let existing: DB.IPortfolioDocument;
       beforeEach(async () => {
         existing = await controller.createPortfolioWithName('Test Portfolio');
       });
@@ -83,7 +81,7 @@ describe('PortfolioController', withDb(() => {
   });
 
   describe('add stock trade to portfolio', () => {
-    const portfolio: Portfolio = defaultPortfolio();
+    const portfolio: DB.IPortfolio = DB.defaultPortfolio();
     const newTrade: StockTrade = defaultStockTrade();
     let savedPortfolio: DB.IPortfolioDocument;
 
