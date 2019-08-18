@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import * as Types from '../../types';
 import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade, ITrade } from '../trade';
+import { booleanLiteral } from 'babel-types';
+import { DBRef } from 'bson';
 
 // Interface
 
@@ -12,7 +14,7 @@ export interface IPortfolio {
   addTrade?: (doc: ITradeDocument) => void;
   getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
-  deleteTrade?: (doc: ITradeDocument) => void;
+  removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<void>;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -95,31 +97,44 @@ portfolioSchema.methods.getAllOptionTrades = async function() {
   return trades;
 };
 
-portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {
-  const optionTrades: string[] = this.optionTrades;
-  const stockTrades: string[] = this.stockTrades;
+portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOption, tradeId: string) {
+  const predicate = (id: string) => (id === tradeId);
 
-  if (trade.type === 'stock') {
-    // remove id from array
-    this.stockTrades = this.stockTrades.filter((tradeId: any) => { 
-      return trade.id !== tradeId.toString();
-    });
-    // save portfolio
+  if (type === 'stock') {
+    this.stockTrades = this.stockTrades.filter(predicate);
     await this.save();
-    // delete stock trade
-    await StockTrade.findByIdAndDelete(trade._id);
-
-  } else if (trade.type === 'option') {
-    // remove id from array
-    this.optionTrades = optionTrades.filter((tradeId: any) => {
-      return trade.id !== tradeId.toString();
-    });
-    // save portfolio
+  } else if (type === 'option') {
+    this.optionTrades = this.optionTrades.filter(predicate);
     await this.save();
-    // delete option trade
-    await OptionTrade.findByIdAndDelete(trade.id);
   }
-};
+
+}
+
+// portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {
+//   const optionTrades: string[] = this.optionTrades;
+//   const stockTrades: string[] = this.stockTrades;
+
+//   if (trade.type === 'stock') {
+//     // remove id from array
+//     this.stockTrades = this.stockTrades.filter((tradeId: any) => { 
+//       return trade.id !== tradeId.toString();
+//     });
+//     // save portfolio
+//     await this.save();
+//     // delete stock trade
+//     await StockTrade.findByIdAndDelete(trade._id);
+
+//   } else if (trade.type === 'option') {
+//     // remove id from array
+//     this.optionTrades = optionTrades.filter((tradeId: any) => {
+//       return trade.id !== tradeId.toString();
+//     });
+//     // save portfolio
+//     await this.save();
+//     // delete option trade
+//     await OptionTrade.findByIdAndDelete(trade.id);
+//   }
+// };
 
 // Export Model
 

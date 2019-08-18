@@ -146,17 +146,9 @@ describe('Portfolio', withDb(() => {
 
     it('removes the trade from the trades array', async () => {
       // delete stock trade
-      await portfolio.deleteTrade(trade);
+      await portfolio.removeTradeById(trade.type, trade.id);
       portfolio = await Portfolio.findById(portfolio.id);
       expect(portfolio.stockTrades).not.to.contain(trade.id);
-    });
-
-    it('deletes the StockTrade', async () => {
-      // delete Stock trade
-      await portfolio.deleteTrade(trade);
-      // expect not to find trade's id
-      const findTrade = await StockTrade.findById(trade.id);
-      expect(findTrade).not.to.exist;
     });
   });
 
@@ -175,19 +167,9 @@ describe('Portfolio', withDb(() => {
       await portfolio.addTrade(trade);
       expect(portfolio.optionTrades).to.contain(trade.id);
       // delete option trade
-      await portfolio.deleteTrade(trade);
+      await portfolio.removeTradeById(trade.type, trade.id);
       portfolio = await Portfolio.findById(portfolio.id);
       expect(portfolio.optionTrades).not.to.contain(trade.id);
-    });
-
-    it('deletes the OptionTrade', async () => {
-      // add test trade to portfolio
-      await portfolio.addTrade(trade);
-      // delete option trade
-      await portfolio.deleteTrade(trade);
-      // expect not to find trade's id
-      const findTrade = await OptionTrade.findById(trade._id);
-      expect(findTrade).not.to.exist;
     });
   });
 }));

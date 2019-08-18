@@ -30,8 +30,6 @@ export class PortfolioController {
     }
   }
 
-
-
   public async addTradeToPortfolio(trade: Types.Trade, portfolioId: string) {
 
     // save trade
@@ -97,10 +95,18 @@ export class PortfolioController {
     return trades;
   }
 
+
+
   public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<void> {
     const portfolio = await DB.Portfolio.findById(portfolioId);
     const trade = await DB.StockTrade.findById(tradeId);
-    await portfolio.deleteTrade(trade);
+
+    // remove trade from portfolio
+    await portfolio.removeTradeById(trade.type, trade.id);
+
+    // delete trade
+    await DB.StockTrade.findByIdAndDelete(tradeId);
+
   }
 
 }
