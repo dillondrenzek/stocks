@@ -1,6 +1,6 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
-import { Holding } from '../../types/holding';
+import {Holding} from '../../types/portfolio';
 
 export interface HoldingsTableProps {
   holdings?: Holding[];

@@ -12,9 +12,3 @@ export interface Portfolio extends Saveable {
   stockTrades: string[];
   optionTrades: string[];
 }
-
-// export interface Portfolio extends Partial<DB.IPortfolioDocument> {
-  // holdingIds: string[];
-  // name: string;
-  // tradeIds: string[];
-// }

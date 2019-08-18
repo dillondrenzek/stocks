@@ -14,8 +14,7 @@ import { PortfoliosTable } from './components/portfolios-table/portfolios-table'
 import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
 import { StockTradesTable } from './components/trades-table/stock-trades-table';
 
-import { Holding } from './types/holding';
-import { Portfolio } from './types/portfolio';
+import { Portfolio, Holding } from './types/portfolio';
 import { StockTrade } from './types/trade';
 
 import './App.scss';
@@ -134,7 +133,7 @@ export default function App() {
         <Container>
           <Grid container>
             <Grid item xs={12}>
-                <Paper className={classes.paper}>
+              <Paper className={classes.paper}>
               <Grid container spacing={2} alignItems='center'>
                   <Grid item>
                     <PortfolioForm
@@ -151,8 +150,8 @@ export default function App() {
                       Delete Selected Portfolio
                     </Button>
                   </Grid>
-              </Grid>
-                </Paper>
+                </Grid>
+              </Paper>
             </Grid>
             {portfolios && portfolios.length && selectedPortfolio && (
               <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
@@ -174,6 +173,22 @@ export default function App() {
                 />
               </Paper>
             </Grid>
+            {selectedPortfolio ? (
+              <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Grid item xs={12}>
+                  <Typography variant='h4'>
+                    Holdings
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <HoldingsTable
+                    holdings={selectedPortfolio.holdings}
+                  />
+                </Grid>
+              </Paper>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>
