@@ -3,7 +3,7 @@ import { expect } from 'chai';
 // import mongoose from 'mongoose';
 import * as DB from '../db';
 // import { getMockDateString } from '../spec/helpers/date';
-import { withDb } from '../../spec/helpers/db-connect';
+import { withDb } from '../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
 import { Portfolio, Trade, StockTrade } from '../types';
 import { defaultStockTrade } from '../db/trade';
