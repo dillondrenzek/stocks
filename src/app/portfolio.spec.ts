@@ -56,4 +56,14 @@ describe('calculateHolding', () => {
     'TEST', 18, 3
   ));
 
+  describe('with a buy and a sell', makeMathTest(
+    [
+      { symbol: 'TEST', price: 10.00, side: 'buy', quantity: 1, type: 'stock' },
+      { symbol: 'TEST', price: 22.00, side: 'sell', quantity: 1, type: 'stock' }
+    ],
+    'TEST', 0, 0
+  ));
+
+  // should throw an error when trying to sell too many shares
+
 });

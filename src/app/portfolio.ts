@@ -16,8 +16,15 @@ export function calculateHolding(trades: Trade[], currentState: Holding = { avgC
 function addTradeToHolding(trade: Trade, holding: Holding = { avgCost: 0, quantity: 0, symbol: null }): Holding {
   const tradeCost = trade.price * trade.quantity;
   const holdingCost = holding.avgCost * holding.quantity;
-  const newQuantity = trade.quantity + holding.quantity;
-  const newAvgCost = (tradeCost + holdingCost) / newQuantity;
+  const newQuantity = (trade.side === 'buy')
+    ? holding.quantity + trade.quantity
+    : holding.quantity - trade.quantity;
+  const newTotalCost = (trade.side === 'buy')
+    ? holdingCost + tradeCost
+    : holdingCost - tradeCost;
+  const newAvgCost = (newQuantity) 
+    ? newTotalCost / newQuantity
+    : 0;
   return Object.assign({}, holding, {
     avgCost: newAvgCost,
     quantity: newQuantity
