@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 import * as Types from '../../types';
 import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade, ITrade } from '../trade';
-import { booleanLiteral } from 'babel-types';
-import { DBRef } from 'bson';
+import { Holding } from '../../types';
 
 // Interface
 
@@ -15,6 +14,8 @@ export interface IPortfolio {
   getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
   removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<void>;
+  addOrUpdateHolding?: (holding: Holding) => Promise<IPortfolioDocument>;
+  getHoldingBySymbol?: (symbol: string) => Holding;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -108,6 +109,22 @@ portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOpt
     await this.save();
   }
 
+}
+
+portfolioSchema.methods.addOrUpdateHolding = async function (holding: Holding) {
+  let existingHolding = this.getHoldingBySymbol(holding.symbol);
+  if (!existingHolding) {
+    this.holdings.push(holding);
+  } else {
+    existingHolding = Object.assign(existingHolding, holding);
+  }
+  await this.save();
+  return this;
+}
+
+portfolioSchema.methods.getHoldingBySymbol = function (symbol: string): Holding {
+  const holding: Holding = this.holdings.find((holding: Holding) => holding.symbol === symbol);
+  return holding;
 }
 
 // portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {

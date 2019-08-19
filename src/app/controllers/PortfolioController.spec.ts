@@ -2,10 +2,19 @@ import { expect } from 'chai';
 import * as DB from '../../db';
 import { withDb } from '../../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
-import { Portfolio, Trade, StockTrade } from '../../types';
-// import {} from '../../spec/helpers/db-generators';
-import {defaultStockTrade} from '../../spec/helpers/type-defaults';
-import { Types } from 'mongoose';
+import { Portfolio, Trade, StockTrade, BuyOrSell } from '../../types';
+// import {generateStockTrade} from '../../spec/helpers/type-defaults';
+
+const generateStockTrade = (side: BuyOrSell = 'buy'): StockTrade => {
+  return {
+    price: Math.random() * 300,
+    quantity: Math.floor(Math.random() * 100),
+    side,
+    symbol: 'TEST',
+    type: 'stock'
+  }
+}
+
 
 describe('PortfolioController', withDb(() => {
   let controller: PortfolioController;
@@ -81,7 +90,7 @@ describe('PortfolioController', withDb(() => {
   });
 
   describe('add stock trade to portfolio', () => {
-    const newTrade: StockTrade = defaultStockTrade();
+    const newTrade: StockTrade = generateStockTrade();
     let savedPortfolio: DB.IPortfolioDocument;
     let preDocumentCount: number, postDocumentCount: number;
     let preTradeCount: number, postTradeCount: number;
@@ -125,7 +134,7 @@ describe('PortfolioController', withDb(() => {
     });
 
     describe('with a symbol that already has a holding', () => {
-      const anotherTrade: StockTrade = defaultStockTrade();
+      const anotherTrade: StockTrade = generateStockTrade();
 
       beforeEach(async () => {
         // add first trade
@@ -158,6 +167,25 @@ describe('PortfolioController', withDb(() => {
         expect(postHoldingsCount).to.eq(preHoldingsCount);
         expect(savedPortfolio.holdings.find((h) => h.symbol === newTrade.symbol)).not.to.be.undefined;
       });
+
+      xdescribe('updates the holding', () => {
+        xit('updates the quantity');
+        xit('updates the average cost');
+      });
+    });
+  });
+
+  describe('remove stock trade from portfolio', () => {
+
+    beforeEach(async () => {
+
+    });
+
+    xit('removes the id from the portfolio', () => {});
+    xit('deletes the StockTrade');
+    xdescribe('updates the holding', () => {
+      xit('updates the quantity');
+      xit('average cost stays the same');
     });
   });
 

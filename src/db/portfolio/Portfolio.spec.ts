@@ -15,6 +15,7 @@ import {
   IPortfolioDocument,
   Portfolio,
 } from './Portfolio';
+import { Holding } from '../../types';
 
 describe('Portfolio', withDb(() => {
   let portfolio: IPortfolioDocument;
@@ -170,6 +171,68 @@ describe('Portfolio', withDb(() => {
       await portfolio.removeTradeById(trade.type, trade.id);
       portfolio = await Portfolio.findById(portfolio.id);
       expect(portfolio.optionTrades).not.to.contain(trade.id);
+    });
+  });
+
+  describe('add or update Holding', () => {
+    let holding: Holding;
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await Portfolio.createByName('Test Portfolio');
+    });
+
+    describe('holding doesn\'t already exist', () => {
+      let holdingsPreCount: number, holdingsPostCount: number;
+      beforeEach(async () => {
+        holding = { quantity: 23, avgCost: 152.14, symbol: 'TEST' };
+
+        holdingsPreCount = portfolio.holdings.length;
+
+        portfolio = await portfolio.addOrUpdateHolding(holding);
+
+        holdingsPostCount = portfolio.holdings.length;
+      });
+      it('increases the length of the holdings array', () => {
+        expect(holdingsPostCount).to.eq(holdingsPreCount + 1);
+      });
+      it('sets the quantity', () => {
+        const updatedHolding = portfolio.getHoldingBySymbol(holding.symbol);
+        expect(updatedHolding.quantity).to.eq(23);
+      });
+      it('sets the average cost', () => {
+        const updatedHolding = portfolio.getHoldingBySymbol(holding.symbol);
+        expect(updatedHolding.avgCost).to.eq(152.14);
+      });
+    });
+
+    describe('holding already exists', () => {
+      let holdingsPreCount: number, holdingsPostCount: number;
+      let anotherHolding: Holding;
+      beforeEach(async () => {
+        holding = { quantity: 23, avgCost: 152.14, symbol: 'TEST' };
+        anotherHolding = { quantity: 11, avgCost: 13.88, symbol: 'TEST' };
+        portfolio = await portfolio.addOrUpdateHolding(holding);
+
+        holdingsPreCount = portfolio.holdings.length;
+
+        portfolio = await portfolio.addOrUpdateHolding(anotherHolding);
+
+        holdingsPostCount = portfolio.holdings.length;
+      });
+      it('does not increase the length of the holdings array', () => {
+        expect(holdingsPostCount).to.eq(holdingsPreCount);
+      });
+      it('sets the quantity', () => {
+        const updatedHolding = portfolio.getHoldingBySymbol(holding.symbol);
+        expect(updatedHolding.quantity).not.to.eq(23);
+        expect(updatedHolding.quantity).to.eq(11);
+      });
+      it('sets the average cost', () => {
+        const updatedHolding = portfolio.getHoldingBySymbol(holding.symbol);
+        expect(updatedHolding.avgCost).not.to.eq(152.14);
+        expect(updatedHolding.avgCost).to.eq(13.88);
+      });
     });
   });
 }));

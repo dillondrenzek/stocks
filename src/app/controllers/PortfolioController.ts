@@ -79,6 +79,12 @@ export class PortfolioController {
     return portfolio;
   } 
 
+  private async calculateHoldingForSymbol(symbol: string): Promise<Types.Holding> {
+    const stockTrades = await DB.StockTrade.findBySymbol(symbol) ;
+    const holding = calculateHolding(stockTrades);
+    return holding;
+  }
+
   private findHoldingBySymbol(symbol: string, portfolio: Types.Portfolio): Types.Holding {
     return portfolio.holdings.find((holding) => holding.symbol === symbol);
   }
@@ -107,6 +113,10 @@ export class PortfolioController {
     // delete trade
     await DB.StockTrade.findByIdAndDelete(tradeId);
 
+    // recalculate corresponding holding
+    const holding: Types.Holding = await this.calculateHoldingForSymbol(trade.symbol);
+    await this.addOrUpdateHoldingForPortfolio(holding, portfolio);
+    
   }
 
 }
