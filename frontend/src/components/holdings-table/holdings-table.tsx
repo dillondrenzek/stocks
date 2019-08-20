@@ -1,6 +1,6 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
-import { Holding } from '../../types/holding';
+import {Holding} from '../../types/portfolio';
 
 export interface HoldingsTableProps {
   holdings?: Holding[];
@@ -33,13 +33,13 @@ export class HoldingsTable extends React.Component<HoldingsTableProps> {
           </MUI.TableRow>
         </MUI.TableHead>
         <MUI.TableBody>
-          {holdings.map((holding, j) => (
+          {holdings && holdings.length ? (holdings.map((holding, j) => (
             <MUI.TableRow key={j}>
               {this.tableHeaders.map(({key}) => (
                 <MUI.TableCell key={key}>{holding[key]}</MUI.TableCell>
               ))}
             </MUI.TableRow>
-          ))}
+          ))) : null}
         </MUI.TableBody>
       </MUI.Table>
     );

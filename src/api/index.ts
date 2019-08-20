@@ -18,7 +18,6 @@ router.use(function (req, res, next) {
 });
 
 router.use('/portfolios', portfoliosApi);
-// router.use('/holdings', holdingsApi);
 // router.use('/trades', tradesApi);
 
 export default router;

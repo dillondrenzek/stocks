@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express';
-import { PortfolioController } from '../controllers/PortfolioController';
+import { PortfolioController } from '../app/controllers/PortfolioController';
 
 // Export Router
 const controller = new PortfolioController();
@@ -9,7 +9,7 @@ const router = express();
 router.get('/',             getPortfolios);
 router.post('/',            createPortfolio);
 router.post('/:id/delete',       deletePortfolioById);
-router.get('/:id/holdings', getPortfolioHoldings);
+// router.get('/:id/holdings', getPortfolioHoldings);
 router.get('/:id/trades/stock', getStockTradesForPortfolio);
 router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
 router.post('/:id/trades',  addTradeToPortfolio);
@@ -46,16 +46,16 @@ export async function deletePortfolioById(req: Request, res: Response) {
 }
 
 // Get a Portfolio's Holdings
-export async function getPortfolioHoldings(req: Request, res: Response) {
-  const { id } = req.params;
-  try {
-    const portfolio = await controller.getPortfolioById(id);
-    const holdings = await controller.getHoldingsForPortfolio(portfolio);
-    res.json(holdings);
-  } catch (e) {
-    res.status(500).send('Error getting holdings for portfolio: ' + e);
-  }
-}
+// export async function getPortfolioHoldings(req: Request, res: Response) {
+//   const { id } = req.params;
+//   try {
+//     const portfolio = await controller.getPortfolioById(id);
+//     const holdings = await controller.getHoldingsForPortfolio(portfolio);
+//     res.json(holdings);
+//   } catch (e) {
+//     res.status(500).send('Error getting holdings for portfolio: ' + e);
+//   }
+// }
 
 // Add a Trade to Portfolio
 export async function addTradeToPortfolio(req: Request, res: Response) {
@@ -64,8 +64,8 @@ export async function addTradeToPortfolio(req: Request, res: Response) {
   try {
     const portfolio = await controller.getPortfolioById(id);
     console.log('add trade:', body);
-    const added = await controller.addTradeToPortfolio(body, portfolio);
-    res.json('Ok');
+    const added = await controller.addTradeToPortfolio(body, portfolio.id);
+    res.json(added);
   } catch (e) {
     res.status(500).send('Error adding trade to portfolio: ' + e);
   }

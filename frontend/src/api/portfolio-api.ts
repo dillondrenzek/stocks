@@ -20,7 +20,7 @@ export const PortfolioAPI = {
       .catch(console.error);
   },
 
-  addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: () => void) => {
+  addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: (updatedPortfolio: Portfolio) => void) => {
     const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
     const params = new URLSearchParams();
     Object.keys(trade).forEach((key) => {
@@ -31,8 +31,8 @@ export const PortfolioAPI = {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
-    http.post(url, params, config)
-      .then(cb)
+    http.post<Portfolio>(url, params, config)
+      .then((res) => cb(res.data))
       .catch(console.error);
   },
 

@@ -1,13 +1,23 @@
-import * as DB from '../db';
+import { Saveable } from './db';
 
-export interface Trade extends Partial<DB.ITradeDocument> {
+export type BuyOrSell = 'buy' | 'sell';
+export type CallOrPut = 'call' | 'put';
+export type OpenOrClose = 'open' | 'close';
+export type StockOrOption = 'stock' | 'option';
 
+export interface Trade extends Saveable {
+  price: number;
+  quantity: number;
+  side: BuyOrSell;
+  symbol: string;
+  timestamp?: Date;
+  type: StockOrOption;
 }
 
-export interface OptionTrade extends Partial<DB.IOptionTradeDocument> {
-
+export interface StockTrade extends Trade {
+  type: 'stock';
 }
 
-export interface StockTrade extends Partial<DB.IStockTradeDocument> {
-
+export interface OptionTrade extends Trade {
+  type: 'option';
 }

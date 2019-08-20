@@ -20,10 +20,14 @@
     "prefrontend:dev": "cd frontend; npm install",
     "preserver:dev": "npm run build",
     "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
+
     "pretest": "npm run build:test",
     "pretest:app": "npm run build:test",
+    "pretest:db": "npm run build:test",
     "test": "mocha",
     "test:app": "mocha --config .mocharc-app.json",
+    "test:db": "mocha --config .mocharc-db.json",
+    
     "start": "node ./bin/www",
     "watch": "npm-watch"
   },

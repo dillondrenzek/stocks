@@ -1,10 +1,14 @@
-export interface Portfolio {
-  _id?: string;
-  name: string;
-}
+import * as Types from '../../../src/types';
+
+export interface Holding extends Types.Holding {}
+
+export interface Portfolio extends Types.Portfolio {}
 
 const defaultValues: Portfolio = {
-  name: ''
+  name: '',
+  holdings: [],
+  stockTrades: [],
+  optionTrades: []
 };
 
 export class Portfolio {

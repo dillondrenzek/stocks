@@ -1,16 +1,8 @@
-export interface Trade {
-  _id?: string;
-  price: number;
-  quantity: number;
-  side: 'buy' | 'sell';
-  symbol: string;
-  timestamp?: Date;
-  type: 'stock' | 'option';
-}
+import * as Types from '../../../src/types';
 
-export interface StockTrade extends Trade {
-  type: 'stock';
-}
+export interface Trade extends Types.Trade {}
+
+export interface StockTrade extends Types.StockTrade {}
 
 const defaultValues: StockTrade = {
   price: 0.00,

@@ -27,4 +27,12 @@ export const defaultStockTrade = (): IStockTrade => ({
   type: 'stock'
 });
 
-export const StockTrade = mongoose.model<IStockTradeDocument>('StockTrade', stockTradeSchema);
+interface IStockTradeModel extends mongoose.Model<IStockTradeDocument> {
+  findBySymbol: (name: string) => Promise<IStockTradeDocument[]>;
+}
+
+stockTradeSchema.statics.findBySymbol = async (symbol: string): Promise<IStockTradeDocument[]> => {
+  return await [];
+};
+
+export const StockTrade = mongoose.model<IStockTradeDocument, IStockTradeModel>('StockTrade', stockTradeSchema);
