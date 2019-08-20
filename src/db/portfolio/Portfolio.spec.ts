@@ -142,13 +142,13 @@ describe('Portfolio', withDb(() => {
       // create test trade
       trade = await StockTrade.create(defaultStockTrade());
       // add test trade to portfolio
-      await portfolio.addTrade(trade);
+      portfolio = await portfolio.addTrade(trade);
     });
 
     it('removes the trade from the trades array', async () => {
       // delete stock trade
-      await portfolio.removeTradeById(trade.type, trade.id);
-      portfolio = await Portfolio.findById(portfolio.id);
+      portfolio = await portfolio.removeTradeById(trade.type, trade.id);
+      // await Portfolio.findById(portfolio.id);
       expect(portfolio.stockTrades).not.to.contain(trade.id);
     });
   });

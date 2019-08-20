@@ -10,10 +10,10 @@ export interface IPortfolio {
   name: string;
   optionTrades: Array<IOptionTradeDocument['_id']>;
   stockTrades: Array<IStockTradeDocument['_id']>;
-  addTrade?: (doc: ITradeDocument) => void;
+  addTrade?: (doc: ITradeDocument) => Promise<IPortfolioDocument>;
   getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
-  removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<void>;
+  removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
   addOrUpdateHolding?: (holding: Holding) => Promise<IPortfolioDocument>;
   getHoldingBySymbol?: (symbol: string) => Holding;
 }
@@ -55,33 +55,17 @@ portfolioSchema.statics.createByName = async function(name: string) {
 
 // Instance Methods
 
-portfolioSchema.methods.addTrade = async function(trade: ITradeDocument) {
+portfolioSchema.methods.addTrade = async function(trade: ITradeDocument): Promise<IPortfolioDocument> {
   // add Trade id to array
   if (trade.type === 'stock') {
     this.stockTrades.push(trade._id);
   } else if (trade.type === 'option') {
     this.optionTrades.push(trade._id);
   }
-
-  // // save
-  // await this.save();
-
-  // // find holding
-  // const existingHoldingIndex = this.holdings.findIndex((holding: Types.Holding) => {
-  //   return holding.symbol === trade.symbol;
-  // });
-
-  // if (existingHoldingIndex !== -1) {
-  //   const existingHolding: Types.Holding = this.holdings[existingHoldingIndex];
-  //   const updatedHolding: Types.Holding = Object.assign({}, existingHolding)
-  //   // update existing
-  //   this.holdings.splice(existingHoldingIndex, 1, updatedHolding);
-  // } else {
-
-  // }
-
   // save
   await this.save();
+
+  return this;
 };
 
 portfolioSchema.methods.getAllStockTrades = async function() {
@@ -98,17 +82,18 @@ portfolioSchema.methods.getAllOptionTrades = async function() {
   return trades;
 };
 
-portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOption, tradeId: string) {
+portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOption, tradeId: string): Promise<IPortfolioDocument> {
   const predicate = (id: string) => (id === tradeId);
 
   if (type === 'stock') {
-    this.stockTrades = this.stockTrades.filter(predicate);
+    const index = this.stockTrades.findIndex(predicate);
+    this.stockTrades.splice(index, 1);
     await this.save();
   } else if (type === 'option') {
     this.optionTrades = this.optionTrades.filter(predicate);
     await this.save();
   }
-
+  return this;
 }
 
 portfolioSchema.methods.addOrUpdateHolding = async function (holding: Holding) {
@@ -117,6 +102,8 @@ portfolioSchema.methods.addOrUpdateHolding = async function (holding: Holding) {
     this.holdings.push(holding);
   } else {
     existingHolding = Object.assign(existingHolding, holding);
+    let index = this.holdings.findIndex((h: Holding) => holding.symbol === h.symbol);
+    this.holdings.splice(index, 1, existingHolding);
   }
   await this.save();
   return this;

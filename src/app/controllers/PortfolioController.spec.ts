@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as DB from '../../db';
 import { withDb } from '../../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
-import { Portfolio, Trade, StockTrade, BuyOrSell } from '../../types';
+import { Portfolio, Trade, StockTrade, BuyOrSell, Holding } from '../../types';
 // import {generateStockTrade} from '../../spec/helpers/type-defaults';
 
 const generateStockTrade = (side: BuyOrSell = 'buy'): StockTrade => {
@@ -90,14 +90,14 @@ describe('PortfolioController', withDb(() => {
   });
 
   describe('add stock trade to portfolio', () => {
-    const newTrade: StockTrade = generateStockTrade();
+    let newTrade: StockTrade;
     let savedPortfolio: DB.IPortfolioDocument;
     let preDocumentCount: number, postDocumentCount: number;
     let preTradeCount: number, postTradeCount: number;
     let preHoldingsCount: number, postHoldingsCount: number;
 
     beforeEach(async () => {
-      newTrade.symbol = 'TEST';
+      newTrade = generateStockTrade();
       // create the test portfolio
       savedPortfolio = await DB.Portfolio.createByName('Test');
     });
@@ -134,12 +134,16 @@ describe('PortfolioController', withDb(() => {
     });
 
     describe('with a symbol that already has a holding', () => {
-      const anotherTrade: StockTrade = generateStockTrade();
+      let anotherTrade: StockTrade;
+      let existingHolding: Holding, updatedHolding: Holding;
 
       beforeEach(async () => {
+        newTrade = generateStockTrade();
+        anotherTrade = generateStockTrade();
         // add first trade
         await controller.addTradeToPortfolio(newTrade, savedPortfolio.id);
         savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
+        existingHolding = savedPortfolio.getHoldingBySymbol(newTrade.symbol);
         // count before
         preDocumentCount = await DB.StockTrade.countDocuments();
         preTradeCount = savedPortfolio.stockTrades.length;
@@ -149,6 +153,7 @@ describe('PortfolioController', withDb(() => {
         anotherTrade.symbol = newTrade.symbol;
         await controller.addTradeToPortfolio(anotherTrade, savedPortfolio.id);
         savedPortfolio = await DB.Portfolio.findById(savedPortfolio.id);
+        updatedHolding = savedPortfolio.getHoldingBySymbol(newTrade.symbol);
         // count after
         postDocumentCount = await DB.StockTrade.countDocuments();
         postTradeCount = savedPortfolio.stockTrades.length;
@@ -161,6 +166,7 @@ describe('PortfolioController', withDb(() => {
 
       it('adds the trade to the portfolio', () => {
         expect(postTradeCount).to.eq(preTradeCount + 1);
+        // expect(savedPortfolio.stockTrades.find((id) => id === anotherTrade._id)).not.to.be.undefined;
       });
 
       it('does not create new Holding', () => {
@@ -168,9 +174,13 @@ describe('PortfolioController', withDb(() => {
         expect(savedPortfolio.holdings.find((h) => h.symbol === newTrade.symbol)).not.to.be.undefined;
       });
 
-      xdescribe('updates the holding', () => {
-        xit('updates the quantity');
-        xit('updates the average cost');
+      describe('updates the holding', () => {
+        it('updates the quantity', () => {
+          expect(updatedHolding.quantity).not.to.eq(existingHolding.quantity);
+        });
+        it('updates the average cost', () => {
+          expect(updatedHolding.avgCost).not.to.eq(existingHolding.avgCost);
+        });
       });
     });
   });

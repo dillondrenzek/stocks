@@ -30,7 +30,7 @@ export class PortfolioController {
     }
   }
 
-  public async addTradeToPortfolio(trade: Types.Trade, portfolioId: string) {
+  public async addTradeToPortfolio(trade: Types.Trade, portfolioId: string): Promise<DB.IPortfolioDocument> {
 
     // save trade
     let newTrade: DB.ITradeDocument;
@@ -51,10 +51,10 @@ export class PortfolioController {
       console.error(err);
     }
 
-    await portfolio.addTrade(newTrade);
+    portfolio = await portfolio.addTrade(newTrade);
 
     // get Holding by symbols
-    const holding: Types.Holding = this.findHoldingBySymbol(trade.symbol, portfolio);
+    const holding: Types.Holding = portfolio.getHoldingBySymbol(trade.symbol);
     let newHolding: Types.Holding;
 
     // if holding doesn't exist, create it
@@ -64,23 +64,13 @@ export class PortfolioController {
       newHolding = calculateHolding([newTrade], holding);
     }
 
-    portfolio = this.addOrUpdateHoldingForPortfolio(newHolding, portfolio);
+    portfolio = await portfolio.addOrUpdateHolding(newHolding);
 
-    await portfolio.save();
-  }
-
-  private addOrUpdateHoldingForPortfolio(holding: Types.Holding, portfolio: DB.IPortfolioDocument): DB.IPortfolioDocument {
-    let existingHolding = this.findHoldingBySymbol(holding.symbol, portfolio);
-    if (!existingHolding) {
-      portfolio.holdings.push(holding);
-    } else {
-      existingHolding = Object.assign(existingHolding, holding);
-    }
     return portfolio;
   } 
 
   private async calculateHoldingForSymbol(symbol: string): Promise<Types.Holding> {
-    const stockTrades = await DB.StockTrade.findBySymbol(symbol) ;
+    const stockTrades = await DB.StockTrade.findBySymbol(symbol);
     const holding = calculateHolding(stockTrades);
     return holding;
   }
@@ -103,7 +93,7 @@ export class PortfolioController {
 
 
 
-  public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<void> {
+  public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<DB.IPortfolioDocument> {
     const portfolio = await DB.Portfolio.findById(portfolioId);
     const trade = await DB.StockTrade.findById(tradeId);
 
@@ -115,7 +105,7 @@ export class PortfolioController {
 
     // recalculate corresponding holding
     const holding: Types.Holding = await this.calculateHoldingForSymbol(trade.symbol);
-    await this.addOrUpdateHoldingForPortfolio(holding, portfolio);
+    return await portfolio.addOrUpdateHolding(holding);
     
   }
 

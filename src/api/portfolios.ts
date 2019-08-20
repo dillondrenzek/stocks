@@ -65,7 +65,7 @@ export async function addTradeToPortfolio(req: Request, res: Response) {
     const portfolio = await controller.getPortfolioById(id);
     console.log('add trade:', body);
     const added = await controller.addTradeToPortfolio(body, portfolio.id);
-    res.json('Ok');
+    res.json(added);
   } catch (e) {
     res.status(500).send('Error adding trade to portfolio: ' + e);
   }

@@ -96,7 +96,8 @@ export default function App() {
   };
 
   const handleStockTradeFormSubmit = (value: StockTrade) => {
-    PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, () => {
+    PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
+      setSelectedPortfolio(updatedPortfolio);
       PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
     });
   };
