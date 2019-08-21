@@ -7,11 +7,28 @@ title: Home
 
 ## Models
 
+- Model instance methods do not auto-save (must call `.save()` from controller)
+
 ### Portfolio
+
+#### Properties
 
 ```
 name: string;
 holdings: Holding[];
+```
+
+#### Static Methods
+```
+Portfolio.createByName(name: string): Portfolio
+```
+
+#### Instance Methods
+```
+addHoldingToPortfolio: (h: Holding, p: Portfolio) => Portfolio;
+fetchHoldingsForPortfolio: (p: Portfolio) => Holding[];
+updateHoldingInPortfolio: (h: Holding, p: Portfolio) => Portfolio;
+removeHoldingFromPortfolioById: (id: string, p: Portfolio) => Portfolio;
 ```
 
 ### Holding
@@ -20,6 +37,28 @@ holdings: Holding[];
 symbol: string;
 trades: Trade[];
 ```
+
+#### Static Methods
+```
+Holding.findBySymbol(symbol: string): Holding;
+```
+
+#### Instance Methods
+```
+addTradeToHolding: (t: Trade, h: Holding) => Holding
+updateTradeInHoldingById: (t: Trade, h: Holding) => Holding
+removeTradeFromHoldingById: (id: string, h: Holding) => Holding
+```
+
+### Trade
+
+#### Instance Methods
+```
+addOrderToTrade: (o: Order, t: Trade) => Trade;
+updateOrderForTrade: (o: Order, t: Trade) => Trade;
+removeOrderForTradeById: (id: string, t: Trade) => Trade;
+```
+
 
 ### StockTrade `extends Trade`
 
@@ -30,9 +69,9 @@ orders: Order[];
 
 #### Ideas
 
-add `targetBuy: number`
-add `targetSell: number`
-add `targetEndDate: string`?
+- add `targetBuy: number`
+- add `targetSell: number`
+- add `targetEndDate: string`?
 
 ### OptionTrade `extends Trade`
 
@@ -46,9 +85,9 @@ orders: Order[]
 
 #### Ideas
 
-add `targetBuy: number`
-add `targetSell: number`
-add `targetEndDate: string`?
+- add `targetBuy: number`
+- add `targetSell: number`
+- add `targetEndDate: string`?
 
 ### Orders
 
@@ -66,3 +105,6 @@ quantity: number;
 username: string;
 passwordHash: string;
 ```
+
+---
+
