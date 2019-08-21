@@ -2,6 +2,7 @@
 layout: default
 title: Home
 edited: August 20, 2019
+version: 1
 ---
 
 # Stocks App
