@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Home
+edited: August 20, 2019
 ---
 
 # Stocks App
@@ -108,3 +109,15 @@ passwordHash: string;
 
 ---
 
+## Calculations
+
+```
+profitLoss( StockTrade | OptionTrade | Holding | Portfolio )
+costBasis( StockTrade | OptionTrade )
+calculateTimeRemain ( OptionTrade )
+calculateTimeOpen( OptionTrade )
+calculateIsClosed( StockTrade | OptionTrade )
+calculatePortfolioWeighting( Portfolio )
+```
+
+---
