@@ -1,85 +1,84 @@
 ---
 layout: default
 title: Home
-edited: August 20, 2019
-version: 1
+edited: August 22, 2019
+version: 2
 ---
 
 # Stocks App
 
 ## Models
----
 
 - Model instance methods do not auto-save (must call `.save()` from controller)
+  - I'm not sure about this
+
+---
 
 ### Portfolio
 
 #### Properties
 
-``` ts
-name: string;
-holdings: Holding[];
-```
+- `name: string;`
+- `holdings: { [symbol: string]: Holding }`
 
 #### Static Methods
 
-``` ts
-static createByName(name: string): Portfolio
-```
+`static createByName(name: string): Portfolio`
+
+- creates and saves a new Portfolio with a given name
 
 #### Instance Methods
 
-`addHolding(h: Holding, p: Portfolio) => Portfolio`
+`addHolding`
 
+- `(h: Holding, p: Portfolio) => Portfolio`
 - adds the holding to the Portfolio's array
-- _does not_ create the holding
 
-`fetchHoldings: (p: Portfolio) => Holding[]`
+`updateHolding(h: Holding, p: Portfolio) => Portfolio`
 
-- if the holdings are strings, fetch them
+- updates the holding in the Portfolio
 
-`removeHolding: (id: string, p: Portfolio) => Portfolio`
+`removeHolding(h: Holding, p: Portfolio) => Portfolio`
 
-- removes the id from the holdings array
+- removes the holding from the Portfolio
+
+`addTransaction(t: Transaction, p: Portfolio) => Portfolio`
+
+- adds the transaction to the portfolio's respective holding
+
+`removeTransaction(t: string | Transaction, p: Portfolio) => Portfolio`
+
+- removes the transaction from the portfolio
+- removes the id if a string is passed in
+- should also delete the transaction in the process
 
 ### Holding
 
-``` js
-  symbol: string;
-  trades: (string | Trade)[]; // or string if unpopulated
-```
+- `symbol: string;`
+- `trades: string[] | Transaction[];` (string if unfetched)
 
-#### Static Methods
+---
 
-```ts
-static findBySymbol(symbol: string): Holding;
-```
+### Transaction
 
-#### Instance Methods
+- `type: 'stock' | 'option'`
 
-`updateHolding: (h: Holding, p: Portfolio) => Portfolio`
-```ts
-addTradeToHolding: (t: Trade, h: Holding) => Holding
-updateTradeInHoldingById: (t: Trade, h: Holding) => Holding
-removeTradeFromHoldingById: (id: string, h: Holding) => Holding
-```
+(Holding Details)
 
-### Trade
+- `symbol: string`
 
-#### Instance Methods
+(Option Details)
 
-```ts
-addOrderToTrade: (o: Order, t: Trade) => Trade;
-updateOrderForTrade: (o: Order, t: Trade) => Trade;
-removeOrderForTradeById: (id: string, t: Trade) => Trade;
-```
+- `callPut: 'call' | 'put'`
+- `strikePrice: number`
+- `expirationDate: string`
 
-### StockTrade `extends Trade`
+(Order Details)
 
-```ts
-symbol: string;
-orders: Order[];
-```
+- `date: string` MM-DD-YYYY (?)
+- `buySell: 'buy' | 'sell'`
+- `price: number`
+- `quantity: number`
 
 #### Ideas
 
@@ -87,31 +86,7 @@ orders: Order[];
 - add `targetSell: number`
 - add `targetEndDate: string`?
 
-### OptionTrade `extends Trade`
-
-```ts
-symbol: string;
-callPut: 'call' | 'put';
-strikePrice: number;
-expDate: string;
-orders: Order[]
-```
-
-#### Ideas
-
-- add `targetBuy: number`
-- add `targetSell: number`
-- add `targetEndDate: string`?
-
-### Orders
-
-```ts
-date: string;
-openClose: 'open' | 'close';
-buySell: 'buy' | 'sell';
-price: number;
-quantity: number;
-```
+---
 
 ### User
 
@@ -125,8 +100,8 @@ passwordHash: string;
 ## Calculations
 
 ```ts
-profitLoss( StockTrade | OptionTrade | Holding | Portfolio )
-costBasis( StockTrade | OptionTrade )
+profitLoss( Holding | Portfolio )
+costBasis( Transaction[] )
 calculateTimeRemain ( OptionTrade )
 calculateTimeOpen( OptionTrade )
 calculateIsClosed( StockTrade | OptionTrade )
