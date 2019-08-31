@@ -41,10 +41,10 @@ interface PortfolioModel {
 type IPortfolioDocumentModel = PortfolioModel & mongoose.Model<IPortfolioDocument>;
 
 portfolioSchema.statics.createByName = async function(name: string) {
-  return await Portfolio.create({
-    name,
-    holdings: {}
-  });
+  const portfolio = defaultPortfolio();
+  portfolio.name = name;
+  console.log('create:', portfolio);
+  return await Portfolio.create(portfolio);
 };
 
 // Instance Methods
