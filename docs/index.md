@@ -7,6 +7,27 @@ version: 2
 
 # Stocks App
 
+1. API Layer
+    1. In: Http Request
+    1. Calls Controller Layer
+    1. Returns success status and modified state
+    1. Returns error status and error information
+
+1. Controller Layer
+    1. In: Relevant info from Requests
+    1. Updates states and calls persistence
+    1. Returns modified state
+
+1. Persistence Layer
+    1. In: Information to be saved
+    1. Saves, updates
+    1. Returns updated information
+    1. Throws if there were errors
+
+
+
+
+
 ## Models
 
 - Model instance methods do not auto-save (must call `.save()` from controller)
@@ -29,9 +50,8 @@ version: 2
 
 #### Instance Methods
 
-`addHolding`
+`addHolding(h: Holding, p: Portfolio) => Portfolio`
 
-- `(h: Holding, p: Portfolio) => Portfolio`
 - adds the holding to the Portfolio's array
 
 `updateHolding(h: Holding, p: Portfolio) => Portfolio`

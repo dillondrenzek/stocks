@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar">
+        <a class="nav-link" href='/'>Home</a>
+        <a class="nav-link" href='/db'>DB</a>
+        <a class="nav-link" href='/high-level'>High Level</a>
+      </nav>
+      <h1 id="db">DB</h1>
+
+<h2 id="portfolio">Portfolio</h2>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  <span class="nx">Portfolio</span><span class="p">.</span><span class="nx">createByName</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Portfolio</span><span class="p">;</span>
+
+  <span class="nl">name</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+  <span class="nl">holding</span><span class="p">:</span> <span class="nx">Holding</span><span class="p">[];</span>
+  <span class="nl">addTransaction</span><span class="p">:</span> <span class="p">(</span><span class="nx">t</span><span class="p">:</span> <span class="nx">Transaction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Portfolio</span><span class="p">;</span>
+  <span class="nl">deleteTransaction</span><span class="p">:</span> <span class="p">(</span><span class="nx">t</span><span class="p">:</span> <span class="nx">Transaction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Portfolio</span><span class="p">;</span>
+  <span class="nl">addHoldingBySymbol</span><span class="p">:</span> <span class="p">(</span><span class="nx">symbol</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Portfolio</span><span class="p">;</span>
+  <span class="nl">removeHoldingBySymbol</span><span class="p">:</span> <span class="p">(</span><span class="nx">symbol</span><span class="p">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">Portfolio</span><span class="p">;</span>
+
+  <span class="nx">totalCost</span><span class="p">(</span><span class="nx">forSymbol</span><span class="p">?:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nx">profitLoss</span><span class="p">(</span><span class="nx">forSymbol</span><span class="p">?:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nx">unrealizedGainLoss</span><span class="p">(</span><span class="nx">forSymbol</span><span class="p">?:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nx">realizedGainLoss</span><span class="p">(</span><span class="nx">forSymbol</span><span class="p">?:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">number</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li><strong>static</strong> <code class="highlighter-rouge">createByName(name: string) =&gt; Portfolio</code>
+    <ul>
+      <li>increases number of Portfolios by 1</li>
+      <li>returns the created Portfolio</li>
+      <li>created Portfolio has it’s name set to the given name</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">name</code></li>
+  <li><code class="highlighter-rouge">holdings</code></li>
+  <li><code class="highlighter-rouge">createHoldingBySymbol()</code>
+    <ul>
+      <li>if Holding exists
+        <ul>
+          <li>do nothing</li>
+        </ul>
+      </li>
+      <li>if Holding with symbol does not exist
+        <ul>
+          <li><code class="highlighter-rouge">holdings[symbol]</code> exists</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">addTransaction()</code>
+    <ul>
+      <li>creates new Transaction</li>
+      <li>if <code class="highlighter-rouge">holdings[symbol]</code> exists
+        <ul>
+          <li>adds Transaction <code class="highlighter-rouge">id</code> to Holding <code class="highlighter-rouge">trades</code></li>
+        </ul>
+      </li>
+      <li>if <code class="highlighter-rouge">holdings[symbol]</code> does not exist
+        <ul>
+          <li>adds Holding with same <code class="highlighter-rouge">symbol</code></li>
+          <li>adds Transaction <code class="highlighter-rouge">id</code> to Holding <code class="highlighter-rouge">trades</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">deleteTransaction()</code>
+    <ul>
+      <li>deletes the Transaction</li>
+      <li>removes the Transaction <code class="highlighter-rouge">id</code> from Holding <code class="highlighter-rouge">trades</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="helper-holding-functions">Helper <strong>Holding</strong> functions</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">createHolding(Transaction[], Holding?) =&gt; Holding</code>
+    <ol>
+      <li>(a) calculates initial state of Holding if not provided</li>
+    </ol>
+  </li>
+  <li><code class="highlighter-rouge">addTransaction(Transaction, Holding?) =&gt; Holding</code>
+    <ol>
+      <li>updates Holding</li>
+    </ol>
+  </li>
+  <li><code class="highlighter-rouge">totalCost(Transaction) =&gt; number</code>
+    <ul>
+      <li>if (sale)
+        <ul>
+          <li>return: (shares sold * sell price)</li>
+        </ul>
+      </li>
+      <li>if (purchase)
+        <ul>
+          <li>return: (shares bought * buy price)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">totalCost(Transaction[])</code>
+    <ol>
+      <li>sum total cost of each transaction</li>
+    </ol>
+  </li>
+  <li><code class="highlighter-rouge">costBasis(Transaction[], key: string) =&gt; number</code>
+    <ol>
+      <li>(a) total cost</li>
+      <li>(b) add up total number of shares acquired</li>
+      <li>return: (a) / (b)</li>
+    </ol>
+  </li>
+  <li><code class="highlighter-rouge">profitLoss(Transaction[], key: string) =&gt; number</code>
+    <ul>
+      <li><strong>Requires current value of Holding</strong></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">unrealizedGainLoss(Transaction[], key: string) =&gt; number</code>
+    <ol>
+      <li>(a) get total cost</li>
+      <li>(b) get total amount of sales</li>
+      <li>return: (a) - (b)</li>
+    </ol>
+  </li>
+  <li><code class="highlighter-rouge">realizedGainLoss(Transaction[], key: string) =&gt; number</code>
+    <ol>
+      <li>(a) get cost basis</li>
+      <li>(b) get total value of sales</li>
+      <li>(c) get # of shares sold</li>
+      <li>return: (a) - (b)</li>
+    </ol>
+  </li>
+</ul>
+
+<p>buy 3 for avg 120, total 360</p>
+
+<p>sell 1 for 130
+2 remain (shares held - shares sold)
+realized 10 gain (value of sale - (cost basis * shares sold))</p>
+
+<p>sell 1 for 135
+1 remain (shares held - shares sold)
+realized 15 gain (value of sale - cost basis)</p>
+
+<p>buy 1 for 125
+2 remain (shares held + shares bought)
+avg 122.5 = (1 share @ 120, 1 share @ 125) / shares held</p>
+
+<p>buy 2 for 118
+4 remain (shares held + shares bought)
+total cost = ((shares held * avg cost) + (shares bought * buy price))
+avg 120.25 = (total cost / (shares held + shares bought))</p>
+
+<p>sell 3 for 123
+value of sale = (shares sold * sell price)
+1 remain (shares held - shares sold)
+realized 8.25 gain (value of sale) - (shares sold * avg cost)</p>
+
+<hr />
+
+<h2 id="transaction">Transaction</h2>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  <span class="nx">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">stock</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">option</span><span class="dl">'</span><span class="p">;</span>
+
+  <span class="nl">symbol</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+
+  <span class="c1">// option</span>
+  <span class="nl">strikePrice</span><span class="p">:</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nl">callPut</span><span class="p">:</span> <span class="dl">'</span><span class="s1">call</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">put</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">expirationDate</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span> <span class="c1">// MM-DD-YYYY</span>
+
+  <span class="c1">// order</span>
+  <span class="nl">buySell</span><span class="p">:</span> <span class="dl">'</span><span class="s1">buy</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">sell</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nl">price</span><span class="p">:</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nl">quantity</span><span class="p">:</span> <span class="nx">number</span><span class="p">;</span>
+  <span class="nl">date</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span> <span class="c1">// MM-DD-YYYY</span>
+
+
+</code></pre></div></div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar">
+        <a class="nav-link" href='/'>Home</a>
+        <a class="nav-link" href='/db'>DB</a>
+        <a class="nav-link" href='/high-level'>High Level</a>
+      </nav>
+      <h1 id="stocks-app">Stocks App</h1>
+
+<ol>
+  <li>API Layer
+    <ol>
+      <li>In: Http Request</li>
+      <li>Calls Controller Layer</li>
+      <li>Returns success status and modified state</li>
+      <li>Returns error status and error information</li>
+    </ol>
+  </li>
+  <li>Controller Layer
+    <ol>
+      <li>In: Relevant info from Requests</li>
+      <li>Updates states and calls persistence</li>
+      <li>Returns modified state</li>
+    </ol>
+  </li>
+  <li>Persistence Layer
+    <ol>
+      <li>In: Information to be saved</li>
+      <li>Saves, updates</li>
+      <li>Returns updated information</li>
+      <li>Throws if there were errors</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="models">Models</h2>
+
+<ul>
+  <li>Model instance methods do not auto-save (must call <code class="highlighter-rouge">.save()</code> from controller)
+    <ul>
+      <li>I’m not sure about this</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="portfolio">Portfolio</h3>
+
+<h4 id="properties">Properties</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">name: string;</code></li>
+  <li><code class="highlighter-rouge">holdings: { [symbol: string]: Holding }</code></li>
+</ul>
+
+<h4 id="static-methods">Static Methods</h4>
+
+<p><code class="highlighter-rouge">static createByName(name: string): Portfolio</code></p>
+
+<ul>
+  <li>creates and saves a new Portfolio with a given name</li>
+</ul>
+
+<h4 id="instance-methods">Instance Methods</h4>
+
+<p><code class="highlighter-rouge">addHolding(h: Holding, p: Portfolio) =&gt; Portfolio</code></p>
+
+<ul>
+  <li>adds the holding to the Portfolio’s array</li>
+</ul>
+
+<p><code class="highlighter-rouge">updateHolding(h: Holding, p: Portfolio) =&gt; Portfolio</code></p>
+
+<ul>
+  <li>updates the holding in the Portfolio</li>
+</ul>
+
+<p><code class="highlighter-rouge">removeHolding(h: Holding, p: Portfolio) =&gt; Portfolio</code></p>
+
+<ul>
+  <li>removes the holding from the Portfolio</li>
+</ul>
+
+<p><code class="highlighter-rouge">addTransaction(t: Transaction, p: Portfolio) =&gt; Portfolio</code></p>
+
+<ul>
+  <li>adds the transaction to the portfolio’s respective holding</li>
+</ul>
+
+<p><code class="highlighter-rouge">removeTransaction(t: string | Transaction, p: Portfolio) =&gt; Portfolio</code></p>
+
+<ul>
+  <li>removes the transaction from the portfolio</li>
+  <li>removes the id if a string is passed in</li>
+  <li>should also delete the transaction in the process</li>
+</ul>
+
+<h3 id="holding">Holding</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">symbol: string;</code></li>
+  <li><code class="highlighter-rouge">trades: string[] | Transaction[];</code> (string if unfetched)</li>
+</ul>
+
+<hr />
+
+<h3 id="transaction">Transaction</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">type: 'stock' | 'option'</code></li>
+</ul>
+
+<p>(Holding Details)</p>
+
+<ul>
+  <li><code class="highlighter-rouge">symbol: string</code></li>
+</ul>
+
+<p>(Option Details)</p>
+
+<ul>
+  <li><code class="highlighter-rouge">callPut: 'call' | 'put'</code></li>
+  <li><code class="highlighter-rouge">strikePrice: number</code></li>
+  <li><code class="highlighter-rouge">expirationDate: string</code></li>
+</ul>
+
+<p>(Order Details)</p>
+
+<ul>
+  <li><code class="highlighter-rouge">date: string</code> MM-DD-YYYY (?)</li>
+  <li><code class="highlighter-rouge">buySell: 'buy' | 'sell'</code></li>
+  <li><code class="highlighter-rouge">price: number</code></li>
+  <li><code class="highlighter-rouge">quantity: number</code></li>
+</ul>
+
+<h4 id="ideas">Ideas</h4>
+
+<ul>
+  <li>add <code class="highlighter-rouge">targetBuy: number</code></li>
+  <li>add <code class="highlighter-rouge">targetSell: number</code></li>
+  <li>add <code class="highlighter-rouge">targetEndDate: string</code>?</li>
+</ul>
+
+<hr />
+
+<h3 id="user">User</h3>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">username</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="nl">passwordHash</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="calculations">Calculations</h2>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">profitLoss</span><span class="p">(</span> <span class="nx">Holding</span> <span class="o">|</span> <span class="nx">Portfolio</span> <span class="p">)</span>
+<span class="nx">costBasis</span><span class="p">(</span> <span class="nx">Transaction</span><span class="p">[]</span> <span class="p">)</span>
+<span class="nx">calculateTimeRemain</span> <span class="p">(</span> <span class="nx">OptionTrade</span> <span class="p">)</span>
+<span class="nx">calculateTimeOpen</span><span class="p">(</span> <span class="nx">OptionTrade</span> <span class="p">)</span>
+<span class="nx">calculateIsClosed</span><span class="p">(</span> <span class="nx">StockTrade</span> <span class="o">|</span> <span class="nx">OptionTrade</span> <span class="p">)</span>
+<span class="nx">calculatePortfolioWeighting</span><span class="p">(</span> <span class="nx">Portfolio</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+    </div>
+  </body>
+</html>
