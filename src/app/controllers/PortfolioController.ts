@@ -1,19 +1,19 @@
-// import * as DB from '../../db';
-// import * as Types from '../../types';
+import * as DB from '../../db';
+import * as Types from '../../types';
 // // import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../../types';
 // import { calculateHolding } from '../portfolio';
 
-// export class PortfolioController {
+export class PortfolioController {
 
-//   public async createPortfolioWithName(name: string): Promise<Types.Portfolio> {
-//     const portfolio = await DB.Portfolio.createByName(name);
-//     return portfolio;
-//   }
+  public static async createPortfolioWithName(name: string): Promise<Types.Portfolio> {
+    const portfolio = await DB.Portfolio.createByName(name);
+    return portfolio;
+  }
 
-//   public async getPortfolios(): Promise<DB.IPortfolioDocument[]> {
-//     const portfolios = await DB.Portfolio.find();
-//     return portfolios;
-//   }
+  public static async getPortfolios(): Promise<Types.Portfolio[]> {
+    const portfolios = await DB.Portfolio.find();
+    return portfolios;
+  }
 
 //   public async getPortfolioById(id: string): Promise<DB.IPortfolioDocument> {
 //     const portfolio = await DB.Portfolio.findById(id);
@@ -109,4 +109,4 @@
     
 //   }
 
-// }
+}

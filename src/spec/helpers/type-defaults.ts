@@ -2,10 +2,8 @@ import * as Types from '../../types';
 
 export function defaultPortfolio(): Types.Portfolio {
   return {
-    holdings: [],
+    holdings: {},
     name: '',
-    optionTrades: [],
-    stockTrades: []
   }
 }
 

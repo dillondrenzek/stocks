@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const {startServer} = require('../dist/src');
+const {startServer} = require('../dist');
 require('../load-env');
 
 startServer();

@@ -6,9 +6,7 @@ export interface Portfolio extends Types.Portfolio {}
 
 const defaultValues: Portfolio = {
   name: '',
-  holdings: [],
-  stockTrades: [],
-  optionTrades: []
+  holdings: {},
 };
 
 export class Portfolio {

@@ -8,7 +8,7 @@ import { PortfolioAPI } from './api/portfolio-api';
 
 import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
-import { HoldingsTable } from './components/holdings-table/holdings-table';
+import HoldingsTable from './components/holdings-table/holdings-table';
 import { PortfolioForm } from './components/portfolio-form/portfolio-form';
 import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
 import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
@@ -183,9 +183,9 @@ export default function App() {
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <HoldingsTable
-                    holdings={selectedPortfolio.holdings}
-                  />
+                  {selectedPortfolio.holdings && <HoldingsTable
+                    holdings={Object.values(selectedPortfolio.holdings)}
+                  />}
                 </Grid>
               </Paper>
               </Grid>

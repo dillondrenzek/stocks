@@ -5,23 +5,21 @@ import { Holding } from '../../types';
 
 // Interface
 
-export interface IPortfolio {
-  holdings: Types.Holding[];
-  name: string;
-  optionTrades: Array<IOptionTradeDocument['_id']>;
-  stockTrades: Array<IStockTradeDocument['_id']>;
-  addTrade?: (doc: ITradeDocument) => Promise<IPortfolioDocument>;
-  getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
-  getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
-  removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
-  addOrUpdateHolding?: (holding: Holding) => Promise<IPortfolioDocument>;
-  getHoldingBySymbol?: (symbol: string) => Holding;
+export interface IPortfolio extends Types.Portfolio {
+  // holdings: Types.Holding[];
+  // name: string;
+  // optionTrades: Array<IOptionTradeDocument['_id']>;
+  // stockTrades: Array<IStockTradeDocument['_id']>;
+  // addTrade?: (doc: ITradeDocument) => Promise<IPortfolioDocument>;
+  // getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
+  // getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
+  // removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
+  // addOrUpdateHolding?: (holding: Holding) => Promise<IPortfolioDocument>;
+  // getHoldingBySymbol?: (symbol: string) => Holding;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
-  holdings: [],
-  optionTrades: [],
-  stockTrades: [],
+  holdings: {},
   name: ''
 });
 
@@ -30,10 +28,8 @@ export type IPortfolioDocument = IPortfolio & mongoose.Document;
 // Schema
 
 const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
-  holdings: Array, // Objects
+  holdings: Object,
   name: String,
-  optionTrades: Array,
-  stockTrades: Array,
 });
 
 // Static Methods
@@ -47,72 +43,70 @@ type IPortfolioDocumentModel = PortfolioModel & mongoose.Model<IPortfolioDocumen
 portfolioSchema.statics.createByName = async function(name: string) {
   return await Portfolio.create({
     name,
-    stockTrades: [],
-    optionTrades: [],
-    holdings: []
+    holdings: {}
   });
 };
 
 // Instance Methods
 
-portfolioSchema.methods.addTrade = async function(trade: ITradeDocument): Promise<IPortfolioDocument> {
-  // add Trade id to array
-  if (trade.type === 'stock') {
-    this.stockTrades.push(trade._id);
-  } else if (trade.type === 'option') {
-    this.optionTrades.push(trade._id);
-  }
-  // save
-  await this.save();
+// portfolioSchema.methods.addTrade = async function(trade: ITradeDocument): Promise<IPortfolioDocument> {
+//   // add Trade id to array
+//   if (trade.type === 'stock') {
+//     this.stockTrades.push(trade._id);
+//   } else if (trade.type === 'option') {
+//     this.optionTrades.push(trade._id);
+//   }
+//   // save
+//   await this.save();
 
-  return this;
-};
+//   return this;
+// };
 
-portfolioSchema.methods.getAllStockTrades = async function() {
-  const trades: IStockTradeDocument[] = await StockTrade.find({
-    _id: { $in: this.stockTrades }
-  });
-  return trades;
-};
+// portfolioSchema.methods.getAllStockTrades = async function() {
+//   const trades: IStockTradeDocument[] = await StockTrade.find({
+//     _id: { $in: this.stockTrades }
+//   });
+//   return trades;
+// };
 
-portfolioSchema.methods.getAllOptionTrades = async function() {
-  const trades: IOptionTradeDocument[] = await OptionTrade.find({
-    _id: { $in: this.optionTrades }
-  });
-  return trades;
-};
+// portfolioSchema.methods.getAllOptionTrades = async function() {
+//   const trades: IOptionTradeDocument[] = await OptionTrade.find({
+//     _id: { $in: this.optionTrades }
+//   });
+//   return trades;
+// };
 
-portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOption, tradeId: string): Promise<IPortfolioDocument> {
-  const predicate = (id: string) => (id === tradeId);
+// portfolioSchema.methods.removeTradeById = async function (type: Types.StockOrOption, tradeId: string): Promise<IPortfolioDocument> {
+//   const predicate = (id: string) => (id === tradeId);
 
-  if (type === 'stock') {
-    const index = this.stockTrades.findIndex(predicate);
-    this.stockTrades.splice(index, 1);
-    await this.save();
-  } else if (type === 'option') {
-    this.optionTrades = this.optionTrades.filter(predicate);
-    await this.save();
-  }
-  return this;
-}
+//   if (type === 'stock') {
+//     const index = this.stockTrades.findIndex(predicate);
+//     this.stockTrades.splice(index, 1);
+//     await this.save();
+//   } else if (type === 'option') {
+//     this.optionTrades = this.optionTrades.filter(predicate);
+//     await this.save();
+//   }
+//   return this;
+// }
 
-portfolioSchema.methods.addOrUpdateHolding = async function (holding: Holding) {
-  let existingHolding = this.getHoldingBySymbol(holding.symbol);
-  if (!existingHolding) {
-    this.holdings.push(holding);
-  } else {
-    existingHolding = Object.assign(existingHolding, holding);
-    let index = this.holdings.findIndex((h: Holding) => holding.symbol === h.symbol);
-    this.holdings.splice(index, 1, existingHolding);
-  }
-  await this.save();
-  return this;
-}
+// portfolioSchema.methods.addOrUpdateHolding = async function (holding: Holding) {
+//   let existingHolding = this.getHoldingBySymbol(holding.symbol);
+//   if (!existingHolding) {
+//     this.holdings.push(holding);
+//   } else {
+//     existingHolding = Object.assign(existingHolding, holding);
+//     let index = this.holdings.findIndex((h: Holding) => holding.symbol === h.symbol);
+//     this.holdings.splice(index, 1, existingHolding);
+//   }
+//   await this.save();
+//   return this;
+// }
 
-portfolioSchema.methods.getHoldingBySymbol = function (symbol: string): Holding {
-  const holding: Holding = this.holdings.find((holding: Holding) => holding.symbol === symbol);
-  return holding;
-}
+// portfolioSchema.methods.getHoldingBySymbol = function (symbol: string): Holding {
+//   const holding: Holding = this.holdings.find((holding: Holding) => holding.symbol === symbol);
+//   return holding;
+// }
 
 // portfolioSchema.methods.deleteTrade = async function (trade: ITradeDocument) {
 //   const optionTrades: string[] = this.optionTrades;

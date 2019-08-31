@@ -34,5 +34,4 @@ describe('Portfolio', withDb(() => {
     });
   });
 
-
 }));
