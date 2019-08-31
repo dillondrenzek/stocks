@@ -64,7 +64,6 @@ describe('Portfolio', withDb(() => {
           // save portfolio
           await portfolio.save();
           // assume created holding
-          console.log(portfolio);
           createdHolding = portfolio.holdings[transactionSymbol];
         });
 
@@ -74,7 +73,7 @@ describe('Portfolio', withDb(() => {
 
         it('should add the transaction id to the holdings transactions', () => {
           expect(createdHolding.transactions).to.contain(savedTransaction.id);
-        })
+        });
 
       });
 
