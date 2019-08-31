@@ -8,11 +8,11 @@ const router = express();
 // Routes
 router.get('/',             getPortfolios);
 router.post('/',            createPortfolio);
-router.post('/:id/delete',       deletePortfolioById);
+// router.post('/:id/delete',       deletePortfolioById);
 // router.get('/:id/holdings', getPortfolioHoldings);
-router.get('/:id/trades/stock', getStockTradesForPortfolio);
-router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
-router.post('/:id/trades',  addTradeToPortfolio);
+// router.get('/:id/trades/stock', getStockTradesForPortfolio);
+// router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
+// router.post('/:id/trades',  addTradeToPortfolio);
 
 // API Methods
 

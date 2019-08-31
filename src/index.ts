@@ -31,7 +31,7 @@ export async function startServer() {
 
   // View routes
   app.use('/api', api);
-  app.get('/portfolios', portfolioRoutes);
+  // app.get('/portfolios', portfolioRoutes);
   app.get('/', (req, res) => {
     res.render('portfolios');
   });

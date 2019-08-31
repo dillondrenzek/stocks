@@ -6,3 +6,11 @@ export class Logger {
         next();
     }
 }
+
+export function accessControlAllowOrigin(allow: string) {
+    return function (req: Request, res: Response, next: NextFunction) {
+        res.header('Access-Control-Allow-Origin', allow);
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        next();
+    }
+}
