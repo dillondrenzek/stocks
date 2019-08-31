@@ -10,7 +10,7 @@ export interface Transaction extends Saveable {
   quantity: number;
   side: BuyOrSell;
   symbol: string;
-  timestamp?: Date;
+  date?: Date;
   type: StockOrOption;
 }
 
@@ -20,4 +20,7 @@ export interface StockTransaction extends Transaction {
 
 export interface OptionTransaction extends Transaction {
   type: 'option';
+  strikePrice: number;
+  callPut: CallOrPut;
+  expirationDate: Date; // MM-DD-YYYY
 }

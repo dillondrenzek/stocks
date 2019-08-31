@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import * as Types from '../../types';
-import { ITransaction, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade } from '../trade';
+import { ITransaction, IStockTransactionDocument, IOptionTransactionDocument, StockTransaction, OptionTransaction, IStockTransaction } from '../trade';
 import { Holding, Transaction } from '../../types';
 
 // Interface
@@ -57,9 +57,9 @@ portfolioSchema.methods.fetchTransactions = async function() {
     const holding: Types.Holding = this.holdings[key];
     holding.transactions.forEach(async (t: string | Transaction, index: number) => {
       if (typeof t === 'string') {
-        holding.transactions[index] = await StockTrade.findById(t);
+        holding.transactions[index] = await StockTransaction.findById(t);
       } else if (t._id) {
-        holding.transactions[index] = await StockTrade.findById(t._id);
+        holding.transactions[index] = await StockTransaction.findById(t._id);
       }
     });
   });

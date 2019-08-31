@@ -1,11 +1,11 @@
 export { connectDb } from './connect';
 export { Portfolio, IPortfolioDocument } from './portfolio/Portfolio';
 export { 
-  StockTrade, 
-  OptionTrade, 
+  StockTransaction as StockTrade, 
+  OptionTransaction as OptionTrade, 
   ITransaction as ITradeDocument, 
-  IOptionTrade, 
-  IOptionTradeDocument, 
-  IStockTrade, 
-  IStockTradeDocument 
+  IOptionTransaction as IOptionTrade, 
+  IOptionTransactionDocument as IOptionTradeDocument, 
+  IStockTransaction as IStockTrade, 
+  IStockTransactionDocument as IStockTradeDocument 
 } from './trade';

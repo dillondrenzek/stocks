@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { CallOrPut, OpenOrClose } from '../../types';
 import { ITransaction } from './Transaction';
 
-export interface IOptionTrade extends ITransaction {
+export interface IOptionTransaction extends ITransaction {
   callPut: CallOrPut;
   expDate: Date;
   openClose: OpenOrClose;
@@ -10,12 +10,12 @@ export interface IOptionTrade extends ITransaction {
   type: 'option';
 }
 
-export const defaultOptionTrade = (): IOptionTrade => ({
+export const defaultOptionTransaction = (): IOptionTransaction => ({
   price: 0.00,
   quantity: 0,
   side: null,
   symbol: '',
-  timestamp: new Date(),
+  date: new Date(),
   callPut: null,
   expDate: new Date(),
   openClose: null,
@@ -23,10 +23,13 @@ export const defaultOptionTrade = (): IOptionTrade => ({
   type: 'option',
 });
 
-export type IOptionTradeDocument = IOptionTrade & mongoose.Document;
+export type IOptionTransactionDocument = IOptionTransaction & mongoose.Document;
 
-const optionTradeSchema = new mongoose.Schema<IOptionTradeDocument>({
-  callPut: String,
+const optionTransactionSchema = new mongoose.Schema<IOptionTransactionDocument>({
+  callPut: {
+    type: String,
+    default: null
+  },
   expDate: Date,
   openClose: String,
   price: Number,
@@ -38,4 +41,4 @@ const optionTradeSchema = new mongoose.Schema<IOptionTradeDocument>({
   type: String,
 });
 
-export const OptionTrade = mongoose.model<IOptionTradeDocument>('OptionTrade', optionTradeSchema);
+export const OptionTransaction = mongoose.model<IOptionTransactionDocument>('OptionTransaction', optionTransactionSchema);
