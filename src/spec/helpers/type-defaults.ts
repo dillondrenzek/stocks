@@ -17,12 +17,12 @@ export function defaultStockTrade(): Types.StockTransaction {
   }
 }
 
-export function defaultOptionTrade(): Types.OptionTransaction {
-  return {
-    price: 0,
-    quantity: 0,
-    side: null,
-    symbol: '',
-    type: 'option'
-  }
-}
+// export function defaultOptionTrade(): Types.OptionTransaction {
+//   return {
+//     price: 0,
+//     quantity: 0,
+//     side: null,
+//     symbol: '',
+//     type: 'option'
+//   }
+// }

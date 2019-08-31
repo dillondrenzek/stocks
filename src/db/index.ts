@@ -8,4 +8,4 @@ export {
   IOptionTransactionDocument as IOptionTradeDocument, 
   IStockTransaction as IStockTrade, 
   IStockTransactionDocument as IStockTradeDocument 
-} from './trade';
+} from './transaction';

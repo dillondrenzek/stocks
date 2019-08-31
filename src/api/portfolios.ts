@@ -64,10 +64,12 @@ export async function deletePortfolioById(req: Request, res: Response) {
 export async function addTransactionsToPortfolio(req: Request, res: Response) {
   const { id } = req.params;
   const body = req.body;
+  console.log('Add transactions to portfolio:', id);
+  console.log(' - body:', body);
   try {
     const portfolio = await PortfolioController.getPortfolioById(id);
-    console.log('add trade:', body);
-    const added = await controller.addTradeToPortfolio(body, portfolio.id);
+
+    const added = await PortfolioController.addTransactionsToPortfolio(body, portfolio._id);
     res.json(added);
   } catch (e) {
     res.status(500).send('Error adding trade to portfolio: ' + e);

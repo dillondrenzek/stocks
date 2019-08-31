@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import * as Types from '../../types';
-import { ITransaction, IStockTransactionDocument, IOptionTransactionDocument, StockTransaction, OptionTransaction, IStockTransaction } from '../trade';
+import { ITransaction, ITransactionDocument, IStockTransactionDocument, IOptionTransactionDocument, StockTransaction, OptionTransaction, IStockTransaction } from '../transaction';
 import { Holding, Transaction } from '../../types';
 
 // Interface
@@ -11,7 +11,7 @@ export interface IPortfolio extends Types.Portfolio {
   // optionTrades: Array<IOptionTradeDocument['_id']>;
   // stockTrades: Array<IStockTradeDocument['_id']>;
   fetchTransactions?: () => void;
-  addTrade?: (doc: ITransaction) => Promise<IPortfolioDocument>;
+  addTransaction?: (doc: ITransaction) => Promise<IPortfolioDocument>;
   // getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   // getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
   // removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
@@ -44,7 +44,7 @@ interface PortfolioModel {
 
 type IPortfolioDocumentModel = PortfolioModel & mongoose.Model<IPortfolioDocument>;
 
-portfolioSchema.statics.createByName = async function(name: string) {
+portfolioSchema.statics.createByName = async function (name: string): Promise<IPortfolioDocument> {
   const portfolio = defaultPortfolio();
   portfolio.name = name;
   return await Portfolio.create(portfolio);
@@ -52,7 +52,7 @@ portfolioSchema.statics.createByName = async function(name: string) {
 
 // Instance Methods
 
-portfolioSchema.methods.fetchTransactions = async function() {
+portfolioSchema.methods.fetchTransactions = async function (): Promise<IPortfolioDocument> {
   Object.keys(this.holdings).forEach((key) => {
     const holding: Types.Holding = this.holdings[key];
     holding.transactions.forEach(async (t: string | Transaction, index: number) => {
@@ -63,20 +63,35 @@ portfolioSchema.methods.fetchTransactions = async function() {
       }
     });
   });
+  return this;
 }
 
-// portfolioSchema.methods.addTrade = async function(trade: ITradeDocument): Promise<IPortfolioDocument> {
-//   // add Trade id to array
-//   if (trade.type === 'stock') {
-//     this.stockTrades.push(trade._id);
-//   } else if (trade.type === 'option') {
-//     this.optionTrades.push(trade._id);
-//   }
-//   // save
-//   await this.save();
+function newHoldingWithSymbol(symbol: string): Types.Holding {
+  return {
+    symbol,
+    transactions: []
+  };
+}
 
-//   return this;
-// };
+portfolioSchema.methods.addTransaction = async function(transaction: ITransactionDocument): Promise<IPortfolioDocument> {
+  
+  // add Holding if it doesn't exist
+  let holding: Types.Holding = this.holdings[transaction.symbol];
+  if (!holding) {
+    this.holdings[transaction.symbol] = newHoldingWithSymbol(transaction.symbol);
+    holding = this.holdings[transaction.symbol];
+  }
+  
+  // add transaction id to holding
+  if (transaction.type === 'stock') {
+    holding.transactions.push(transaction.id);
+    // this.stockTrades.push(transaction._id);
+  // } else if (trade.type === 'option') {
+  //   this.optionTrades.push(trade._id);
+  }
+
+  return this;
+};
 
 // portfolioSchema.methods.getAllStockTrades = async function() {
 //   const trades: IStockTradeDocument[] = await StockTrade.find({

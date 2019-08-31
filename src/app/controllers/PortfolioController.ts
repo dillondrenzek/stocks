@@ -33,8 +33,8 @@ export class PortfolioController {
     }
   }
 
-//   public async addTradeToPortfolio(trade: Types.Trade, portfolioId: string): Promise<DB.IPortfolioDocument> {
-
+  public static async addTransactionsToPortfolio(trade: Types.Transaction | Types.Transaction[], portfolioId: string): Promise<Types.Portfolio> {
+    let portfolio: Types.Portfolio;
 //     // save trade
 //     let newTrade: DB.ITradeDocument;
 //     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
@@ -69,8 +69,8 @@ export class PortfolioController {
 
 //     portfolio = await portfolio.addOrUpdateHolding(newHolding);
 
-//     return portfolio;
-//   } 
+    return portfolio;
+  } 
 
 //   private async calculateHoldingForSymbol(symbol: string): Promise<Types.Holding> {
 //     const stockTrades = await DB.StockTrade.findBySymbol(symbol);
