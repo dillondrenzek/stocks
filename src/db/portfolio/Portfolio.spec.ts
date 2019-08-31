@@ -34,14 +34,13 @@ describe('Portfolio', withDb(() => {
       expect(foundPortfolios.length).to.eq(1);
     });
 
-    it('creates a new Portfolio with the correct name', async () => {
+    it('creates a new Portfolio with the correct name', () => {
       const createdPortfolio = foundPortfolios[0];
       expect(createdPortfolio.name).to.eq(name);
     });
 
-    it('creates a portfolio with a holdings object', async () => {
+    it('creates a portfolio with a holdings object', () => {
       const createdPortfolio = foundPortfolios[0];
-      console.log(createdPortfolio);
       expect(createdPortfolio.holdings).to.exist;
     })
   });

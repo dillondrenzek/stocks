@@ -28,7 +28,10 @@ export type IPortfolioDocument = IPortfolio & mongoose.Document;
 // Schema
 
 const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
-  holdings: Object,
+  holdings: {
+    type: Object,
+    default: {}
+  },
   name: String,
 });
 
@@ -43,7 +46,6 @@ type IPortfolioDocumentModel = PortfolioModel & mongoose.Model<IPortfolioDocumen
 portfolioSchema.statics.createByName = async function(name: string) {
   const portfolio = defaultPortfolio();
   portfolio.name = name;
-  console.log('create:', portfolio);
   return await Portfolio.create(portfolio);
 };
 
