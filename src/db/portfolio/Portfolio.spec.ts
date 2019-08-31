@@ -79,7 +79,43 @@ describe('Portfolio', withDb(() => {
 
     });
 
+    describe('to a portfolio with a holding for transaction symbol', () => {
+      let transactionSymbol = 'TEST',
+        existingHolding: Types.Holding;
 
+      describe('by passing an id of a saved transaction', () => {
+        let firstTransaction: IStockTransactionDocument,
+          secondTransaction: IStockTransactionDocument,
+          precount: number,
+          postcount: number;
+
+        beforeEach(async () => {
+          // save transaction first
+          firstTransaction = await StockTransaction.create({ symbol: transactionSymbol });
+          secondTransaction = await StockTransaction.create({ symbol: transactionSymbol });
+          // add first transaction to portfolio
+          await portfolio.addTransaction(firstTransaction);
+          await portfolio.save();
+          // add another transaction
+          await portfolio.addTransaction(secondTransaction);
+          await portfolio.save();
+          // assume created holding
+          existingHolding = portfolio.holdings[transactionSymbol];
+        });
+
+        it('should have added one transaction id', () => {
+          expect(existingHolding).to.exist;
+        });
+
+        it('should add the transaction id to the holdings transactions', () => {
+          expect(existingHolding.transactions).to.contain(secondTransaction.id);
+          // there should now be two transactions
+          expect(existingHolding.transactions.length).to.eq(2);
+        });
+
+      });
+
+    });
 
   });
 
