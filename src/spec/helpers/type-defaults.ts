@@ -7,7 +7,7 @@ export function defaultPortfolio(): Types.Portfolio {
   }
 }
 
-export function defaultStockTrade(): Types.StockTrade {
+export function defaultStockTrade(): Types.StockTransaction {
   return {
     price: 0,
     quantity: 0,
@@ -17,7 +17,7 @@ export function defaultStockTrade(): Types.StockTrade {
   }
 }
 
-export function defaultOptionTrade(): Types.OptionTrade {
+export function defaultOptionTrade(): Types.OptionTransaction {
   return {
     price: 0,
     quantity: 0,

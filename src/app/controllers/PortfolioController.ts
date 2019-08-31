@@ -15,10 +15,13 @@ export class PortfolioController {
     return portfolios;
   }
 
-//   public async getPortfolioById(id: string): Promise<DB.IPortfolioDocument> {
-//     const portfolio = await DB.Portfolio.findById(id);
-//     return portfolio;
-//   }
+  public static async getPortfolioById(id: string): Promise<Types.Portfolio> {
+    let portfolio = await DB.Portfolio.findById(id);
+    // for each holding, we need it populated with each of it's transactions
+    await portfolio.fetchTransactions();
+
+    return portfolio;
+  }
 
 //   public async deletePortfolioById(id: string): Promise<DB.IPortfolioDocument> {
 //     try {

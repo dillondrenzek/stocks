@@ -1,4 +1,5 @@
 import { Saveable } from './db';
+import { Transaction } from './transaction';
 
 export interface Portfolio extends Saveable {
   holdings: { 
@@ -9,5 +10,9 @@ export interface Portfolio extends Saveable {
 
 export interface Holding {
   symbol: string;
-  transactions: string[]; // id
+  transactions: string[] | Transaction[];
+}
+
+export interface FullHolding extends Holding {
+  transactions: Transaction[];
 }

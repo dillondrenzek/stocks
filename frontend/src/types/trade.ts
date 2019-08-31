@@ -1,8 +1,8 @@
 import * as Types from '../../../src/types';
 
-export interface Trade extends Types.Trade {}
+export interface Trade extends Types.Transaction {}
 
-export interface StockTrade extends Types.StockTrade {}
+export interface StockTrade extends Types.StockTransaction {}
 
 const defaultValues: StockTrade = {
   price: 0.00,

@@ -37,6 +37,18 @@ export async function createPortfolio(req: Request, res: Response) {
   }
 }
 
+// Get Portfolio By Id
+export async function getPortfolioById(req: Request, res: Response) {
+  const { params } = req;
+  const { id } = params;
+  try {
+    const portfolio = await PortfolioController.getPortfolioById(id);
+    res.json(portfolio);
+  } catch (err) {
+    res.status(500).send('Error getting portfolio: ' + err);
+  }
+}
+
 // // Delete Portfolio by Id
 // export async function deletePortfolioById(req: Request, res: Response) {
 //   const { id } = req.params;

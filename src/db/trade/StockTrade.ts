@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { ITrade, ITradeDocument } from './Trade';
+import { ITransaction, ITransactionDocument } from './Trade';
 
-export interface IStockTrade extends ITrade {
+export interface IStockTrade extends ITransaction {
   type: 'stock';
 }
 

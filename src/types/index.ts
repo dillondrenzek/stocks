@@ -1,2 +1,2 @@
 export * from './portfolios';
-export * from './trades';
+export * from './transaction';

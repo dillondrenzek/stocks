@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { CallOrPut, OpenOrClose } from '../../types';
-import { ITrade, ITradeDocument } from './Trade';
+import { ITransaction } from './Trade';
 
-export interface IOptionTrade extends ITrade {
+export interface IOptionTrade extends ITransaction {
   callPut: CallOrPut;
   expDate: Date;
   openClose: OpenOrClose;

@@ -3,7 +3,7 @@ export { Portfolio, IPortfolioDocument } from './portfolio/Portfolio';
 export { 
   StockTrade, 
   OptionTrade, 
-  ITradeDocument, 
+  ITransaction as ITradeDocument, 
   IOptionTrade, 
   IOptionTradeDocument, 
   IStockTrade, 

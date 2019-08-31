@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import * as Types from '../../types';
-import { ITradeDocument, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade, ITrade } from '../trade';
-import { Holding } from '../../types';
+import { ITransaction, IStockTradeDocument, IOptionTradeDocument, StockTrade, OptionTrade, IStockTrade } from '../trade';
+import { Holding, Transaction } from '../../types';
 
 // Interface
 
@@ -10,7 +10,8 @@ export interface IPortfolio extends Types.Portfolio {
   // name: string;
   // optionTrades: Array<IOptionTradeDocument['_id']>;
   // stockTrades: Array<IStockTradeDocument['_id']>;
-  // addTrade?: (doc: ITradeDocument) => Promise<IPortfolioDocument>;
+  fetchTransactions?: () => void;
+  addTrade?: (doc: ITransaction) => Promise<IPortfolioDocument>;
   // getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   // getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
   // removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
@@ -50,6 +51,19 @@ portfolioSchema.statics.createByName = async function(name: string) {
 };
 
 // Instance Methods
+
+portfolioSchema.methods.fetchTransactions = async function() {
+  Object.keys(this.holdings).forEach((key) => {
+    const holding: Types.Holding = this.holdings[key];
+    holding.transactions.forEach(async (t: string | Transaction, index: number) => {
+      if (typeof t === 'string') {
+        holding.transactions[index] = await StockTrade.findById(t);
+      } else if (t._id) {
+        holding.transactions[index] = await StockTrade.findById(t._id);
+      }
+    });
+  });
+}
 
 // portfolioSchema.methods.addTrade = async function(trade: ITradeDocument): Promise<IPortfolioDocument> {
 //   // add Trade id to array

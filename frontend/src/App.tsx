@@ -84,7 +84,7 @@ export default function App() {
       PortfolioAPI.getPortfolios((data) => {
         setSelectedPortfolio(data[0]);
         setPortfolios(data);
-        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+        // PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
       });
     }
   });

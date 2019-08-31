@@ -1,13 +1,7 @@
 import mongoose from 'mongoose';
-import { BuyOrSell, StockOrOption } from '../../types';
+import * as Types from '../../types';
 
-export interface ITrade {
-  price: number;
-  quantity: number;
-  side: BuyOrSell;
-  symbol: string;
-  timestamp: Date;
-  type: StockOrOption;
+export interface ITransaction extends Types.Transaction {
 }
 
-export type ITradeDocument = ITrade & mongoose.Document;
+export type ITransactionDocument = ITransaction & mongoose.Document;
