@@ -23,15 +23,15 @@ export class PortfolioController {
     return portfolio;
   }
 
-//   public async deletePortfolioById(id: string): Promise<DB.IPortfolioDocument> {
-//     try {
-//       const removed = await DB.Portfolio.findByIdAndDelete(id);
-//       return removed;
-//     } catch (error) {
-//       // console.error('Error deleting portfolio:', error);
-//       return null;
-//     }
-//   }
+  public static async deletePortfolioById(id: string): Promise<DB.IPortfolioDocument> {
+    try {
+      const removed = await DB.Portfolio.findByIdAndDelete(id);
+      return removed;
+    } catch (error) {
+      // console.error('Error deleting portfolio:', error);
+      return null;
+    }
+  }
 
 //   public async addTradeToPortfolio(trade: Types.Trade, portfolioId: string): Promise<DB.IPortfolioDocument> {
 

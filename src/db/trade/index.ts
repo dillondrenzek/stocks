@@ -1,3 +1,3 @@
-export * from './Trade';
+export * from './Transaction';
 export * from './OptionTrade';
 export * from './StockTrade';

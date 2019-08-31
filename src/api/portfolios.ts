@@ -5,9 +5,9 @@ import { PortfolioController } from '../app/controllers/PortfolioController';
 const router = express();
 
 // Routes
-router.get('/',   getPortfolios);
-router.post('/',  createPortfolio);
-// router.post('/:id/delete',       deletePortfolioById);
+router.get('/', getPortfolios);
+router.post('/', createPortfolio);
+router.post('/:id/delete', deletePortfolioById);
 // router.get('/:id/holdings', getPortfolioHoldings);
 // router.get('/:id/trades/stock', getStockTradesForPortfolio);
 // router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
@@ -49,16 +49,16 @@ export async function getPortfolioById(req: Request, res: Response) {
   }
 }
 
-// // Delete Portfolio by Id
-// export async function deletePortfolioById(req: Request, res: Response) {
-//   const { id } = req.params;
-//   try {
-//     const deleted = await controller.deletePortfolioById(id);
-//     res.json(deleted);
-//   } catch (e) {
-//     res.status(500).send('Error deleting portfolio: ' + e);
-//   }
-// }
+// Delete Portfolio by Id
+export async function deletePortfolioById(req: Request, res: Response) {
+  const { id } = req.params;
+  try {
+    const deleted = await PortfolioController.deletePortfolioById(id);
+    res.json(deleted);
+  } catch (e) {
+    res.status(500).send('Error deleting portfolio: ' + e);
+  }
+}
 
 // // Get a Portfolio's Holdings
 // // export async function getPortfolioHoldings(req: Request, res: Response) {

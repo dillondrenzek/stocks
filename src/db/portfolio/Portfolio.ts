@@ -34,7 +34,7 @@ const portfolioSchema = new mongoose.Schema<IPortfolioDocument>({
     default: {}
   },
   name: String,
-});
+}, { minimize: false});
 
 // Static Methods
 
