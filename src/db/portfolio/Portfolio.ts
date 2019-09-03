@@ -85,10 +85,9 @@ portfolioSchema.methods.addTransaction = async function(transaction: ITransactio
   // add transaction id to holding
   if (transaction.type === 'stock') {
     holding.transactions.push(transaction.id);
-    // this.stockTrades.push(transaction._id);
-  // } else if (trade.type === 'option') {
-  //   this.optionTrades.push(trade._id);
   }
+
+  await this.save();
 
   return this;
 };

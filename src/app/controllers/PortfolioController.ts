@@ -33,41 +33,25 @@ export class PortfolioController {
     }
   }
 
-  public static async addTransactionsToPortfolio(trade: Types.Transaction | Types.Transaction[], portfolioId: string): Promise<Types.Portfolio> {
-    let portfolio: Types.Portfolio;
-//     // save trade
-//     let newTrade: DB.ITradeDocument;
-//     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
+  private addTransactionToPortfolio(tx: Types.Transaction, portfolio: Types.Portfolio) {
 
-//     try {
-//       switch (trade.type) {
-//         case 'stock':
-//           newTrade = await DB.StockTrade.create(trade);
-//           break;
-//         case 'option':
-//           newTrade = await DB.OptionTrade.create(trade);
-//           break;
-//         default:
-//           break;
-//       }
-//     } catch (err) {
-//       console.error(err);
-//     }
+  }
 
-//     portfolio = await portfolio.addTrade(newTrade);
+  public static async addTransactionsToPortfolio(tx: Types.Transaction | Types.Transaction[], portfolioId: string): Promise<Types.Portfolio> {
+    let portfolio: DB.IPortfolioDocument;
 
-//     // get Holding by symbols
-//     const holding: Types.Holding = portfolio.getHoldingBySymbol(trade.symbol);
-//     let newHolding: Types.Holding;
+    if (!Array.isArray(tx)) {
+      // find portfolio
+      portfolio = await DB.Portfolio.findById(portfolioId);
+      // create and save transaction
+      let transaction = await DB.StockTransaction.create(tx);
+      // add transaction id to Portfolio
+      portfolio = await portfolio.addTransaction(transaction);
 
-//     // if holding doesn't exist, create it
-//     if (!holding) {
-//       newHolding = calculateHolding([newTrade]);
-//     } else {
-//       newHolding = calculateHolding([newTrade], holding);
-//     }
-
-//     portfolio = await portfolio.addOrUpdateHolding(newHolding);
+      // console.log('-- portfolio', portfolio, '\n-- transaction', transaction);
+    } else {
+      // NYI - Not yet implemented
+    }
 
     return portfolio;
   } 
