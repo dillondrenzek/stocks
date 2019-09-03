@@ -9,7 +9,7 @@ import {
   IPortfolioDocument,
   Portfolio,
 } from './Portfolio';
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 import { create } from 'domain';
 
 describe('Portfolio', withDb(() => {

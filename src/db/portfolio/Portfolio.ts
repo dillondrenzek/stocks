@@ -43,31 +43,28 @@ portfolioSchema.statics.createByName = async function (name: string): Promise<IP
 
 // Instance Methods
 
-function newHoldingWithSymbol(symbol: string): Types.Holding {
-  return {
-    symbol,
-    transactions: []
-  };
-}
-
-function newHoldingFromTransaction(transaction: ITransactionDocument) {
+function newHoldingFromTransaction(transaction: ITransactionDocument): Types.Holding {
   return {
     symbol: transaction.symbol,
     transactions: [ transaction.id ]
   }
 }
 
+function addTransactionToHoldings(t: ITransactionDocument, holdings: Types.Holdings ): Types.Holdings {
+  const symbol = t.symbol;
+  let holding = holdings[symbol];
+  if (!holding) {
+    holding = newHoldingFromTransaction(t);
+  }
+  return Object.assign({}, holdings, {
+    [symbol]: holding
+  });
+}
+
 portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): IPortfolio {
   
   // add Holding if it doesn't exist
-  if (!this.holdings[transaction.symbol]) {
-    this.holdings[transaction.symbol] = newHoldingFromTransaction(transaction);
-  }
-  
-  // add transaction id to holding
-  if (transaction.type === 'stock') {
-    this.holdings[transaction.symbol].transactions.push(transaction.id);
-  }
+  this.holdings = addTransactionToHoldings(transaction, this.holdings);
 
   return this;
 };
