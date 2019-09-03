@@ -50,14 +50,28 @@ function newHoldingFromTransaction(transaction: ITransactionDocument): Types.Hol
   }
 }
 
+function addTransactionToHolding(t: ITransactionDocument, holding: Types.Holding): Types.Holding {
+  let { transactions } = holding;
+  let newTransactions: string[];
+  // if it doesn't exist, push it
+  if (transactions.indexOf(t.id) === -1) {
+    newTransactions = [ t.id, ...transactions ];
+  } else {
+    newTransactions = transactions;
+  }
+  return Object.assign({}, holding, {
+    transactions: newTransactions
+  });
+}
+
 function addTransactionToHoldings(t: ITransactionDocument, holdings: Types.Holdings ): Types.Holdings {
   const symbol = t.symbol;
-  let holding = holdings[symbol];
-  if (!holding) {
-    holding = newHoldingFromTransaction(t);
-  }
+  let existing = holdings[symbol];
+  let updated = (existing) 
+    ? addTransactionToHolding(t, existing)
+    : newHoldingFromTransaction(t);
   return Object.assign({}, holdings, {
-    [symbol]: holding
+    [symbol]: updated
   });
 }
 

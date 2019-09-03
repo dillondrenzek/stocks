@@ -46,6 +46,7 @@ describe('PortfolioController', withDb(() => {
     });
 
     it('contains the correct transaction', async () => {
+      const savedPortfolio = await DB.Portfolio.findById(portfolio.id);
       const holding = savedPortfolio.holdings[transaction.symbol];
       const id = holding.transactions[0];
       const foundTransaction = await DB.StockTransaction.findById(id);

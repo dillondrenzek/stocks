@@ -12,6 +12,6 @@ export interface Holdings {
 
 export interface Holding {
   symbol: string;
-  transactions: Transaction[];
+  transactions: string[]; // Transaction ids
 }
 

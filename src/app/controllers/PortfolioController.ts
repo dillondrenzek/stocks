@@ -33,17 +33,13 @@ export class PortfolioController {
     }
   }
 
-  private addTransactionToPortfolio(tx: Types.Transaction, portfolio: Types.Portfolio) {
-
-  }
-
   public static async addTransactionToPortfolio(tx: Types.Transaction, portfolioId: string) {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // create and save transaction
     let transaction = await DB.StockTransaction.create(tx);
     // add transaction id to Portfolio
-    await portfolio.addTransaction(transaction);
+    portfolio.addTransaction(transaction);
     // save portfolio
     await portfolio.save();
   } 
