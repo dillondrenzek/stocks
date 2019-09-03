@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { CallOrPut, OpenOrClose } from '../../types';
+import { CallOrPut, OpenOrClose } from '../../lib/types';
 import { ITransaction } from './Transaction';
 
 export interface IOptionTransaction extends ITransaction {

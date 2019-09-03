@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as DB from '../../db';
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 import { withDb } from '../../spec/helpers/db-connect';
 import { PortfolioController } from './PortfolioController';
 // import { Portfolio, Trade, StockTrade, BuyOrSell, Holding } from '../../types';

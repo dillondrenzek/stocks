@@ -1,22 +1,13 @@
 import mongoose from 'mongoose';
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 import { ITransaction, ITransactionDocument, IStockTransactionDocument, IOptionTransactionDocument, StockTransaction, OptionTransaction, IStockTransaction } from '../transaction';
-import { Holding, Transaction } from '../../types';
+import { Holding, Transaction } from '../../lib/types';
 
 // Interface
 
 export interface IPortfolio extends Types.Portfolio {
-  // holdings: Types.Holding[];
-  // name: string;
-  // optionTrades: Array<IOptionTradeDocument['_id']>;
-  // stockTrades: Array<IStockTradeDocument['_id']>;
   fetchTransactions?: () => void;
   addTransaction?: (doc: ITransaction) => IPortfolio;
-  // getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
-  // getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
-  // removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
-  // addOrUpdateHolding?: (holding: Holding) => Promise<IPortfolioDocument>;
-  // getHoldingBySymbol?: (symbol: string) => Holding;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -51,20 +42,6 @@ portfolioSchema.statics.createByName = async function (name: string): Promise<IP
 };
 
 // Instance Methods
-
-portfolioSchema.methods.fetchTransactions = async function (): Promise<IPortfolioDocument> {
-  Object.keys(this.holdings).forEach((key) => {
-    const holding: Types.Holding = this.holdings[key];
-    holding.transactions.forEach(async (t: string | Transaction, index: number) => {
-      if (typeof t === 'string') {
-        holding.transactions[index] = await StockTransaction.findById(t);
-      } else if (t._id) {
-        holding.transactions[index] = await StockTransaction.findById(t._id);
-      }
-    });
-  });
-  return this;
-}
 
 function newHoldingWithSymbol(symbol: string): Types.Holding {
   return {

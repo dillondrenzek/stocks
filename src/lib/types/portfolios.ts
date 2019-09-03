@@ -8,17 +8,8 @@ export interface Portfolio extends Saveable {
   name: string;
 }
 
-export interface FullPortfolio extends Portfolio {
-  holdings: {
-    [symbol: string]: FullHolding
-  };
-}
-
 export interface Holding {
   symbol: string;
-  transactions: string[] | Transaction[];
-}
-
-export interface FullHolding extends Holding {
   transactions: Transaction[];
 }
+

@@ -1,5 +1,5 @@
 import * as DB from '../../db';
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 // // import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../../types';
 // import { calculateHolding } from '../portfolio';
 

@@ -1,4 +1,4 @@
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 
 export function defaultPortfolio(): Types.Portfolio {
   return {
