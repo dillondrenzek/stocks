@@ -11,7 +11,7 @@ export interface IPortfolio extends Types.Portfolio {
   // optionTrades: Array<IOptionTradeDocument['_id']>;
   // stockTrades: Array<IStockTradeDocument['_id']>;
   fetchTransactions?: () => void;
-  addTransaction?: (doc: ITransaction) => Promise<IPortfolioDocument>;
+  addTransaction?: (doc: ITransaction) => IPortfolio;
   // getAllStockTrades?: () => Promise<IStockTradeDocument[]>;
   // getAllOptionTrades?: () => Promise<IOptionTradeDocument[]>;
   // removeTradeById?: (type: Types.StockOrOption, tradeId: string) => Promise<IPortfolioDocument>;
@@ -73,21 +73,24 @@ function newHoldingWithSymbol(symbol: string): Types.Holding {
   };
 }
 
-portfolioSchema.methods.addTransaction = async function(transaction: ITransactionDocument): Promise<IPortfolioDocument> {
+function newHoldingFromTransaction(transaction: ITransactionDocument) {
+  return {
+    symbol: transaction.symbol,
+    transactions: [ transaction.id ]
+  }
+}
+
+portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): IPortfolio {
   
   // add Holding if it doesn't exist
-  let holding: Types.Holding = this.holdings[transaction.symbol];
-  if (!holding) {
-    this.holdings[transaction.symbol] = newHoldingWithSymbol(transaction.symbol);
-    holding = this.holdings[transaction.symbol];
+  if (!this.holdings[transaction.symbol]) {
+    this.holdings[transaction.symbol] = newHoldingFromTransaction(transaction);
   }
   
   // add transaction id to holding
   if (transaction.type === 'stock') {
-    holding.transactions.push(transaction.id);
+    this.holdings[transaction.symbol].transactions.push(transaction.id);
   }
-
-  await this.save();
 
   return this;
 };

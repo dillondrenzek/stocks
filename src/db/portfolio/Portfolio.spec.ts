@@ -99,12 +99,17 @@ describe('Portfolio', withDb(() => {
           // add another transaction
           await portfolio.addTransaction(secondTransaction);
           await portfolio.save();
+          portfolio = await Portfolio.findById(portfolio.id);
           // assume created holding
           existingHolding = portfolio.holdings[transactionSymbol];
         });
 
         it('should have added one transaction id', () => {
           expect(existingHolding).to.exist;
+        });
+
+        it('should still have the first transaction id', () => {
+          expect(existingHolding.transactions).to.contain(firstTransaction.id);
         });
 
         it('should add the transaction id to the holdings transactions', () => {

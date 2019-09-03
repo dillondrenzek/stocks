@@ -28,23 +28,25 @@ describe('PortfolioController', withDb(() => {
       side: 'buy'
     },
       portfolio: DB.IPortfolioDocument,
-      savedPortfolio: Types.Portfolio,
-      holding: Types.Holding;
+      savedPortfolio: Types.Portfolio;
 
     beforeEach(async () => {
       // create test portfolio
       portfolio = await DB.Portfolio.createByName('Test');
       // 
-      savedPortfolio = await PortfolioController.addTransactionsToPortfolio(transaction, portfolio.id);
-      holding = savedPortfolio.holdings[transaction.symbol];
+      await PortfolioController.addTransactionToPortfolio(transaction, portfolio.id);
     });
     
-    it('has a Holding that contains a transaction id', () => {
+    it('has a Holding that contains a transaction id', async () => {
+      const savedPortfolio = await DB.Portfolio.findById(portfolio.id);
+      expect(savedPortfolio).to.exist;
+      const holding = savedPortfolio.holdings[transaction.symbol];
       expect(holding).to.exist;
       expect(holding.transactions.length).to.eq(1);
     });
 
     it('contains the correct transaction', async () => {
+      const holding = savedPortfolio.holdings[transaction.symbol];
       const id = holding.transactions[0];
       const foundTransaction = await DB.StockTransaction.findById(id);
       expect(foundTransaction).to.exist;

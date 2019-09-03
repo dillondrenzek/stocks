@@ -9,6 +9,7 @@ router.get('/', getPortfolios);
 router.post('/', createPortfolio);
 router.post('/:id/delete', deletePortfolioById);
 router.post('/:id/transactions',  addTransactionsToPortfolio);
+router.get('/:id', getPortfolioById);
 // router.get('/:id/holdings', getPortfolioHoldings);
 // router.get('/:id/trades/stock', getStockTradesForPortfolio);
 // router.post('/:portfolioId/trades/:tradeId/delete', deleteStockTradeForPortfolio);
@@ -67,9 +68,7 @@ export async function addTransactionsToPortfolio(req: Request, res: Response) {
   console.log('Add transactions to portfolio:', id);
   console.log(' - body:', body);
   try {
-    const portfolio = await PortfolioController.getPortfolioById(id);
-
-    const added = await PortfolioController.addTransactionsToPortfolio(body, portfolio._id);
+    const added = await PortfolioController.addTransactionToPortfolio(body, id);
     res.json(added);
   } catch (e) {
     res.status(500).send('Error adding trade to portfolio: ' + e);
