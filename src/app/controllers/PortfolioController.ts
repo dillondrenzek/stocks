@@ -18,7 +18,7 @@ export class PortfolioController {
   public static async getPortfolioById(id: string): Promise<Types.Portfolio> {
     let portfolio = await DB.Portfolio.findById(id);
     // for each holding, we need it populated with each of it's transactions
-    await portfolio.fetchTransactions();
+    // await portfolio.fetchTransactions();
 
     return portfolio;
   }
