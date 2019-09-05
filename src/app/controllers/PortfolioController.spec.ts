@@ -2,31 +2,13 @@ import { expect } from 'chai';
 import * as DB from '../../db';
 import * as Types from '../../lib/types';
 import { withDb } from '../../spec/helpers/db-connect';
+import { generateHolding, generateOptionTransaction, generateStockTransaction } from '../../spec/helpers/db-generators';
 import { PortfolioController } from './PortfolioController';
-// import { Portfolio, Trade, StockTrade, BuyOrSell, Holding } from '../../types';
-// // import {generateStockTrade} from '../../spec/helpers/type-defaults';
-
-// const generateStockTrade = (side: BuyOrSell = 'buy'): StockTrade => {
-//   return {
-//     price: Math.random() * 300,
-//     quantity: Math.floor(Math.random() * 100),
-//     side,
-//     symbol: 'TEST',
-//     type: 'stock'
-//   }
-// }
-
 
 describe('PortfolioController', withDb(() => {
 
   describe('adds a Transaction to a Portfolio', () => {
-    let transaction: Types.Transaction = {
-      type: 'stock',
-      symbol: 'TEST',
-      price: 3.33,
-      quantity: 2,
-      side: 'buy'
-    },
+    let transaction: Types.Transaction = generateStockTransaction(),
       portfolio: DB.IPortfolioDocument,
       savedPortfolio: Types.Portfolio;
 
@@ -34,30 +16,59 @@ describe('PortfolioController', withDb(() => {
       // create test portfolio
       portfolio = await DB.Portfolio.createByName('Test');
       // 
-      await PortfolioController.addTransactionToPortfolio(transaction, portfolio.id);
+      savedPortfolio = await PortfolioController.addTransactionToPortfolio(transaction, portfolio.id);
     });
-    
-    it('has a Holding that contains a transaction id', async () => {
-      const savedPortfolio = await DB.Portfolio.findById(portfolio.id);
+
+    it('returns the saved portfolio', () => {
       expect(savedPortfolio).to.exist;
+      expect(savedPortfolio._id).to.eq(portfolio.id);
+    })
+    
+    it('has a Holding that contains a transaction id', () => {
       const holding = savedPortfolio.holdings[transaction.symbol];
       expect(holding).to.exist;
       expect(holding.transactions.length).to.eq(1);
+      expect(typeof holding.transactions[0]).to.eq('string');
     });
 
-    it('contains the correct transaction', async () => {
-      const savedPortfolio = await DB.Portfolio.findById(portfolio.id);
-      const holding = savedPortfolio.holdings[transaction.symbol];
-      const id = holding.transactions[0];
-      const foundTransaction = await DB.StockTransaction.findById(id);
-      expect(foundTransaction).to.exist;
-      expect(foundTransaction.side).to.eq(transaction.side);
-      expect(foundTransaction.symbol).to.eq(transaction.symbol);
-      expect(foundTransaction.type).to.eq(transaction.type);
-      expect(foundTransaction.price).to.eq(transaction.price);
-      expect(foundTransaction.quantity).to.eq(transaction.quantity);
-    });
+    // it('contains the correct transaction', () => {
+    //   const holding = savedPortfolio.holdings[transaction.symbol];
+    //   const foundTransaction = holding.transactions[0] as any; // HACK
+    //   expect(foundTransaction).to.exist;
+    //   expect(foundTransaction.side).to.eq(transaction.side);
+    //   expect(foundTransaction.symbol).to.eq(transaction.symbol);
+    //   expect(foundTransaction.type).to.eq(transaction.type);
+    //   expect(foundTransaction.price).to.eq(transaction.price);
+    //   expect(foundTransaction.quantity).to.eq(transaction.quantity);
+    // });
 
+  });
+
+  describe('fetches transactions for a Holding', () => {
+    let holding: Types.Holding,
+      tx1: Types.StockTransaction,
+      savedTx1: DB.IStockTransactionDocument,
+      fetchedHolding: Types.Holding;
+
+      beforeEach(async () => {
+        holding = generateHolding();
+        tx1 = generateStockTransaction();
+        // save transaction
+        savedTx1 = await DB.StockTransaction.create(tx1);
+        holding.transactions = [savedTx1.id];
+        //
+        fetchedHolding = await PortfolioController.fetchTransactionsForHolding(holding);
+      });
+
+      it('returns the fetched Holding', () => {
+        expect(fetchedHolding).to.exist;
+      });
+
+      it('returns with each transaction object', () => {
+        expect(fetchedHolding.transactions.length).to.eq(1);
+        expect(typeof fetchedHolding.transactions[0]).to.eq('object');
+        expect((fetchedHolding.transactions[0] as any)._id).to.eq(savedTx1.id);
+      });
   });
 
   // describe('creates a portfolio using a name', () => {

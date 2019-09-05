@@ -16,15 +16,9 @@ export class PortfolioController {
     return portfolios;
   }
 
-  private static async fetchTransactionsForHolding(h: Types.Holding): Promise<Types.Holding> {
+  public static async fetchTransactionsForHolding(h: Types.Holding): Promise<Types.Holding> {
     // fetch each transaction in transactions array
-    const fetchedTransactions = h.transactions.map(async (id) => {
-      const stock = await DB.StockTransaction.findById(id);
-      if (!stock) {
-        return await DB.OptionTransaction.findById(id);
-      }
-      return stock;
-    });
+    const fetchedTransactions = await TradeController.getTransactionsByIds(h.transactions);
 
     // assign the fetched transactions to the holding's transactions array
     const resultHolding: Types.Holding = Object.assign({}, h, {
@@ -35,9 +29,11 @@ export class PortfolioController {
     return resultHolding;
   }
 
-  private static async fetchTransactionsForPortfolio(p: Types.Portfolio): Promise<Types.Portfolio> {
+  public static async fetchTransactionsForPortfolio(p: Types.Portfolio): Promise<Types.Portfolio> {
     let holdings = p.holdings;
     let resultHoldings: Types.Holdings = {};
+
+    console.log('holdings', holdings);
 
     // for each key in holdings object
     Object.keys(holdings).forEach(async (symbol) => {
@@ -53,11 +49,11 @@ export class PortfolioController {
   }
 
   public static async getPortfolioById(id: string): Promise<Types.Portfolio> {
-    let portfolio: Types.Portfolio = await DB.Portfolio.findById(id);
+    let portfolio: Types.Portfolio = this.toPortfolio(await DB.Portfolio.findById(id));
     // for each holding, we need it populated with each of it's transactions
-    portfolio = await this.fetchTransactionsForPortfolio(portfolio);
+    let fullPortfolio = await this.fetchTransactionsForPortfolio(portfolio);
 
-    return portfolio;
+    return this.toPortfolio(fullPortfolio);
   }
 
   public static async deletePortfolioById(id: string): Promise<DB.IPortfolioDocument> {
@@ -70,17 +66,26 @@ export class PortfolioController {
     }
   }
 
-  public static async addTransactionToPortfolio(tx: Types.Transaction, portfolioId: string) {
+  public static async addTransactionToPortfolio(tx: Types.Transaction, portfolioId: string): Promise<Types.Portfolio> {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // create and save transaction
-    let transaction = await TradeController.addTransaction(tx);
+    let transaction = await TradeController.saveTransaction(tx);
     // add transaction id to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
-    await portfolio.save();
+    portfolio = await portfolio.save();
+
+    return this.toPortfolio(portfolio);
   } 
 
+  public static toPortfolio(p: Types.Portfolio | DB.IPortfolioDocument): Types.Portfolio {
+    return {
+      _id: (typeof p._id === 'string') ? p._id : (p as DB.IPortfolioDocument).id,
+      name: p.name,
+      holdings: p.holdings
+    }
+  }
 //   private async calculateHoldingForSymbol(symbol: string): Promise<Types.Holding> {
 //     const stockTrades = await DB.StockTrade.findBySymbol(symbol);
 //     const holding = calculateHolding(stockTrades);

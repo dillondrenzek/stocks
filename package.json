@@ -29,8 +29,8 @@
     "pretest:app": "npm run build:test",
     "pretest:db": "npm run build:test",
     "test": "mocha --exit",
-    "test:app": "mocha --config .mocharc-app.json",
-    "test:db": "mocha --config .mocharc-db.json",
+    "test:app": "mocha --exit --config .mocharc-app.json",
+    "test:db": "mocha --exit --config .mocharc-db.json",
     
     "start": "node ./bin/www",
     "watch": "npm-watch"

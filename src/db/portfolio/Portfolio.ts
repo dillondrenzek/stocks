@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
 import * as Types from '../../lib/types';
-import { ITransaction, ITransactionDocument, IStockTransactionDocument, IOptionTransactionDocument, StockTransaction, OptionTransaction, IStockTransaction } from '../transaction';
-import { Holding, Transaction } from '../../lib/types';
+import { ITransactionDocument } from '../transaction';
 
 // Interface
 
 export interface IPortfolio extends Types.Portfolio {
   fetchTransactions?: () => void;
-  addTransaction?: (doc: ITransaction) => IPortfolio;
+  addTransaction?: (doc: Types.Transaction | ITransactionDocument) => IPortfolio;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -43,19 +42,21 @@ portfolioSchema.statics.createByName = async function (name: string): Promise<IP
 
 // Instance Methods
 
-function newHoldingFromTransaction(transaction: ITransactionDocument): Types.Holding {
+function newHoldingFromTransaction(transaction: Types.Transaction | ITransactionDocument): Types.Holding {
+  const id = (typeof transaction._id === 'string') ? transaction._id : (transaction as ITransactionDocument).id;
   return {
     symbol: transaction.symbol,
-    transactions: [ transaction.id ]
+    transactions: [ id ]
   }
 }
 
-function addTransactionToHolding(t: ITransactionDocument, holding: Types.Holding): Types.Holding {
+function addTransactionToHolding(t: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
   let { transactions } = holding;
   let newTransactions: string[];
+  const id = (typeof t._id === 'string') ? t._id : (t as ITransactionDocument).id;
   // if it doesn't exist, push it
-  if (transactions.indexOf(t.id) === -1) {
-    newTransactions = [ t.id, ...transactions ];
+  if (transactions.indexOf(id) === -1) {
+    newTransactions = [ id, ...transactions ];
   } else {
     newTransactions = transactions;
   }
@@ -64,7 +65,7 @@ function addTransactionToHolding(t: ITransactionDocument, holding: Types.Holding
   });
 }
 
-function addTransactionToHoldings(t: ITransactionDocument, holdings: Types.Holdings ): Types.Holdings {
+function addTransactionToHoldings(t: Types.Transaction | ITransactionDocument, holdings: Types.Holdings ): Types.Holdings {
   const symbol = t.symbol;
   let existing = holdings[symbol];
   let updated = (existing) 
