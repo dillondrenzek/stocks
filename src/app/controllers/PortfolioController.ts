@@ -31,20 +31,16 @@ export class PortfolioController {
 
   public static async fetchTransactionsForPortfolio(p: Types.Portfolio): Promise<Types.Portfolio> {
     let holdings = p.holdings;
-    let resultHoldings: Types.Holdings = {};
+    let resultHoldings = await Promise.all(Object.values(holdings).map((holding) => this.fetchTransactionsForHolding(holding)));
+    let result: Types.Holdings = {};
 
-    console.log('holdings', holdings);
-
-    // for each key in holdings object
-    Object.keys(holdings).forEach(async (symbol) => {
-      // fetch the holding's transactions
-      const holding = holdings[symbol];
-      resultHoldings[symbol] = await this.fetchTransactionsForHolding(holding);
+    resultHoldings.forEach((holding) => {
+      result[holding.symbol] = holding;
     });
 
     // return the Portfolio
     return Object.assign({}, p, {
-      holdings: resultHoldings
+      holdings: result
     });
   }
 
