@@ -16,10 +16,46 @@ export class PortfolioController {
     return portfolios;
   }
 
+  private static async fetchTransactionsForHolding(h: Types.Holding): Promise<Types.Holding> {
+    // fetch each transaction in transactions array
+    const fetchedTransactions = h.transactions.map(async (id) => {
+      const stock = await DB.StockTransaction.findById(id);
+      if (!stock) {
+        return await DB.OptionTransaction.findById(id);
+      }
+      return stock;
+    });
+
+    // assign the fetched transactions to the holding's transactions array
+    const resultHolding: Types.Holding = Object.assign({}, h, {
+      transactions: fetchedTransactions
+    });
+
+    // return the modified holding
+    return resultHolding;
+  }
+
+  private static async fetchTransactionsForPortfolio(p: Types.Portfolio): Promise<Types.Portfolio> {
+    let holdings = p.holdings;
+    let resultHoldings: Types.Holdings = {};
+
+    // for each key in holdings object
+    Object.keys(holdings).forEach(async (symbol) => {
+      // fetch the holding's transactions
+      const holding = holdings[symbol];
+      resultHoldings[symbol] = await this.fetchTransactionsForHolding(holding);
+    });
+
+    // return the Portfolio
+    return Object.assign({}, p, {
+      holdings: resultHoldings
+    });
+  }
+
   public static async getPortfolioById(id: string): Promise<Types.Portfolio> {
-    let portfolio = await DB.Portfolio.findById(id);
+    let portfolio: Types.Portfolio = await DB.Portfolio.findById(id);
     // for each holding, we need it populated with each of it's transactions
-    // await portfolio.fetchTransactions();
+    portfolio = await this.fetchTransactionsForPortfolio(portfolio);
 
     return portfolio;
   }

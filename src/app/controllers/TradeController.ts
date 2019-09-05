@@ -11,4 +11,13 @@ export class TradeController {
     }
   }
 
+  public static async getTransactionsByIds(ids: string[]): Promise<Types.Transaction[]> {
+    const promisesArray = ids.map((id) => {
+      const tx = DB.StockTransaction.findById(id);
+      return tx;
+    });
+
+    return await Promise.all(promisesArray);
+  }
+
 }

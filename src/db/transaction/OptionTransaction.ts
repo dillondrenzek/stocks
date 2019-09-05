@@ -1,14 +1,9 @@
 import mongoose from 'mongoose';
+import * as Types from '../../lib/types';
 import { CallOrPut, OpenOrClose } from '../../lib/types';
 import { ITransaction } from './Transaction';
 
-export interface IOptionTransaction extends ITransaction {
-  callPut: CallOrPut;
-  expDate: Date;
-  openClose: OpenOrClose;
-  strikePrice: number;
-  type: 'option';
-}
+export interface IOptionTransaction extends Types.OptionTransaction {}
 
 export const defaultOptionTransaction = (): IOptionTransaction => ({
   price: 0.00,
@@ -17,8 +12,7 @@ export const defaultOptionTransaction = (): IOptionTransaction => ({
   symbol: '',
   date: new Date(),
   callPut: null,
-  expDate: new Date(),
-  openClose: null,
+  expirationDate: new Date(),
   strikePrice: 0.00,
   type: 'option',
 });
@@ -30,8 +24,7 @@ const optionTransactionSchema = new mongoose.Schema<IOptionTransactionDocument>(
     type: String,
     default: null
   },
-  expDate: Date,
-  openClose: String,
+  expirationDate: Date,
   price: Number,
   quantity: Number,
   side: String, // 'buy' or 'sell'

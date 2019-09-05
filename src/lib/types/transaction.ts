@@ -5,7 +5,7 @@ export type CallOrPut = 'call' | 'put';
 export type OpenOrClose = 'open' | 'close';
 export type StockOrOption = 'stock' | 'option';
 
-export interface Transaction extends Saveable {
+interface BaseTransaction extends Saveable {
   price: number;
   quantity: number;
   side: BuyOrSell;
@@ -14,11 +14,13 @@ export interface Transaction extends Saveable {
   type: StockOrOption;
 }
 
-export interface StockTransaction extends Transaction {
+export type Transaction = StockTransaction | OptionTransaction;
+
+export interface StockTransaction extends BaseTransaction {
   type: 'stock';
 }
 
-export interface OptionTransaction extends Transaction {
+export interface OptionTransaction extends BaseTransaction {
   type: 'option';
   strikePrice: number;
   callPut: CallOrPut;
