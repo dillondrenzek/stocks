@@ -1,5 +1,6 @@
 import * as DB from '../../db';
 import * as Types from '../../lib/types';
+import { TradeController } from './TradeController';
 // // import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../../types';
 // import { calculateHolding } from '../portfolio';
 
@@ -37,7 +38,7 @@ export class PortfolioController {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // create and save transaction
-    let transaction = await DB.StockTransaction.create(tx);
+    let transaction = await TradeController.addTransaction(tx);
     // add transaction id to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
