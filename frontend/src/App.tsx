@@ -15,7 +15,7 @@ import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
 import { StockTradesTable } from './components/trades-table/stock-trades-table';
 
 import { Portfolio, Holding } from './types/portfolio';
-import { StockTrade } from './types/trade';
+import { StockTransaction } from './types/transaction';
 
 import './App.scss';
 
@@ -54,8 +54,8 @@ const useStyles = makeStyles((theme) => ({
 export interface AppState {
   holdings: Holding[];
   portfolios: Portfolio[];
-  stockTrades: StockTrade[];
-  stockTradeFormValue: StockTrade;
+  stockTrades: StockTransaction[];
+  stockTradeFormValue: StockTransaction;
   selectedPortfolio: Portfolio;
 }
 
@@ -63,7 +63,7 @@ export default function App() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [portfolioFormValue, setPortfolioFormValue] = useState<Portfolio>(new Portfolio());
   const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio>(null);
-  const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTrade>(new StockTrade());
+  const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTransaction>(new StockTransaction());
   const [stockTrades, setStockTrades] = useState([]);
 
   // constructor(props) {
@@ -90,48 +90,48 @@ export default function App() {
   });
 
   const onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
-    const portfolio = portfolios.find((p) => p._id === value);
-    setSelectedPortfolio(portfolio);
-    PortfolioAPI.getStockTradesForPortfolio(portfolio._id, setStockTrades);
+    // const portfolio = portfolios.find((p) => p._id === value);
+    // setSelectedPortfolio(portfolio);
+    // PortfolioAPI.getStockTradesForPortfolio(portfolio._id, setStockTrades);
   };
 
-  const handleStockTradeFormSubmit = (value: StockTrade) => {
-    PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
-      setSelectedPortfolio(updatedPortfolio);
-      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
-    });
+  const handleStockTradeFormSubmit = (value: StockTransaction) => {
+    // PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
+    //   setSelectedPortfolio(updatedPortfolio);
+    //   PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    // });
   };
 
   const handlePortfolioFormSubmit = (value: Portfolio) => {
-    PortfolioAPI.createPortfolio(value, () => {
-      PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
-        setPortfolios(_portfolios);
-        setPortfolioFormValue(new Portfolio());
-      });
-    });
+    // PortfolioAPI.createPortfolio(value, () => {
+    //   PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
+    //     setPortfolios(_portfolios);
+    //     setPortfolioFormValue(new Portfolio());
+    //   });
+    // });
   };
 
-  const onDeleteStockTrade = (trade: StockTrade) => {
-    PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
-      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
-    });
+  const onDeleteStockTrade = (trade: StockTransaction) => {
+    // PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
+    //   PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    // });
   };
 
   const onDeleteSelectedPortfolio = () => {
-    PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
-      PortfolioAPI.getPortfolios((data) => {
-        setSelectedPortfolio(data[0]);
-        setPortfolios(data);
-        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
-      });
-    });
+    // PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
+    //   PortfolioAPI.getPortfolios((data) => {
+    //     setSelectedPortfolio(data[0]);
+    //     setPortfolios(data);
+    //     PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+    //   });
+    // });
   };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <main className={classes.content}>
-        <Container>
+        {/* <Container>
           <Grid container>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
@@ -163,11 +163,11 @@ export default function App() {
             )}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                {/* <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Typography variant='h4'>
                     New Trade
                   </Typography>
-                </Grid> */}
+                </Grid>
                 <StockTradeForm
                   onSubmit={handleStockTradeFormSubmit}
                   value={stockTradeFormValue}
@@ -216,15 +216,15 @@ export default function App() {
                   <Typography align='center' variant='subtitle1'>
                     No Options Trades table yet.
                   </Typography>
-                  {/* <StockTradesTable
+                  <StockTradesTable
                     trades={stockTrades}
                     onClickDelete={onDeleteStockTrade}
-                  /> */}
+                  />
                 </Grid>
               </Paper>
             </Grid>
           </Grid>
-        </Container>
+        </Container> */}
       </main>
     </div>
   );
