@@ -74,6 +74,7 @@ export default function App() {
         setPortfolios(data);
         if (data && data.length) {
           setSelectedPortfolio(data[0]);
+          PortfolioAPI.getPortfolioById(data[0]._id, (p) => setSelectedPortfolio(p));
         }
       });
     }
@@ -82,7 +83,7 @@ export default function App() {
   const onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
     const portfolio = portfolios.find((p) => p._id === value);
     setSelectedHolding(null);
-    PortfolioAPI.getPortfolioById(portfolio._id, setSelectedPortfolio);
+    PortfolioAPI.getPortfolioById(portfolio._id, (p) => setSelectedPortfolio(p));
   };
 
   const handleStockTradeFormSubmit = (value: StockTransaction) => {
