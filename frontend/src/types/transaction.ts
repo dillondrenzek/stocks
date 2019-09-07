@@ -11,7 +11,7 @@ export class StockTransaction {
       ...{
         price: 0.00,
         quantity: 0,
-        side: null,
+        side: 'buy',
         symbol: '',
         type: 'stock',
       }

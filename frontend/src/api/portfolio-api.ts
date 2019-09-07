@@ -1,6 +1,7 @@
 import http from '../lib/http';
 import {
-  Portfolio
+  Portfolio,
+  Transaction,
 } from '../types';
 
 export const PortfolioAPI = {
@@ -23,21 +24,22 @@ export const PortfolioAPI = {
 
   // TODO: Reimplement
 
-  // addTradeToPortfolio: (trade: StockTrade, portfolioId: string, cb: (updatedPortfolio: Portfolio) => void) => {
-  //   const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/trades';
-  //   const params = new URLSearchParams();
-  //   Object.keys(trade).forEach((key) => {
-  //     params.append(key, trade[key].toString());
-  //   });
-  //   const config = {
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded'
-  //     }
-  //   };
-  //   http.post<Portfolio>(url, params, config)
-  //     .then((res) => cb(res.data))
-  //     .catch(console.error);
-  // },
+  addTradeToPortfolio: (tx: Transaction, portfolioId: string, cb: (updatedPortfolio: Portfolio) => void) => {
+    const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/transactions';
+    const params = new URLSearchParams();
+
+    Object.keys(tx).forEach((key) => {
+      params.append(key, tx[key].toString());
+    });
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    http.post<Portfolio>(url, params, config)
+      .then((res) => cb(res.data))
+      .catch(console.error);
+  },
 
   getPortfolios: (cb: (portfolios: Portfolio[]) => void) => {
     http.get<Portfolio[]>('http://localhost:7000/api/portfolios')

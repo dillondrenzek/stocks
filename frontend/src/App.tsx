@@ -11,6 +11,7 @@ import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typogr
 import HoldingsTable from './components/holdings-table/holdings-table';
 import { PortfolioForm } from './components/portfolio-form/portfolio-form';
 import TransactionsTable from './components/transactions-table/transactions-table';
+import TransactionForm from './components/transaction-form/transaction-form';
 
 
 import { Portfolio, Holding } from './types/portfolio';
@@ -87,10 +88,11 @@ export default function App() {
   };
 
   const handleStockTradeFormSubmit = (value: StockTransaction) => {
-    // PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
-    //   setSelectedPortfolio(updatedPortfolio);
-    //   PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
-    // });
+    PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
+      setSelectedPortfolio(updatedPortfolio);
+      PortfolioAPI.getPortfolioById(selectedPortfolio._id, (p) => setSelectedPortfolio(p));
+      // PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    });
   };
 
   const handlePortfolioFormSubmit = (value: Portfolio) => {
@@ -160,19 +162,18 @@ export default function App() {
                 ))}
               </Tabs>
             )}
-            {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>
                   <Typography variant='h4'>
-                    New Trade
+                    New Transaction
                   </Typography>
                 </Grid>
-                <StockTradeForm
+                <TransactionForm
                   onSubmit={handleStockTradeFormSubmit}
-                  value={stockTradeFormValue}
                 />
               </Paper>
-            </Grid> */}
+            </Grid>
             {selectedPortfolio ? (
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
