@@ -45,6 +45,12 @@ export const PortfolioAPI = {
       .catch(console.error);
   },
 
+  getPortfolioById: (id: string, cb: (portfolio: Portfolio) => void) => {
+    http.get<Portfolio>('http://localhost:7000/api/portfolios/' + id)
+      .then((res) => cb(res.data))
+      .catch(console.error);
+  },
+
   // getStockTradesForPortfolio: (id: string, cb: (trades: StockTrade[]) => void) => {
   //   http.get<StockTrade[]>('http://localhost:7000/api/portfolios/' + id + '/trades/stock')
   //     .then((res) => cb(res.data))
