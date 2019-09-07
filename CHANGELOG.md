@@ -2,8 +2,14 @@
 
 ## Next
 
-- update the UI to display the new Portfolio, Holding, Transaction structure
-- maybe a v0.3 (this could be a big project)
+- create option transactions from transaction form (dropdown?)
+
+### v0.2.3
+
+- Frontend refactored to support new backend
+  - create stock transactions from transaction form
+  - select a holding from a portfolio
+  - list transactions from selected portfolio
 
 ### v0.2.2
 
