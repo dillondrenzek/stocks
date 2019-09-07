@@ -8,14 +8,14 @@ import { PortfolioAPI } from './api/portfolio-api';
 
 import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
 
-import { HoldingsTable } from './components/holdings-table/holdings-table';
+import HoldingsTable from './components/holdings-table/holdings-table';
 import { PortfolioForm } from './components/portfolio-form/portfolio-form';
-import { PortfoliosTable } from './components/portfolios-table/portfolios-table';
-import { StockTradeForm } from './components/stock-trade-form/stock-trade-form';
-import { StockTradesTable } from './components/trades-table/stock-trades-table';
+import TransactionsTable from './components/transactions-table/transactions-table';
+import TransactionForm from './components/transaction-form/transaction-form';
+
 
 import { Portfolio, Holding } from './types/portfolio';
-import { StockTrade } from './types/trade';
+import { Transaction, StockTransaction } from './types/transaction';
 
 import './App.scss';
 
@@ -54,8 +54,8 @@ const useStyles = makeStyles((theme) => ({
 export interface AppState {
   holdings: Holding[];
   portfolios: Portfolio[];
-  stockTrades: StockTrade[];
-  stockTradeFormValue: StockTrade;
+  stockTrades: StockTransaction[];
+  stockTradeFormValue: StockTransaction;
   selectedPortfolio: Portfolio;
 }
 
@@ -63,68 +63,69 @@ export default function App() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [portfolioFormValue, setPortfolioFormValue] = useState<Portfolio>(new Portfolio());
   const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio>(null);
-  const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTrade>(new StockTrade());
-  const [stockTrades, setStockTrades] = useState([]);
+  const [selectedHolding, setSelectedHolding] = useState<Holding>(null);
+  const [stockTradeFormValue, setStockTradeFormValue] = useState<StockTransaction>(new StockTransaction());
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     holdings: [],
-  //     portfolios: [],
-  //     selectedPortfolio: null,
-  //     stockTradeFormValue: new StockTrade(),
-  //     stockTrades: [],
-  //   };
-  // }
   const classes = useStyles({});
 
   // get portfolios
   useEffect(() => {
     if (!portfolios.length) {
       PortfolioAPI.getPortfolios((data) => {
-        setSelectedPortfolio(data[0]);
         setPortfolios(data);
-        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+        if (data && data.length) {
+          setSelectedPortfolio(data[0]);
+          PortfolioAPI.getPortfolioById(data[0]._id, (p) => setSelectedPortfolio(p));
+        }
       });
     }
   });
 
   const onSelectPortfolio = (ev: React.ChangeEvent, value: string) => {
     const portfolio = portfolios.find((p) => p._id === value);
-    setSelectedPortfolio(portfolio);
-    PortfolioAPI.getStockTradesForPortfolio(portfolio._id, setStockTrades);
+    setSelectedHolding(null);
+    PortfolioAPI.getPortfolioById(portfolio._id, (p) => setSelectedPortfolio(p));
   };
 
-  const handleStockTradeFormSubmit = (value: StockTrade) => {
+  const handleStockTradeFormSubmit = (value: StockTransaction) => {
     PortfolioAPI.addTradeToPortfolio(value, selectedPortfolio._id, (updatedPortfolio: Portfolio) => {
       setSelectedPortfolio(updatedPortfolio);
-      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+      PortfolioAPI.getPortfolioById(selectedPortfolio._id, (p) => setSelectedPortfolio(p));
+      // PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
     });
   };
 
   const handlePortfolioFormSubmit = (value: Portfolio) => {
     PortfolioAPI.createPortfolio(value, () => {
-      PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
-        setPortfolios(_portfolios);
-        setPortfolioFormValue(new Portfolio());
-      });
+    //   PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
+    //     setPortfolios(_portfolios);
+    //     setPortfolioFormValue(new Portfolio());
+    //   });
     });
   };
 
-  const onDeleteStockTrade = (trade: StockTrade) => {
-    PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
-      PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
-    });
+  const onDeleteStockTrade = (trade: StockTransaction) => {
+    // PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
+    //   PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
+    // });
   };
 
   const onDeleteSelectedPortfolio = () => {
-    PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
-      PortfolioAPI.getPortfolios((data) => {
-        setSelectedPortfolio(data[0]);
-        setPortfolios(data);
-        PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
-      });
-    });
+    // PortfolioAPI.deletePortfolio(selectedPortfolio, () => {
+    //   PortfolioAPI.getPortfolios((data) => {
+    //     setSelectedPortfolio(data[0]);
+    //     setPortfolios(data);
+    //     PortfolioAPI.getStockTradesForPortfolio(data[0]._id, setStockTrades);
+    //   });
+    // });
+  };
+  
+  const handleSelectHolding = (h: Holding) => {
+    setSelectedHolding(h);
+  };
+
+  const handleSelectTransaction = (tx: Transaction) => {
+
   };
 
   return (
@@ -163,34 +164,54 @@ export default function App() {
             )}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                {/* <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Typography variant='h4'>
-                    New Trade
+                    New Transaction
                   </Typography>
-                </Grid> */}
-                <StockTradeForm
+                </Grid>
+                <TransactionForm
                   onSubmit={handleStockTradeFormSubmit}
-                  value={stockTradeFormValue}
                 />
               </Paper>
             </Grid>
             {selectedPortfolio ? (
               <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Grid item xs={12}>
-                  <Typography variant='h4'>
-                    Holdings
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <HoldingsTable
-                    holdings={selectedPortfolio.holdings}
-                  />
-                </Grid>
-              </Paper>
+                <Paper className={classes.paper}>
+                  <Grid item xs={12}>
+                    <Typography variant='h4'>
+                      Holdings
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {selectedPortfolio.holdings && (
+                      <HoldingsTable
+                        holdings={Object.values(selectedPortfolio.holdings)}
+                        onSelectHolding={handleSelectHolding}
+                      />
+                    )}
+                  </Grid>
+                </Paper>
               </Grid>
             ) : null}
-            <Grid item xs={12}>
+            {selectedHolding ? (
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Grid item xs={12}>
+                    <Typography variant='h4'>
+                      Transactions
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {selectedPortfolio.holdings && (
+                      <TransactionsTable
+                        transactions={selectedHolding.transactions}
+                      />
+                    )}
+                  </Grid>
+                </Paper>
+              </Grid>
+            ) : null}
+            {/* <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>
                   <Typography variant='h4'>
@@ -204,8 +225,8 @@ export default function App() {
                   />
                 </Grid>
               </Paper>
-            </Grid>
-            <Grid item xs={12}>
+            </Grid> */}
+            {/* <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>
                   <Typography variant='h4'>
@@ -216,13 +237,13 @@ export default function App() {
                   <Typography align='center' variant='subtitle1'>
                     No Options Trades table yet.
                   </Typography>
-                  {/* <StockTradesTable
+                  <StockTradesTable
                     trades={stockTrades}
                     onClickDelete={onDeleteStockTrade}
-                  /> */}
+                  />
                 </Grid>
               </Paper>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Container>
       </main>

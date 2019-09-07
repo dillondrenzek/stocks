@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { PortfolioAPI } from '../../api/portfolio-api';
-import { StockTrade } from '../../types/trade';
+import { StockTransaction } from '../../types/transaction';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
 
 export interface StockTradesTableProps {
-  onClickDelete?: (trade: StockTrade) => void;
-  trades?: StockTrade[];
+  onClickDelete?: (trade: StockTransaction) => void;
+  trades?: StockTransaction[];
 }
 
 type TableHeaders<T> = Array<{
@@ -16,7 +16,7 @@ type TableHeaders<T> = Array<{
 
 export function StockTradesTable(props: StockTradesTableProps) {
 
-  const tableHeaders: TableHeaders<StockTrade> = [
+  const tableHeaders: TableHeaders<StockTransaction> = [
     { key: 'side', label: 'Side' },
     { key: 'symbol', label: 'Symbol' },
     { key: 'quantity', label: 'Quantity', align: 'right' },
@@ -25,7 +25,7 @@ export function StockTradesTable(props: StockTradesTableProps) {
 
   const { onClickDelete, trades } = props;
 
-  const handleStockTradeDelete = (trade: StockTrade) => (ev: React.MouseEvent) => {
+  const handleStockTradeDelete = (trade: StockTransaction) => (ev: React.MouseEvent) => {
     if (typeof onClickDelete === 'function') {
       onClickDelete(trade);
     }

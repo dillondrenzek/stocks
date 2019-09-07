@@ -1,6 +1,6 @@
 import { spacing } from '@material-ui/system';
 import React from 'react';
-import { StockTrade } from '../../types/trade';
+import { StockTransaction } from '../../types';
 import { Button, Grid, TextField } from '../shared';
 
 const theme = {
@@ -8,12 +8,12 @@ const theme = {
 };
 
 export interface StockTradeFormProps {
-  onSubmit: (value: StockTrade) => void;
-  value: StockTrade;
+  onSubmit: (value: StockTransaction) => void;
+  value: StockTransaction;
 }
 
 interface StockTradeFormState {
-  value: StockTrade;
+  value: StockTransaction;
 }
 
 export class StockTradeForm extends React.Component<StockTradeFormProps, StockTradeFormState> {
@@ -22,7 +22,7 @@ export class StockTradeForm extends React.Component<StockTradeFormProps, StockTr
     super(props);
 
     this.state = {
-      value: new StockTrade({ side: 'buy' })
+      value: new StockTransaction({ side: 'buy' })
     };
   }
 

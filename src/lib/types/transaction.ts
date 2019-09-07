@@ -5,19 +5,24 @@ export type CallOrPut = 'call' | 'put';
 export type OpenOrClose = 'open' | 'close';
 export type StockOrOption = 'stock' | 'option';
 
-export interface Trade extends Saveable {
+interface BaseTransaction extends Saveable {
   price: number;
   quantity: number;
   side: BuyOrSell;
   symbol: string;
-  timestamp?: Date;
+  date?: Date;
   type: StockOrOption;
 }
 
-export interface StockTrade extends Trade {
+export type Transaction = StockTransaction | OptionTransaction;
+
+export interface StockTransaction extends BaseTransaction {
   type: 'stock';
 }
 
-export interface OptionTrade extends Trade {
+export interface OptionTransaction extends BaseTransaction {
   type: 'option';
+  strikePrice: number;
+  callPut: CallOrPut;
+  expirationDate: Date; // MM-DD-YYYY
 }

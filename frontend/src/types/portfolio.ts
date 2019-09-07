@@ -1,18 +1,19 @@
-import * as Types from '../../../src/types';
+import * as Types from '../../../src/lib/types';
 
 export interface Holding extends Types.Holding {}
-
 export interface Portfolio extends Types.Portfolio {}
 
 const defaultValues: Portfolio = {
   name: '',
-  holdings: [],
-  stockTrades: [],
-  optionTrades: []
+  holdings: {},
 };
 
 export class Portfolio {
+  static get defaultValues() {
+    return Object.assign({}, defaultValues);
+  }
+
   constructor(values: Partial<Portfolio> = defaultValues) {
-    return Object.assign({}, defaultValues, values);
+    return Object.assign({}, Portfolio.defaultValues, values);
   }
 }

@@ -4,7 +4,7 @@ import path from 'path';
 import api from './api';
 import { connectDb } from './db';
 
-import portfolioRoutes from '../server/routes/portfolio';
+// import portfolioRoutes from '../server/routes/portfolio';
 // import holdingsRoutes = require('./routes/holdings');
 // import quotesRoutes = require('./routes/quotes');
 
@@ -29,14 +29,10 @@ export async function startServer() {
   // Serve Static files
   app.use('/public', express.static(path.join(__dirname, 'public')));
 
-  // View routes
+  // Api
   app.use('/api', api);
-  app.get('/portfolios', portfolioRoutes);
-  app.get('/', (req, res) => {
-    res.render('portfolios');
-  });
 
+  // Listen
   await app.listen(app.get('port'));
-
   console.log(`Server started. Port: ${app.get('port')}`);
 }

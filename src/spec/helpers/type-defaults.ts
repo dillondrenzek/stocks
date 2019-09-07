@@ -1,15 +1,13 @@
-import * as Types from '../../types';
+import * as Types from '../../lib/types';
 
 export function defaultPortfolio(): Types.Portfolio {
   return {
-    holdings: [],
+    holdings: {},
     name: '',
-    optionTrades: [],
-    stockTrades: []
   }
 }
 
-export function defaultStockTrade(): Types.StockTrade {
+export function defaultStockTrade(): Types.StockTransaction {
   return {
     price: 0,
     quantity: 0,
@@ -19,12 +17,12 @@ export function defaultStockTrade(): Types.StockTrade {
   }
 }
 
-export function defaultOptionTrade(): Types.OptionTrade {
-  return {
-    price: 0,
-    quantity: 0,
-    side: null,
-    symbol: '',
-    type: 'option'
-  }
-}
+// export function defaultOptionTrade(): Types.OptionTransaction {
+//   return {
+//     price: 0,
+//     quantity: 0,
+//     side: null,
+//     symbol: '',
+//     type: 'option'
+//   }
+// }
