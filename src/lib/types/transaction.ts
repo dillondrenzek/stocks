@@ -10,7 +10,7 @@ interface BaseTransaction extends Saveable {
   quantity: number;
   side: BuyOrSell;
   symbol: string;
-  date?: Date;
+  date: Date;
   type: StockOrOption;
 }
 
