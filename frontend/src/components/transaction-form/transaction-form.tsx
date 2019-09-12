@@ -64,6 +64,14 @@ export default function TransactionForm(props: TransactionFormProps) {
           />
         </Grid>
         <Grid item>
+          <TextField
+            label={'Date'}
+            name='date'
+            onChange={onFieldChange('date')}
+            value={formValue.date}
+          />
+        </Grid>
+        <Grid item>
           <Button
             color='primary'
             type='submit'

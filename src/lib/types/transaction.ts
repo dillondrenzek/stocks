@@ -10,7 +10,7 @@ interface BaseTransaction extends Saveable {
   quantity: number;
   side: BuyOrSell;
   symbol: string;
-  date: Date;
+  date: string | Date;
   type: StockOrOption;
 }
 
@@ -24,5 +24,5 @@ export interface OptionTransaction extends BaseTransaction {
   type: 'option';
   strikePrice: number;
   callPut: CallOrPut;
-  expirationDate: Date; // MM-DD-YYYY
+  expirationDate: string | Date; // MM-DD-YYYY
 }
