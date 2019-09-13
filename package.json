@@ -22,18 +22,15 @@
     "prefrontend:dev": "cd frontend; npm install",
     "preserver:dev": "npm run build",
     "lint": "tslint -c tslint.json -p tsconfig-spec.json --fix",
-
     "set-ruby": "rvm use ruby-2.4.2",
     "predev:docs": "cd docs; npm run set-ruby; bundle install",
     "dev:docs": "cd docs; jekyll serve",
-
     "pretest": "npm run build:test",
     "pretest:app": "npm run build:test",
     "pretest:db": "npm run build:test",
     "test": "mocha --exit",
     "test:app": "mocha --exit --config .mocharc-app.json",
     "test:db": "mocha --exit --config .mocharc-db.json",
-    
     "start": "node ./bin/www",
     "watch": "npm-watch"
   },
@@ -60,6 +57,7 @@
     "https": "^1.0.0",
     "jade": "^1.11.0",
     "minimalist": "1.0.0",
+    "moment": "^2.24.0",
     "mongodb": "3.2.7",
     "mongoose": "^5.3.12",
     "morgan": "~1.9.0",

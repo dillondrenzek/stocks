@@ -2,7 +2,9 @@ import * as Types from '../../../src/lib/types';
 
 export type Transaction = Types.Transaction;
 
-export interface StockTransaction extends Types.StockTransaction {}
+export interface StockTransaction extends Types.StockTransaction {
+  date: string; 
+}
 export interface OptionTransaction extends Types.OptionTransaction {}
 
 export class StockTransaction {
@@ -14,6 +16,7 @@ export class StockTransaction {
         side: 'buy',
         symbol: '',
         type: 'stock',
+        date: new Date().toISOString()
       }
     };
   }
@@ -33,7 +36,8 @@ export class OptionTransaction {
         type: 'option',
         callPut: null,
         expirationDate: new Date(),
-        strikePrice: 0.00
+        strikePrice: 0.00,
+        date: null
       }
     };
   }
