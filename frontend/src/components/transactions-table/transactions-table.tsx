@@ -1,5 +1,6 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
+import moment from 'moment';
 import { Holding } from '../../types/portfolio';
 import { Transaction } from '../../types/transaction';
 
@@ -34,6 +35,16 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
       key: 'price',
       label: 'Price',
     },
+    {
+      key: 'date',
+      label: 'Date',
+      render: (dateString: string) => {
+        const formatted = moment(dateString).format('MMM D YY');
+        return (
+          <span>{formatted}</span>
+        )
+      }
+    }
   ];
 
   return (

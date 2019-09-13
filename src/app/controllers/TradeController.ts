@@ -47,15 +47,17 @@ export class TradeController {
     if (p.type === 'stock') {
       return {
         _id: p.id,
+        date: p.date,
         price: p.price,
         quantity: p.quantity,
         side: p.side,
         symbol: p.symbol,
-        type: p.type
+        type: p.type,
       }
     } else if (p.type === 'option') {
       return {
         _id: p.id,
+        date: p.date,
         price: p.price,
         callPut: p.callPut,
         expirationDate: p.expirationDate,

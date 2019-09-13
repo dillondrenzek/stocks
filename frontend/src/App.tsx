@@ -134,6 +134,8 @@ export default function App() {
       <main className={classes.content}>
         <Container>
           <Grid container>
+
+            {/* New Portfolio Form */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
               <Grid container spacing={2} alignItems='center'>
@@ -155,6 +157,8 @@ export default function App() {
                 </Grid>
               </Paper>
             </Grid>
+
+            {/* Portfolio Tabs */}
             {portfolios && portfolios.length && selectedPortfolio && (
               <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
                 {portfolios.map((portfolio, i) => (
@@ -162,6 +166,8 @@ export default function App() {
                 ))}
               </Tabs>
             )}
+
+            {/* New Transaction Form */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>
@@ -174,8 +180,10 @@ export default function App() {
                 />
               </Paper>
             </Grid>
+
+            {/* Holdings Table */}
             {selectedPortfolio ? (
-              <Grid item xs={12}>
+              <Grid item xs={3}>
                 <Paper className={classes.paper}>
                   <Grid item xs={12}>
                     <Typography variant='h4'>
@@ -193,8 +201,10 @@ export default function App() {
                 </Paper>
               </Grid>
             ) : null}
+
+            {/* Transactions Table */}
             {selectedHolding ? (
-              <Grid item xs={12}>
+              <Grid item xs={9}>
                 <Paper className={classes.paper}>
                   <Grid item xs={12}>
                     <Typography variant='h4'>
@@ -211,6 +221,7 @@ export default function App() {
                 </Paper>
               </Grid>
             ) : null}
+
             {/* <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <Grid item xs={12}>

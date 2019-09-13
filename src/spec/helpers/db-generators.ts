@@ -10,7 +10,8 @@ export const generateStockTransaction = (): Types.StockTransaction => ({
   symbol: 'TEST',
   price: 3.33,
   quantity: 2,
-  side: 'buy'
+  side: 'buy',
+  date: new Date(),
 });
 
 export const generateOptionTransaction = (): Types.OptionTransaction => ({
@@ -21,5 +22,6 @@ export const generateOptionTransaction = (): Types.OptionTransaction => ({
   side: 'buy',
   callPut: 'call',
   expirationDate: new Date(),
-  strikePrice: 185.50
+  strikePrice: 185.50,
+  date: new Date()
 });
