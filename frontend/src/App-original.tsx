@@ -6,7 +6,7 @@ import React, { useEffect, useState, } from 'react';
 
 import { PortfolioAPI } from './api/portfolio-api';
 
-import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './components/shared';
+import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './shared';
 
 import HoldingsTable from './components/holdings-table/holdings-table';
 import { PortfolioForm } from './components/portfolio-form/portfolio-form';
@@ -147,8 +147,8 @@ export default function App() {
                   </Grid>
                   <Grid item>
                     <Button
-                      color='secondary'
-                      variant='text'
+                      // color='secondary'
+                      // variant='text'
                       onClick={onDeleteSelectedPortfolio}
                     >
                       Delete Selected Portfolio
@@ -158,14 +158,7 @@ export default function App() {
               </Paper>
             </Grid>
 
-            {/* Portfolio Tabs */}
-            {portfolios && portfolios.length && selectedPortfolio && (
-              <Tabs value={selectedPortfolio && selectedPortfolio._id} onChange={onSelectPortfolio}>
-                {portfolios.map((portfolio, i) => (
-                  <Tab key={i} label={portfolio.name} value={portfolio._id} />
-                ))}
-              </Tabs>
-            )}
+            
 
             {/* New Transaction Form */}
             <Grid item xs={12}>

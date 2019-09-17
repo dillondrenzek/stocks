@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Portfolio } from '../../types/portfolio';
-import { Button, Grid, TextField } from '../shared';
+import { Button, Grid, TextField } from '../../shared';
 
 export interface PortfolioFormProps {
   onSubmit: (value: Portfolio) => void;
@@ -40,12 +40,14 @@ export function PortfolioForm(props: PortfolioFormProps) {
             onChange={onFieldChange('name')}
             value={value.name}
           />
+          
         {/* </Grid>
-        <Grid item> */}
-          <Button
+
             color='primary'
             type='submit'
             variant='text'
+        <Grid item> */}
+          <Button
           >
             New Portfolio
           </Button>

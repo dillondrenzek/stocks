@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PortfolioAPI } from '../../api/portfolio-api';
 import { StockTransaction } from '../../types/transaction';
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../shared';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '../../shared';
 
 export interface StockTradesTableProps {
   onClickDelete?: (trade: StockTransaction) => void;
@@ -48,7 +48,7 @@ export function StockTradesTable(props: StockTradesTableProps) {
               <TableCell key={key} align={align}>{trade[key]}</TableCell>
             ))}
             <TableCell align='right'>
-              <Button color='secondary' onClick={handleStockTradeDelete(trade)}>Delete</Button>
+              <Button onClick={handleStockTradeDelete(trade)}>Delete</Button>
             </TableCell>
           </TableRow>
         ))}

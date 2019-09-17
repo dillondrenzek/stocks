@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StockTransaction } from '../../types';
-import { Button, Grid, TextField } from '../shared';
+import { Button, Grid, TextField } from '../../shared';
 
 export interface TransactionFormProps {
   onSubmit: (value: StockTransaction) => void;
@@ -73,9 +73,7 @@ export default function TransactionForm(props: TransactionFormProps) {
         </Grid>
         <Grid item>
           <Button
-            color='primary'
             type='submit'
-            variant='text'
           >
             New Stock Trade
           </Button>

@@ -1,9 +1,16 @@
 import * as Mui from '@material-ui/core';
+import * as Bootstrap from 'react-bootstrap';
 
+// Bootstrap
+export const Button = Bootstrap.Button;
+export const Col = Bootstrap.Col;
+export const Container = Bootstrap.Container;
+export const Nav = Bootstrap.Nav;
+export const Row = Bootstrap.Row;
+
+// Material UI (DEPRECATED)
 export const AppBar = Mui.AppBar;
 export const Box = Mui.Box;
-export const Button = Mui.Button;
-export const Container = Mui.Container;
 export const Grid = Mui.Grid;
 export const Paper = Mui.Paper;
 export const Table = Mui.Table;
