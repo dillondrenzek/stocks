@@ -35,8 +35,6 @@ export default function PortfolioTabs({
 
   }
 
-  const tabsExist = (portfolios && portfolios.length && selectedPortfolio);
-
   return (
     <Nav
       activeKey={key(selectedPortfolio)}
