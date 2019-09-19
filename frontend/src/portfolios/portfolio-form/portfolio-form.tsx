@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Portfolio } from '../../types/portfolio';
-import { Button, Grid, TextField } from '../../shared';
+import { Button, Col, Form, FormControl, Row } from '../../shared';
+import { Alert } from 'react-bootstrap';
 
 export interface PortfolioFormProps {
   onSubmit: (value: Portfolio) => void;
@@ -31,28 +32,26 @@ export function PortfolioForm(props: PortfolioFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container direction={'row'} alignItems='center' spacing={2}>
-        {/* <Grid alignItems='center' item> */}
-          <TextField
-            label={'Name'}
-            name='name'
-            onChange={onFieldChange('name')}
-            value={value.name}
+    <Form onSubmit={handleSubmit}>
+      <Row noGutters>
+        <Col>
+          <Form.Control
+            placeholder='Name'
+            type='text'
           />
-          
-        {/* </Grid>
-
-            color='primary'
-            type='submit'
-            variant='text'
-        <Grid item> */}
-          <Button
-          >
+        </Col>
+        {/* <TextField
+          label={'Name'}
+          name='name'
+          onChange={onFieldChange('name')}
+          value={value.name}
+        /> */}
+        <Col xs='auto'>
+          <Button>
             New Portfolio
           </Button>
-        {/* </Grid> */}
-      </Grid>
-    </form>
+        </Col>
+      </Row>
+    </Form>
   );
 }

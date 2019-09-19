@@ -9,7 +9,7 @@ import { PortfolioAPI } from './api/portfolio-api';
 import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './shared';
 
 import HoldingsTable from './components/holdings-table/holdings-table';
-import { PortfolioForm } from './components/portfolio-form/portfolio-form';
+import { PortfolioForm } from './portfolios/portfolio-form/portfolio-form';
 import TransactionsTable from './components/transactions-table/transactions-table';
 import TransactionForm from './components/transaction-form/transaction-form';
 

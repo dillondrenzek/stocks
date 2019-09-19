@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { Button, Container, Col, Nav, Row } from '../../shared';
+import { Alert, Button, Container, Col, Nav, Row } from '../../shared';
 
 import { Portfolio } from '../../types';
 
@@ -23,33 +23,31 @@ export default function PortfolioTabs({
   onSelectPortfolio
 } : PortfolioTabsProps) {
 
-
-
   const handleSelectPortfolio = (id: string) => {
-
     // find portfolio
     const selectedPortfolio = _.find(portfolios, (p) => key(p) === id);
-
     // emit portfolio
     onSelectPortfolio(selectedPortfolio);
+  };
 
-  }
+  const portfoliosExist = portfolios && portfolios.length;
 
   return (
-    <Nav
-      activeKey={key(selectedPortfolio)}
-      onSelect={handleSelectPortfolio}
-    >
-      {portfolios.map((portfolio, i) => (
-        <Nav.Item>
-          <Nav.Link eventKey={key(portfolio)}>{portfolio.name}</Nav.Link>
-        </Nav.Item>
-      ))}
-      <Nav.Item>
-        <Button>
-          Add
-        </Button>
-      </Nav.Item>
-    </Nav>
+    portfoliosExist ? (
+      <Nav
+        activeKey={key(selectedPortfolio)}
+        onSelect={handleSelectPortfolio}
+      >
+        {portfolios.map((portfolio, i) => (
+          <Nav.Item>
+            <Nav.Link eventKey={key(portfolio)}>{portfolio.name}</Nav.Link>
+          </Nav.Item>
+        ))}
+      </Nav>
+    ) : (
+      <Alert variant='dark'>
+        No Portfolios exist
+      </Alert>
+    )
   );
 }
