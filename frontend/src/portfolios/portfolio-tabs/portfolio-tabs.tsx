@@ -39,7 +39,7 @@ export default function PortfolioTabs({
         onSelect={handleSelectPortfolio}
       >
         {portfolios.map((portfolio, i) => (
-          <Nav.Item>
+          <Nav.Item key={i}>
             <Nav.Link eventKey={key(portfolio)}>{portfolio.name}</Nav.Link>
           </Nav.Item>
         ))}

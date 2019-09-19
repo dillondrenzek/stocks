@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Portfolio } from '../../types/portfolio';
 import { Button, Col, Form, FormControl, Row } from '../../shared';
-import { Alert } from 'react-bootstrap';
+// import { FormEvent } from 'react-bootstrap';
 
 export interface PortfolioFormProps {
   onSubmit: (value: Portfolio) => void;
@@ -16,7 +16,7 @@ export function PortfolioForm(props: PortfolioFormProps) {
 
   const [ value, setValue ] = useState<Portfolio>(props.value);
 
-  const onFieldChange = (fieldName: string) => (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onFieldChange = (fieldName: string) => (ev) => {
     const fieldValue = ev.currentTarget.value;
     const updatedFormValue = Object.assign({}, value, {
       [fieldName]: fieldValue
@@ -36,8 +36,10 @@ export function PortfolioForm(props: PortfolioFormProps) {
       <Row noGutters>
         <Col>
           <Form.Control
+            onChange={onFieldChange('name')}
             placeholder='Name'
             type='text'
+            value={value.name}
           />
         </Col>
         {/* <TextField
@@ -47,7 +49,7 @@ export function PortfolioForm(props: PortfolioFormProps) {
           value={value.name}
         /> */}
         <Col xs='auto'>
-          <Button>
+          <Button type='submit'>
             New Portfolio
           </Button>
         </Col>

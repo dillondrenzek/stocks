@@ -95,15 +95,6 @@ export default function App() {
     });
   };
 
-  const handlePortfolioFormSubmit = (value: Portfolio) => {
-    PortfolioAPI.createPortfolio(value, () => {
-    //   PortfolioAPI.getPortfolios((_portfolios: Portfolio[]) => {
-    //     setPortfolios(_portfolios);
-    //     setPortfolioFormValue(new Portfolio());
-    //   });
-    });
-  };
-
   const onDeleteStockTrade = (trade: StockTransaction) => {
     // PortfolioAPI.deleteTradeFromPortfolio(trade, selectedPortfolio._id, () => {
     //   PortfolioAPI.getStockTradesForPortfolio(selectedPortfolio._id, setStockTrades);
@@ -140,10 +131,10 @@ export default function App() {
               <Paper className={classes.paper}>
               <Grid container spacing={2} alignItems='center'>
                   <Grid item>
-                    <PortfolioForm
+                    {/* <PortfolioForm
                       onSubmit={handlePortfolioFormSubmit}
                       value={portfolioFormValue}
-                    />
+                    /> */}
                   </Grid>
                   <Grid item>
                     <Button
