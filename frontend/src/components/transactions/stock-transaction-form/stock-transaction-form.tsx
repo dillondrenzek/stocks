@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { StockTransaction } from '../../../types';
-import { Button, Grid, TextField } from '../../../shared';
+import { Row, Alert, Button, Col, Form } from '../../../shared';
+import { validationStockTransaction } from './validations';
+
 
 export interface StockTransactionFormProps {
   onSubmit: (value: StockTransaction) => void;
@@ -8,80 +10,111 @@ export interface StockTransactionFormProps {
 }
 
 export default function StockTransactionForm(props: StockTransactionFormProps) {
+  const [formValue, setFormValue] = useState<StockTransaction>(props.value);
+  const [errorMsg, setErrorMsg] = useState<string>('');
 
-  const {
-    onSubmit,
-    value
-  } = props;
-
-  const [formValue, setFormValue] = useState<StockTransaction>(new StockTransaction());
-
-  const onFieldChange = (fieldName: string) => (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onFieldChange = (fieldName: string) => (ev) => {
     const value = ev.currentTarget.value;
     const updatedFormValue = Object.assign({}, formValue, {
       [fieldName]: value
     });
+    setErrorMsg('');
     setFormValue(updatedFormValue);
   }
 
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
+
+    // Validate
+    const error = validationStockTransaction(formValue);
+    if (error) {
+      setErrorMsg(error);
+      return;
+    }
+
+    // Submit
     props.onSubmit(formValue);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
 
-      {/* <Grid container direction={'row'} spacing={2}>
-        <Grid item>
-          <TextField
-            label={'Symbol'}
+      {errorMsg && (
+        <Alert variant='danger'>
+          {errorMsg}
+        </Alert>
+      )}
+
+      <Form.Row>
+        <Form.Group as={Col}>
+          <Form.Label>Symbol</Form.Label>
+          <Form.Control 
+            type='text'
             name='symbol'
-            onChange={onFieldChange('symbol')}
+            placeholder='SYM'
             value={formValue.symbol}
+            onChange={onFieldChange('symbol')}
           />
-        </Grid>
-        <Grid item>
-          <TextField
-            label={'Quantity'}
+        </Form.Group>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col}>
+          <Form.Label>Quantity</Form.Label>
+          <Form.Control 
+            type='number'
             name='quantity'
+            placeholder='0'
+            value={formValue.quantity.toString()}
             onChange={onFieldChange('quantity')}
-            value={formValue.quantity}
           />
-        </Grid>
-        <Grid item>
-          <TextField
-            label={'Price'}
+        </Form.Group>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col}>
+          <Form.Label>Price</Form.Label>
+          <Form.Control 
+            type='number'
             name='price'
+            placeholder='0.00'
+            value={formValue.price.toString()}
             onChange={onFieldChange('price')}
-            value={formValue.price}
           />
-        </Grid>
-        <Grid item>
-          <TextField
-            label={'Side'}
+        </Form.Group>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col}>
+          <Form.Label>Side</Form.Label>
+          <Form.Control 
+            type='text'
             name='side'
+            placeholder='buy, sell'
+            value={formValue.side.toString()}
             onChange={onFieldChange('side')}
-            value={formValue.side}
           />
-        </Grid>
-        <Grid item>
-          <TextField
-            label={'Date'}
+        </Form.Group>
+      </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col}>
+          <Form.Label>Date</Form.Label>
+          <Form.Control 
+            type='text'
             name='date'
+            placeholder=''
+            value={formValue.date.toString()}
             onChange={onFieldChange('date')}
-            value={formValue.date}
           />
-        </Grid>
-        <Grid item>
-          <Button
-            type='submit'
-          >
-            New Stock Trade
-          </Button>
-        </Grid>
-      </Grid> */}
-    </form>
+        </Form.Group>
+      </Form.Row>
+
+      <Button type='submit'>
+        New Stock Trade
+      </Button>
+      
+    </Form>
   );
 }
 

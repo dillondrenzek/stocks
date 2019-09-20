@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
+import { StockTransaction } from '../../../types/transaction';
 import { Accordion, Button, Card, Col, Form, FormControl, Row, Typography } from '../../../shared';
+
+import { PortfolioAPI } from '../../../api/portfolio-api';
 
 import HoldingsTable from '../../holdings-table/holdings-table';
 import TransactionsTable from '../../transactions-table/transactions-table';
-import TransactionForm from '../../transaction-form/transaction-form';
+import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import { Alert } from 'react-bootstrap';
 
 export interface PortfolioProps {
-  portfolio?: PortfolioModel;
+  portfolio: PortfolioModel;
+  onPortfolioChange: (portfolio: PortfolioModel) => void;
 }
 
 export function Portfolio (props: PortfolioProps) {
@@ -16,26 +20,25 @@ export function Portfolio (props: PortfolioProps) {
   const { portfolio } = props;
   const holdings = portfolio ? Object.values(portfolio.holdings) : [];
 
-  // const [selectedHolding, setSelectedHolding] = useState<Holding>(null);
+  const [stockTransactionFormValue, setStockTransactionFormValue] = useState(new StockTransaction());
 
-  // const handleSelectHolding = (h: Holding) => {
-  //   setSelectedHolding(h);
-  // };
+  const handleTransactionFormSubmit = (value: StockTransaction) => {
+    console.log('submitted:', value)
 
-  const [stockTransactionFormValue, setStockTransactionFormValue] = useState();
-
-  const handleTransactionFormSubmit = () => {
-
+    PortfolioAPI.addTradeToPortfolio(value, portfolio._id, (p: PortfolioModel) => {
+      console.log('added trade', value, 'to portfolio', p);
+      props.onPortfolioChange(p);
+    });
   };
 
   return (
-    <Row noGutters>
-      <Col xs={9}>
+    <Row>
+      <Col xs={8}>
         {portfolio && holdings.length ? (
           <Accordion>
             {holdings.map((h: Holding, i: number) => (
               <Card key={i}>
-                <Accordion.Toggle as={Card.Header} variant='link' eventKey={i.toString()}>
+                <Accordion.Toggle as={Card.Header} variant='link' eventKey={i.toString()} style={{cursor: 'pointer'}}>
                   {h.symbol}
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey={i.toString()}>
@@ -54,15 +57,23 @@ export function Portfolio (props: PortfolioProps) {
           </Alert>
         )}
       </Col>
-      <Col xs={3}>
-        <Typography variant='h6'>
-          New Transaction
-        </Typography>
+      <Col xs={4}>
         <Card>
-          <TransactionForm 
-            onSubmit={handleTransactionFormSubmit}
-            value={stockTransactionFormValue}
-          />
+          <Card.Header>
+            <Row>
+              <Col>
+                <Typography variant='h6'>
+                  New Transaction
+                </Typography>
+              </Col>
+            </Row>
+          </Card.Header>
+          <Card.Body>
+            <StockTransactionForm 
+              onSubmit={handleTransactionFormSubmit}
+              value={stockTransactionFormValue}
+            />
+          </Card.Body>
         </Card>
       </Col>
     </Row>

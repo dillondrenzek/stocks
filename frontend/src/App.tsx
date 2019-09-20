@@ -12,6 +12,11 @@ import PortfolioTabs from './components/portfolios/portfolio-tabs/portfolio-tabs
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+interface Portfolios {
+  [id: string]: Portfolio;
+}
+
 export default function App() {
 
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -42,6 +47,12 @@ export default function App() {
     });
   };
 
+  const handlePortfolioChange = (value: Portfolio) => {
+    PortfolioAPI.getPortfolios((data: Portfolio[]) => {
+      setPortfolios(data);
+    });
+  }
+
   return (
     <Container>
 
@@ -69,6 +80,7 @@ export default function App() {
 
           <PortfolioPage
             portfolio={selectedPortfolio}
+            onPortfolioChange={setSelectedPortfolio}
           />
 
         </Col>
