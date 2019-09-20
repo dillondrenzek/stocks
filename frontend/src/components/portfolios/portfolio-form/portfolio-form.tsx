@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Portfolio } from '../../types/portfolio';
-import { Button, Col, Form, FormControl, Row } from '../../shared';
+import { Portfolio } from '../../../types/portfolio';
+import { Button, Col, Form, FormControl, Row } from '../../../shared';
 // import { FormEvent } from 'react-bootstrap';
 
 export interface PortfolioFormProps {
@@ -42,12 +42,6 @@ export function PortfolioForm(props: PortfolioFormProps) {
             value={value.name}
           />
         </Col>
-        {/* <TextField
-          label={'Name'}
-          name='name'
-          onChange={onFieldChange('name')}
-          value={value.name}
-        /> */}
         <Col xs='auto'>
           <Button type='submit'>
             New Portfolio

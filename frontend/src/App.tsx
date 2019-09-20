@@ -6,8 +6,9 @@ import { PortfolioAPI } from './api/portfolio-api';
 
 import { Portfolio } from './types';
 
-import { PortfolioForm } from './portfolios/portfolio-form/portfolio-form';
-import PortfolioTabs from './portfolios/portfolio-tabs/portfolio-tabs';
+import { Portfolio as PortfolioPage } from './components/portfolios/portfolio/portfolio';
+import { PortfolioForm } from './components/portfolios/portfolio-form/portfolio-form';
+import PortfolioTabs from './components/portfolios/portfolio-tabs/portfolio-tabs';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -60,6 +61,16 @@ export default function App() {
             selectedPortfolio={selectedPortfolio}
             onSelectPortfolio={setSelectedPortfolio}
           />
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+
+          <PortfolioPage
+            portfolio={selectedPortfolio}
+          />
+
         </Col>
       </Row>
 

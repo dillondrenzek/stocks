@@ -47,7 +47,7 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
     }
   ];
 
-  return (
+  return (transactions ? (
     <MUI.Table size='small'>
       <MUI.TableHead>
         <MUI.TableRow>
@@ -70,6 +70,6 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
         ))) : null}
       </MUI.TableBody>
     </MUI.Table>
-  );
+  ) : null);
 }
 

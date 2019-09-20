@@ -9,7 +9,7 @@ import { PortfolioAPI } from './api/portfolio-api';
 import { AppBar, Box, Button, Container, Grid, Paper, Tab, Tabs, Toolbar, Typography } from './shared';
 
 import HoldingsTable from './components/holdings-table/holdings-table';
-import { PortfolioForm } from './portfolios/portfolio-form/portfolio-form';
+import { PortfolioForm } from './components/portfolios/portfolio-form/portfolio-form';
 import TransactionsTable from './components/transactions-table/transactions-table';
 import TransactionForm from './components/transaction-form/transaction-form';
 
@@ -111,9 +111,7 @@ export default function App() {
     // });
   };
   
-  const handleSelectHolding = (h: Holding) => {
-    setSelectedHolding(h);
-  };
+  
 
   const handleSelectTransaction = (tx: Transaction) => {
 
@@ -170,17 +168,10 @@ export default function App() {
               <Grid item xs={3}>
                 <Paper className={classes.paper}>
                   <Grid item xs={12}>
-                    <Typography variant='h4'>
-                      Holdings
-                    </Typography>
+                    
                   </Grid>
                   <Grid item xs={12}>
-                    {selectedPortfolio.holdings && (
-                      <HoldingsTable
-                        holdings={Object.values(selectedPortfolio.holdings)}
-                        onSelectHolding={handleSelectHolding}
-                      />
-                    )}
+                    
                   </Grid>
                 </Paper>
               </Grid>
@@ -196,11 +187,7 @@ export default function App() {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    {selectedPortfolio.holdings && (
-                      <TransactionsTable
-                        transactions={selectedHolding.transactions}
-                      />
-                    )}
+                    
                   </Grid>
                 </Paper>
               </Grid>

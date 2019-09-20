@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { Alert, Button, Container, Col, Nav, Row } from '../../shared';
+import { Alert, Button, Container, Col, Nav, Row } from '../../../shared';
 
-import { Portfolio } from '../../types';
+import { Portfolio } from '../../../types';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
