@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Portfolio } from '../../types/portfolio';
-import { Button, Grid, TextField } from '../shared';
+import { Portfolio } from '../../../types/portfolio';
+import { Button, Col, Form, FormControl, Row } from '../../../shared';
+// import { FormEvent } from 'react-bootstrap';
 
 export interface PortfolioFormProps {
   onSubmit: (value: Portfolio) => void;
@@ -15,7 +16,7 @@ export function PortfolioForm(props: PortfolioFormProps) {
 
   const [ value, setValue ] = useState<Portfolio>(props.value);
 
-  const onFieldChange = (fieldName: string) => (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onFieldChange = (fieldName: string) => (ev) => {
     const fieldValue = ev.currentTarget.value;
     const updatedFormValue = Object.assign({}, value, {
       [fieldName]: fieldValue
@@ -31,26 +32,22 @@ export function PortfolioForm(props: PortfolioFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container direction={'row'} alignItems='center' spacing={2}>
-        {/* <Grid alignItems='center' item> */}
-          <TextField
-            label={'Name'}
-            name='name'
+    <Form onSubmit={handleSubmit}>
+      <Row noGutters>
+        <Col>
+          <Form.Control
             onChange={onFieldChange('name')}
+            placeholder='Name'
+            type='text'
             value={value.name}
           />
-        {/* </Grid>
-        <Grid item> */}
-          <Button
-            color='primary'
-            type='submit'
-            variant='text'
-          >
+        </Col>
+        <Col xs='auto'>
+          <Button type='submit'>
             New Portfolio
           </Button>
-        {/* </Grid> */}
-      </Grid>
-    </form>
+        </Col>
+      </Row>
+    </Form>
   );
 }
