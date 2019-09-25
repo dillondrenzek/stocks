@@ -31,16 +31,32 @@ describe('PortfolioController', withDb(() => {
       expect(typeof holding.transactions[0]).to.eq('string');
     });
 
-    // it('contains the correct transaction', () => {
-    //   const holding = savedPortfolio.holdings[transaction.symbol];
-    //   const foundTransaction = holding.transactions[0] as any; // HACK
-    //   expect(foundTransaction).to.exist;
-    //   expect(foundTransaction.side).to.eq(transaction.side);
-    //   expect(foundTransaction.symbol).to.eq(transaction.symbol);
-    //   expect(foundTransaction.type).to.eq(transaction.type);
-    //   expect(foundTransaction.price).to.eq(transaction.price);
-    //   expect(foundTransaction.quantity).to.eq(transaction.quantity);
-    // });
+  });
+
+  describe('removes a Transaction from a Portfolio', () => {
+    let transaction: Types.Transaction = generateStockTransaction(),
+      savedTransaction: DB.IStockTransactionDocument,
+      portfolioWithTx: Types.Portfolio,
+      portfolio: DB.IPortfolioDocument,
+      savedPortfolio: Types.Portfolio,
+      removeTransactionId: string;
+
+    beforeEach(async () => {
+      // create test portfolio
+      portfolio = await DB.Portfolio.createByName('Test');
+      // add the transaction
+      portfolioWithTx = await PortfolioController.addTransactionToPortfolio(transaction, portfolio.id);
+      removeTransactionId = portfolioWithTx.holdings[transaction.symbol].transactions[0];
+      // remove the portfolio
+      savedPortfolio = await PortfolioController.removeTransactionFromPortfolio(removeTransactionId, portfolio.id);
+    });
+
+    it('has a Holding that does not contain the transaction id', () => {
+      const holding = savedPortfolio.holdings[transaction.symbol];
+      expect(holding).to.exist;
+      expect(holding.transactions).not.to.contain(removeTransactionId);
+      expect(holding.transactions.length).to.eq(0);
+    });
 
   });
 

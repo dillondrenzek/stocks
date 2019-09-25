@@ -11,6 +11,7 @@ import {
 } from './Portfolio';
 import * as Types from '../../lib/types';
 import { create } from 'domain';
+import { generateStockTransaction } from '../../spec/helpers/db-generators';
 
 describe('Portfolio', withDb(() => {
   let portfolio: IPortfolioDocument;
@@ -45,8 +46,6 @@ describe('Portfolio', withDb(() => {
     beforeEach(async () => {
       // create test portfolio
       portfolio = await Portfolio.createByName('Test');
-
-
     });
 
     describe('to a portfolio without a holding for transaction symbol', () => {
@@ -63,6 +62,8 @@ describe('Portfolio', withDb(() => {
           await portfolio.addTransaction(savedTransaction);
           // save portfolio
           await portfolio.save();
+          // fetch portfolio
+          portfolio = await Portfolio.findById(portfolio.id);
           // assume created holding
           createdHolding = portfolio.holdings[transactionSymbol];
         });
@@ -122,6 +123,38 @@ describe('Portfolio', withDb(() => {
 
     });
 
+  });
+
+  describe('removes a stock transaction by id', () => {
+    let tx: Types.StockTransaction;
+    let removeId = 'testiddoesntmatter';
+
+    beforeEach(async () => {
+      tx = generateStockTransaction();
+      tx._id = removeId;
+      // create test portfolio
+      portfolio = await Portfolio.createByName('Test');
+      // add a tx id
+      portfolio.addTransaction(tx);
+      // save portfolio
+      await portfolio.save();
+      // fetch portfolio
+      portfolio = await Portfolio.findById(portfolio.id);
+      // remove a tx id
+      portfolio.removeTransaction(tx);
+      // save portfolio
+      await portfolio.save();
+      // fetch portfolio
+      portfolio = await Portfolio.findById(portfolio.id);
+    });
+
+    it('has a holding for that symbol', () => {
+      expect(portfolio.holdings[tx.symbol]).to.exist;
+    });
+
+    it('does not contain a transaction with that id', () => {
+      expect(portfolio.holdings[tx.symbol].transactions).not.to.contain(tx._id);
+    });
   });
 
 }));

@@ -13,6 +13,14 @@ export class TradeController {
     }
   }
 
+  public static async deleteTransaction(tx: Types.Transaction): Promise<void> {
+    if (tx.type === 'stock') {
+      const id = (typeof tx._id === 'string') ? tx._id : (tx as DB.IStockTransactionDocument).id;
+      await DB.StockTransaction.findByIdAndDelete(id);
+      return;
+    }
+  }
+
   public static async getTransactionById(id: string): Promise<Types.Transaction> {
     let tx: DB.IStockTransactionDocument | DB.IOptionTransactionDocument;
 

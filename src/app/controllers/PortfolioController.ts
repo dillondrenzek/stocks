@@ -75,6 +75,21 @@ export class PortfolioController {
     return this.toPortfolio(portfolio);
   } 
 
+  public static async removeTransactionFromPortfolio(txId: string, portfolioId: string): Promise<Types.Portfolio> {
+    // find portfolio
+    let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
+    // find transaction
+    let transaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
+
+    if (transaction) {
+      // remove transaction
+      portfolio.removeTransaction(transaction)
+      // save portfolio
+      portfolio = await portfolio.save();
+    }
+    return this.toPortfolio(portfolio);
+  }
+
   public static toPortfolio(p: Types.Portfolio | DB.IPortfolioDocument): Types.Portfolio {
     return {
       _id: (typeof p._id === 'string') ? p._id : (p as DB.IPortfolioDocument).id,
