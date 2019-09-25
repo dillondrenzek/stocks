@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
+import moment from 'moment';
 
 export class Logger {
     public static logRequests(req: Request, res: Response, next: NextFunction) {
-        console.info('[api]', req.method.toUpperCase(), req.url);
+        const date = moment().format('HH:MM:SS');
+        console.info(`[${date}]`, '[api]', req.method.toUpperCase(), req.url);
         next();
     }
 }
