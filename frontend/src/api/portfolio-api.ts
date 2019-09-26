@@ -41,6 +41,14 @@ export const PortfolioAPI = {
       .catch(console.error);
   },
 
+  removeTradeFromPortfolio: (txId: string, portfolioId: string, cb: (updatedPortfolio: Portfolio) => void) => {
+    const url = 'http://localhost:7000/api/portfolios/' + portfolioId + '/transactions/' + txId + '/delete';
+    
+    http.post<Portfolio>(url, null, null)
+      .then((res) => cb(res.data))
+      .catch(console.error);
+  },
+
   getPortfolios: (cb: (portfolios: Portfolio[]) => void) => {
     http.get<Portfolio[]>('http://localhost:7000/api/portfolios')
       .then((res) => cb(res.data))

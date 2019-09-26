@@ -31,6 +31,13 @@ export function Portfolio (props: PortfolioProps) {
     });
   };
 
+  const handleDeleteTransaction = (txId: string) => {
+    PortfolioAPI.removeTradeFromPortfolio(txId, portfolio._id, (p: PortfolioModel) => {
+      console.log('removed tx', txId, 'from portfolio', p);
+      props.onPortfolioChange(p);
+    });
+  }
+
   return (
     <Row>
       <Col xs={8}>
@@ -45,6 +52,7 @@ export function Portfolio (props: PortfolioProps) {
                   <Card.Body>
                     <TransactionsTable
                       transactions={h.transactions}
+                      onDeleteTransaction={handleDeleteTransaction}
                     />
                   </Card.Body>
                 </Accordion.Collapse>

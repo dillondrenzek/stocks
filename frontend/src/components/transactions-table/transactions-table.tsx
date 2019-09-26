@@ -3,9 +3,11 @@ import React from 'react';
 import moment from 'moment';
 import { Holding } from '../../types/portfolio';
 import { Transaction } from '../../types/transaction';
+import { Button } from '../../shared';
 
 export interface TransactionsTableProps {
   transactions: (string | Transaction)[];
+  onDeleteTransaction?: (txId: string) => void;
 }
 
 type TableHeaders<T> = Array<{
@@ -16,7 +18,7 @@ type TableHeaders<T> = Array<{
 
 
 
-export default function TransactionTable({ transactions }: TransactionsTableProps) {
+export default function TransactionTable({ transactions, onDeleteTransaction }: TransactionsTableProps) {
 
   const tableHeaders: TableHeaders<Transaction> = [
     {
@@ -47,6 +49,18 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
     }
   ];
 
+  const handleClickDelete = (id: string) => (ev: React.MouseEvent) => {
+    console.log('clicked delete transaction:', id);
+
+    if (typeof onDeleteTransaction === 'function') {
+      onDeleteTransaction(id);
+    }
+  }
+
+  const id = (tx: string | Transaction): string => {
+    return typeof tx === 'string' ? tx : tx._id;
+  }
+
   return (transactions ? (
     <MUI.Table size='small'>
       <MUI.TableHead>
@@ -54,6 +68,7 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
           {tableHeaders.map(({ label }, i) => (
             <MUI.TableCell key={i}>{label}</MUI.TableCell>
           ))}
+          <MUI.TableCell />
         </MUI.TableRow>
       </MUI.TableHead>
       <MUI.TableBody>
@@ -66,6 +81,9 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
                 </MUI.TableCell>
               ) : null
             ))}
+            <MUI.TableCell>
+                <Button variant='outline-danger' onClick={handleClickDelete(id(tx))}>Delete</Button>
+            </MUI.TableCell>
           </MUI.TableRow>
         ))) : null}
       </MUI.TableBody>

@@ -82,11 +82,14 @@ export default function App() {
   };
 
   const handlePortfolioChange = (value: Portfolio) => {
-    const updatedPortfolios = {
-      ...portfolios,
-      [value._id]: value
-    };
-    setPortfolios(updatedPortfolios);
+    PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
+      const updatedPortfolios = {
+        ...portfolios,
+        [value._id]: data
+      };
+      setPortfolios(updatedPortfolios);
+      setSelectedPortfolio(data);
+    });
   }
 
   const handleSelectPortfolio = (p: Portfolio) => setSelectedPortfolio(p);
