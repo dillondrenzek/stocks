@@ -7,7 +7,7 @@ import { ITransactionDocument } from '../transaction';
 export interface IPortfolio extends Types.Portfolio {
   fetchTransactions?: () => void;
   addTransaction?: (doc: Types.Transaction | ITransactionDocument) => IPortfolio;
-  removeTransaction?: (doc: Types.Transaction | ITransactionDocument) => IPortfolio;
+  removeTransaction?: (doc: Types.Transaction | ITransactionDocument) => Promise<IPortfolioDocument>;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -91,7 +91,7 @@ function removeTransactionFromHoldings(t: Types.Transaction | ITransactionDocume
   }) : holdings;
 }
 
-portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): IPortfolio {
+portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): Types.Portfolio {
   
   // add Holding if it doesn't exist
   this.holdings = addTransactionToHoldings(transaction, this.holdings);
@@ -99,8 +99,12 @@ portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocum
   return this;
 };
 
-portfolioSchema.methods.removeTransaction = function(transaction: ITransactionDocument): IPortfolio {
+portfolioSchema.methods.removeTransaction = async function(transaction: ITransactionDocument): Promise<IPortfolioDocument> {
+
+  // remove Transaction
   this.holdings = removeTransactionFromHoldings(transaction, this.holdings);
+  // save Portfolio
+  await this.save();
 
   return this;
 }

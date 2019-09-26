@@ -67,6 +67,7 @@ export class PortfolioController {
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // create and save transaction
     let transaction = await TradeController.saveTransaction(tx);
+
     // add transaction id to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
@@ -83,10 +84,9 @@ export class PortfolioController {
 
     if (transaction) {
       // remove transaction
-      portfolio.removeTransaction(transaction)
-      // save portfolio
-      portfolio = await portfolio.save();
+      portfolio = await portfolio.removeTransaction(transaction);
     }
+
     return this.toPortfolio(portfolio);
   }
 

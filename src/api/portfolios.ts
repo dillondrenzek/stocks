@@ -9,6 +9,7 @@ router.get('/', getPortfolios);
 router.post('/', createPortfolio);
 router.post('/:id/delete', deletePortfolioById);
 router.post('/:id/transactions',  addTransactionsToPortfolio);
+router.post('/:id/transactions/:transactionId/delete', removeTransactionFromPortfolio);
 router.get('/:id', getPortfolioById);
 // router.get('/:id/holdings', getPortfolioHoldings);
 // router.get('/:id/trades/stock', getStockTradesForPortfolio);
@@ -72,6 +73,18 @@ export async function addTransactionsToPortfolio(req: Request, res: Response) {
     res.json(added);
   } catch (e) {
     res.status(500).send('Error adding trade to portfolio: ' + e);
+  }
+}
+
+// Removes a Transaction from a Portfolio
+export async function removeTransactionFromPortfolio(req: Request, res: Response) {
+  const { id, transactionId } = req.params;
+
+  try {
+    const updated = await PortfolioController.removeTransactionFromPortfolio(transactionId, id);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).send('Error removing transaction from portfolio: ' + e);
   }
 }
 

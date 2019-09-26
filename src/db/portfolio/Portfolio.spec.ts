@@ -128,6 +128,9 @@ describe('Portfolio', withDb(() => {
   describe('removes a stock transaction by id', () => {
     let tx: Types.StockTransaction;
     let removeId = 'testiddoesntmatter';
+    let portfolioWithTx: IPortfolioDocument;
+    let resultPortfolio: IPortfolioDocument;
+    let fetchedPortfolio: IPortfolioDocument;
 
     beforeEach(async () => {
       tx = generateStockTransaction();
@@ -138,22 +141,22 @@ describe('Portfolio', withDb(() => {
       portfolio.addTransaction(tx);
       // save portfolio
       await portfolio.save();
-      // fetch portfolio
-      portfolio = await Portfolio.findById(portfolio.id);
       // remove a tx id
-      portfolio.removeTransaction(tx);
-      // save portfolio
-      await portfolio.save();
+      resultPortfolio = await portfolio.removeTransaction(tx);
       // fetch portfolio
-      portfolio = await Portfolio.findById(portfolio.id);
+      fetchedPortfolio = await Portfolio.findById(portfolio.id);
     });
 
-    it('has a holding for that symbol', () => {
-      expect(portfolio.holdings[tx.symbol]).to.exist;
+    it('saves the portfolio', async () => {
+      expect(resultPortfolio).to.exist;
     });
 
-    it('does not contain a transaction with that id', () => {
-      expect(portfolio.holdings[tx.symbol].transactions).not.to.contain(tx._id);
+    it('has a holding for that symbol', async () => {
+      expect(fetchedPortfolio.holdings[tx.symbol]).to.exist;
+    });
+
+    it('does not contain a transaction with that id', async() => {
+      expect(fetchedPortfolio.holdings[tx.symbol].transactions).not.to.contain(tx._id);
     });
   });
 
