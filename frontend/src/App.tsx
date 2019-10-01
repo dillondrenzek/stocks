@@ -35,13 +35,13 @@ function useSelectedPortfolio(initialState): [Portfolio, (p: Portfolio) => void]
       if (!newPortfolio) {
         setPortfolio(newPortfolio);
       } else {
-        if (!portfolio || (newPortfolio._id !== portfolio._id)) {
+        // if (!portfolio) {
           // fetch portfolio then set it
           PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
             console.log('fetched selected portfolio:', fetchedPortfolio);
             setPortfolio(fetchedPortfolio);
           });
-        }
+        // }
       }
     }
   ];
@@ -82,6 +82,7 @@ export default function App() {
   };
 
   const handlePortfolioChange = (value: Portfolio) => {
+    console.log('handle portfolio change', value);
     PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
       const updatedPortfolios = {
         ...portfolios,
