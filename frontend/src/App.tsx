@@ -31,17 +31,15 @@ function useSelectedPortfolio(initialState): [Portfolio, (p: Portfolio) => void]
   return [
     portfolio,
     (newPortfolio: Portfolio) => {
-      console.log('set selected portfolio:', newPortfolio);
+
       if (!newPortfolio) {
         setPortfolio(newPortfolio);
       } else {
-        // if (!portfolio) {
-          // fetch portfolio then set it
-          PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
-            console.log('fetched selected portfolio:', fetchedPortfolio);
-            setPortfolio(fetchedPortfolio);
-          });
-        // }
+        // fetch portfolio then set it
+        PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
+          console.log('fetched selected portfolio:', fetchedPortfolio);
+          setPortfolio(fetchedPortfolio);
+        });
       }
     }
   ];
@@ -57,15 +55,31 @@ export default function App() {
   useEffect(() => {
     if (!portfolios) {
       PortfolioAPI.getPortfolios((data) => {
+
+        // set portfolios
         const _portfolios = arrayToPortfolios(data);
-        const _selectedPortfolio = (selectedPortfolio) 
-          ? _portfolios[selectedPortfolio._id] 
-          : null;
         setPortfolios(_portfolios);
-        setSelectedPortfolio(_selectedPortfolio);
+
+        // select an initial portfolio
+        updateSelectedPortfolio(_portfolios);
       });
     }
   }, []);
+
+  const updateSelectedPortfolio = (_portfolios: Portfolios) => {
+    const _ids = Object.keys(_portfolios);
+    let _selectPortfolio: Portfolio;
+
+    if (selectedPortfolio) {
+      _selectPortfolio = _portfolios[selectedPortfolio._id];
+    } else if (_ids.length) {
+      _selectPortfolio = _portfolios[_ids[0]];
+    } else {
+      _selectPortfolio = null;
+    }
+
+    setSelectedPortfolio(_selectPortfolio);
+  };
 
   const handlePortfolioFormSubmit = (value: Portfolio) => {
     PortfolioAPI.createPortfolio(value, () => {
@@ -75,8 +89,8 @@ export default function App() {
         setPortfolios(_portfolios);
         // reset form
         setPortfolioFormValue(new Portfolio());
-
-        setSelectedPortfolio((data.length) ? data[0] : null);
+        // update selected portfolio
+        updateSelectedPortfolio(_portfolios);
       });
     });
   };
