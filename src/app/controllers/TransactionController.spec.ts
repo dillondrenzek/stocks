@@ -3,11 +3,11 @@ import * as DB from '../../db';
 import * as Types from '../../lib/types';
 import { generateOptionTransaction, generateStockTransaction } from '../../spec/helpers/db-generators';
 import { withDb } from '../../spec/helpers/db-connect';
-import { TradeController } from './TradeController';
+import { TransactionController } from './TransactionController';
 
 
 
-describe('TradeController', withDb(() => {
+describe('TransactionController', withDb(() => {
 
   describe('saves a Transaction', () => {
     let transaction: Types.Transaction,
@@ -18,7 +18,7 @@ describe('TradeController', withDb(() => {
         // get a stock tx
         transaction = generateStockTransaction();
         // save it
-        savedTransaction = await TradeController.saveTransaction(transaction);
+        savedTransaction = await TransactionController.saveTransaction(transaction);
       });
 
       it('returns a transaction', () => {
@@ -31,7 +31,7 @@ describe('TradeController', withDb(() => {
       beforeEach(async () => {
         transaction = generateOptionTransaction();
 
-        savedTransaction = await TradeController.saveTransaction(transaction);
+        savedTransaction = await TransactionController.saveTransaction(transaction);
       });
 
       it('returns a transaction', () => {
@@ -50,9 +50,9 @@ describe('TradeController', withDb(() => {
       // get a stock tx
       transaction = generateStockTransaction();
       // save it
-      savedTransaction = await TradeController.saveTransaction(transaction);
+      savedTransaction = await TransactionController.saveTransaction(transaction);
       // remove it
-      await TradeController.deleteTransaction(savedTransaction);
+      await TransactionController.deleteTransaction(savedTransaction);
     });
 
     it('should not return a transaction', async () => {
@@ -67,7 +67,7 @@ describe('TradeController', withDb(() => {
   describe('gets a Transaction by id', () => {
     describe('if called with an id that doesn\'t exist', () => {
       it('throws an error', () => {
-        expect(() => TradeController.getTransactionById('abc')).to.throw;
+        expect(() => TransactionController.getTransactionById('abc')).to.throw;
       });
     });
     describe('for a saved Stock Transaction', () => {
@@ -77,8 +77,8 @@ describe('TradeController', withDb(() => {
 
         beforeEach(async () => {
           tx = generateStockTransaction();
-          savedTx = await TradeController.saveTransaction(tx);
-          fetchedTx = await TradeController.getTransactionById(savedTx._id);
+          savedTx = await TransactionController.saveTransaction(tx);
+          fetchedTx = await TransactionController.getTransactionById(savedTx._id);
         });
 
         it('fetches the transaction', () => {
@@ -94,8 +94,8 @@ describe('TradeController', withDb(() => {
 
       beforeEach(async () => {
         tx = generateOptionTransaction();
-        savedTx = await TradeController.saveTransaction(tx);
-        fetchedTx = await TradeController.getTransactionById(savedTx._id);
+        savedTx = await TransactionController.saveTransaction(tx);
+        fetchedTx = await TransactionController.getTransactionById(savedTx._id);
       });
 
       it('fetches the transaction', () => {
@@ -116,7 +116,7 @@ describe('TradeController', withDb(() => {
     describe('with an empty list', () => {
       beforeEach(async () => {
         // fetch an empty array
-        fetchedTransactions = await TradeController.getTransactionsByIds([]);
+        fetchedTransactions = await TransactionController.getTransactionsByIds([]);
       });
 
       it('returns an empty array', () => {
@@ -129,7 +129,7 @@ describe('TradeController', withDb(() => {
       it('should throw', async () => {
         const fn = async () => {
           // fetch an empty array
-          fetchedTransactions = await TradeController.getTransactionsByIds([null]);
+          fetchedTransactions = await TransactionController.getTransactionsByIds([null]);
         }
         await expect(fn).to.throw;
       });
@@ -139,13 +139,13 @@ describe('TradeController', withDb(() => {
       transaction = generateStockTransaction();
 
       savedTransactions = await Promise.all([
-        TradeController.saveTransaction(transaction), 
-        TradeController.saveTransaction(transaction)
+        TransactionController.saveTransaction(transaction), 
+        TransactionController.saveTransaction(transaction)
       ]);
 
       savedTransactionIds = savedTransactions.map(t => t._id);
       
-      fetchedTransactions = await TradeController.getTransactionsByIds(savedTransactionIds);
+      fetchedTransactions = await TransactionController.getTransactionsByIds(savedTransactionIds);
     });
 
     it('fetches full objects', () => {
@@ -169,13 +169,13 @@ describe('TradeController', withDb(() => {
       transaction = generateOptionTransaction();
 
       savedTransactions = await Promise.all([
-        TradeController.saveTransaction(transaction), 
-        TradeController.saveTransaction(transaction)
+        TransactionController.saveTransaction(transaction), 
+        TransactionController.saveTransaction(transaction)
       ]);
 
       savedTransactionIds = savedTransactions.map(t => t._id);
       
-      fetchedTransactions = await TradeController.getTransactionsByIds(savedTransactionIds);
+      fetchedTransactions = await TransactionController.getTransactionsByIds(savedTransactionIds);
     });
 
     it('fetches full objects', () => {

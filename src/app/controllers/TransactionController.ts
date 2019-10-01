@@ -1,7 +1,7 @@
 import * as DB from '../../db';
 import * as Types from '../../lib/types';
 
-export class TradeController {
+export class TransactionController {
 
   public static async saveTransaction(tx: Types.Transaction): Promise<Types.Transaction> {
     if (tx.type === 'stock') {
