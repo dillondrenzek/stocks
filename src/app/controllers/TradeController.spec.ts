@@ -41,6 +41,29 @@ describe('TradeController', withDb(() => {
     });
   });
 
+  describe('deletes a StockTransaction', () => {
+    let transaction: Types.StockTransaction,
+      savedTransaction: Types.Transaction,
+      fetchedTransaction: DB.IStockTransactionDocument;
+
+    beforeEach(async () => {
+      // get a stock tx
+      transaction = generateStockTransaction();
+      // save it
+      savedTransaction = await TradeController.saveTransaction(transaction);
+      // remove it
+      await TradeController.deleteTransaction(savedTransaction);
+    });
+
+    it('should not return a transaction', async () => {
+      // fetch tx
+      fetchedTransaction = await DB.StockTransaction.findById(savedTransaction._id);
+      
+      expect(fetchedTransaction).not.to.exist;
+    });
+
+  });
+
   describe('gets a Transaction by id', () => {
     describe('if called with an id that doesn\'t exist', () => {
       it('throws an error', () => {

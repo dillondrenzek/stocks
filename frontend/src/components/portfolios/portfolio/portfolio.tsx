@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
 import { StockTransaction } from '../../../types/transaction';
-import { Accordion, Button, Card, Col, Form, FormControl, Row, Typography } from '../../../shared';
-
+import { Card, Col, Row, Typography } from '../../../shared';
 import { PortfolioAPI } from '../../../api/portfolio-api';
-
-import HoldingsTable from '../../holdings-table/holdings-table';
-import TransactionsTable from '../../transactions-table/transactions-table';
+import TransactionsTable from '../../transactions/transactions-table/transactions-table';
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import { Alert } from 'react-bootstrap';
 
@@ -15,7 +12,7 @@ export interface PortfolioProps {
   onPortfolioChange: (portfolio: PortfolioModel) => void;
 }
 
-export function Portfolio (props: PortfolioProps) {
+export function Portfolio(props: PortfolioProps) {
 
   const { portfolio } = props;
   const holdings = portfolio ? Object.values(portfolio.holdings) : [];
@@ -31,31 +28,56 @@ export function Portfolio (props: PortfolioProps) {
     });
   };
 
+  const handleDeleteTransaction = (txId: string) => {
+    PortfolioAPI.removeTradeFromPortfolio(txId, portfolio._id, (p: PortfolioModel) => {
+      console.log('removed tx', txId, 'from portfolio', p);
+      props.onPortfolioChange(p);
+    });
+  }
+
   return (
     <Row>
       <Col xs={8}>
-        {portfolio && holdings.length ? (
-          <Accordion>
-            {holdings.map((h: Holding, i: number) => (
-              <Card key={i}>
-                <Accordion.Toggle as={Card.Header} variant='link' eventKey={i.toString()} style={{cursor: 'pointer'}}>
-                  {h.symbol}
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey={i.toString()}>
-                  <Card.Body>
-                    <TransactionsTable
-                      transactions={h.transactions}
-                    />
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
-            ))}
-          </Accordion>
+        {portfolio ? (
+          <>
+            <Row>
+              <Col>
+                <Typography variant='h4'>
+                  {`${portfolio.name} - Portfolio Holdings`}
+                </Typography>
+              </Col>
+            </Row>
+            <Row>
+              {holdings.length ? (<>
+                {holdings.map((holding: Holding, i: number) => (
+                  <Col key={holding.symbol}>
+                    <Card>
+                      <Card.Header>
+                        <Typography>{holding.symbol}</Typography>
+                      </Card.Header>
+                      <Card.Body>
+                        <TransactionsTable
+                          transactions={holding.transactions}
+                          onDeleteTransaction={handleDeleteTransaction}
+                        />
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </>) : (
+                <Col>
+                  <Alert variant='light'>
+                    No holdings
+                  </Alert>
+                </Col>
+              )}
+            </Row>
+          </>
         ) : (
-          <Alert>
-            No Holdings
+            <Alert variant='dark'>
+              No portfolio selected
           </Alert>
-        )}
+          )}
       </Col>
       <Col xs={4}>
         <Card>
@@ -69,7 +91,7 @@ export function Portfolio (props: PortfolioProps) {
             </Row>
           </Card.Header>
           <Card.Body>
-            <StockTransactionForm 
+            <StockTransactionForm
               onSubmit={handleTransactionFormSubmit}
               value={stockTransactionFormValue}
             />

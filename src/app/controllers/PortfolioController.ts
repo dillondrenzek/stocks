@@ -67,6 +67,7 @@ export class PortfolioController {
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // create and save transaction
     let transaction = await TradeController.saveTransaction(tx);
+
     // add transaction id to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
@@ -74,6 +75,20 @@ export class PortfolioController {
 
     return this.toPortfolio(portfolio);
   } 
+
+  public static async removeTransactionFromPortfolio(txId: string, portfolioId: string): Promise<Types.Portfolio> {
+    // find portfolio
+    let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
+    // find transaction
+    let transaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
+
+    if (transaction) {
+      // remove transaction
+      portfolio = await portfolio.removeTransaction(transaction);
+    }
+
+    return this.toPortfolio(portfolio);
+  }
 
   public static toPortfolio(p: Types.Portfolio | DB.IPortfolioDocument): Types.Portfolio {
     return {

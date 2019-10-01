@@ -7,6 +7,7 @@ import { ITransactionDocument } from '../transaction';
 export interface IPortfolio extends Types.Portfolio {
   fetchTransactions?: () => void;
   addTransaction?: (doc: Types.Transaction | ITransactionDocument) => IPortfolio;
+  removeTransaction?: (doc: Types.Transaction | ITransactionDocument) => Promise<IPortfolioDocument>;
 }
 
 export const defaultPortfolio = (): IPortfolio => ({
@@ -76,13 +77,37 @@ function addTransactionToHoldings(t: Types.Transaction | ITransactionDocument, h
   });
 }
 
-portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): IPortfolio {
+function removeTransactionFromHolding(t: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
+  const id = (typeof t._id === 'string') ? t._id : (t as ITransactionDocument).id;
+  return Object.assign({}, holding, {
+    transactions: holding.transactions.filter((txid: string) => txid !== id)
+  });
+}
+
+function removeTransactionFromHoldings(t: Types.Transaction | ITransactionDocument, holdings: Types.Holdings): Types.Holdings {
+  let existing = holdings[t.symbol];
+  return (t._id) ? Object.assign({}, holdings, {
+    [t.symbol]: removeTransactionFromHolding(t, existing)
+  }) : holdings;
+}
+
+portfolioSchema.methods.addTransaction = function(transaction: ITransactionDocument): Types.Portfolio {
   
   // add Holding if it doesn't exist
   this.holdings = addTransactionToHoldings(transaction, this.holdings);
 
   return this;
 };
+
+portfolioSchema.methods.removeTransaction = async function(transaction: ITransactionDocument): Promise<IPortfolioDocument> {
+
+  // remove Transaction
+  this.holdings = removeTransactionFromHoldings(transaction, this.holdings);
+  // save Portfolio
+  await this.save();
+
+  return this;
+}
 
 // portfolioSchema.methods.getAllStockTrades = async function() {
 //   const trades: IStockTradeDocument[] = await StockTrade.find({

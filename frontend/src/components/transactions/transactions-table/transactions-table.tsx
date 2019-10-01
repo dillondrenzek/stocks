@@ -1,11 +1,12 @@
 import * as MUI from '@material-ui/core';
 import React from 'react';
 import moment from 'moment';
-import { Holding } from '../../types/portfolio';
-import { Transaction } from '../../types/transaction';
+import { Transaction } from '../../../types/transaction';
+import { Button } from '../../../shared';
 
 export interface TransactionsTableProps {
   transactions: (string | Transaction)[];
+  onDeleteTransaction?: (txId: string) => void;
 }
 
 type TableHeaders<T> = Array<{
@@ -14,9 +15,7 @@ type TableHeaders<T> = Array<{
   render?: (h) => React.ReactNode;
 }>;
 
-
-
-export default function TransactionTable({ transactions }: TransactionsTableProps) {
+export default function TransactionTable({ transactions, onDeleteTransaction }: TransactionsTableProps) {
 
   const tableHeaders: TableHeaders<Transaction> = [
     {
@@ -47,29 +46,45 @@ export default function TransactionTable({ transactions }: TransactionsTableProp
     }
   ];
 
+  const handleClickDelete = (id: string) => (ev: React.MouseEvent) => {
+    console.log('clicked delete transaction:', id);
+
+    if (typeof onDeleteTransaction === 'function') {
+      onDeleteTransaction(id);
+    }
+  }
+
+  const id = (tx: string | Transaction): string => {
+    return typeof tx === 'string' ? tx : tx._id;
+  }
+
   return (transactions ? (
-    <MUI.Table size='small'>
-      <MUI.TableHead>
+    <table className='table table-bordered'>
+      <thead className='thead-light'>
         <MUI.TableRow>
           {tableHeaders.map(({ label }, i) => (
             <MUI.TableCell key={i}>{label}</MUI.TableCell>
           ))}
+          <MUI.TableCell />
         </MUI.TableRow>
-      </MUI.TableHead>
-      <MUI.TableBody>
-        {transactions && transactions.length ? (transactions.map((tx, j) => (
-          <MUI.TableRow key={j}>
+      </thead>
+      <tbody>
+        {transactions.length ? (transactions.map((tx, j) => (
+          <tr key={j}>
             {tableHeaders.map(({ key, render }) => (
               tx ? (
-                <MUI.TableCell key={key}>
+                <td key={key}>
                   {typeof render === 'function' ? render(tx[key]) : tx[key]}
-                </MUI.TableCell>
+                </td>
               ) : null
             ))}
-          </MUI.TableRow>
+            <td>
+              <Button variant='link' onClick={handleClickDelete(id(tx))}>Delete</Button>
+            </td>
+          </tr>
         ))) : null}
-      </MUI.TableBody>
-    </MUI.Table>
+      </tbody>
+    </table>
   ) : null);
 }
 

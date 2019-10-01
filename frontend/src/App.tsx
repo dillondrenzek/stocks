@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Button, Container, Col, Nav, Row } from './shared';
-
+import { Container, Col, Row } from './shared';
 import { PortfolioAPI } from './api/portfolio-api';
-
 import { Portfolio } from './types';
-
 import { Portfolio as PortfolioPage } from './components/portfolios/portfolio/portfolio';
 import { PortfolioForm } from './components/portfolios/portfolio-form/portfolio-form';
 import PortfolioTabs from './components/portfolios/portfolio-tabs/portfolio-tabs';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 interface Portfolios {
   [id: string]: Portfolio;
@@ -31,17 +27,15 @@ function useSelectedPortfolio(initialState): [Portfolio, (p: Portfolio) => void]
   return [
     portfolio,
     (newPortfolio: Portfolio) => {
-      console.log('set selected portfolio:', newPortfolio);
+
       if (!newPortfolio) {
         setPortfolio(newPortfolio);
       } else {
-        if (!portfolio || (newPortfolio._id !== portfolio._id)) {
-          // fetch portfolio then set it
-          PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
-            console.log('fetched selected portfolio:', fetchedPortfolio);
-            setPortfolio(fetchedPortfolio);
-          });
-        }
+        // fetch portfolio then set it
+        PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
+          console.log('fetched selected portfolio:', fetchedPortfolio);
+          setPortfolio(fetchedPortfolio);
+        });
       }
     }
   ];
@@ -57,15 +51,34 @@ export default function App() {
   useEffect(() => {
     if (!portfolios) {
       PortfolioAPI.getPortfolios((data) => {
+
+        // set portfolios
         const _portfolios = arrayToPortfolios(data);
-        const _selectedPortfolio = (selectedPortfolio) 
-          ? _portfolios[selectedPortfolio._id] 
-          : null;
         setPortfolios(_portfolios);
-        setSelectedPortfolio(_selectedPortfolio);
+
+        // select an initial portfolio
+        updateSelectedPortfolio(_portfolios);
       });
     }
   }, []);
+
+  const updateSelectedPortfolio = (_portfolios: Portfolios) => {
+    const _ids = Object.keys(_portfolios);
+    let _selectPortfolio: Portfolio;
+
+    if (selectedPortfolio) {
+      // update currently selected portfolio
+      _selectPortfolio = _portfolios[selectedPortfolio._id];
+    } else if (_ids.length) {
+      // set selected to first portfolio in array
+      _selectPortfolio = _portfolios[_ids[0]];
+    } else {
+      // no portfolios, don't select one
+      _selectPortfolio = null;
+    }
+
+    setSelectedPortfolio(_selectPortfolio);
+  };
 
   const handlePortfolioFormSubmit = (value: Portfolio) => {
     PortfolioAPI.createPortfolio(value, () => {
@@ -75,18 +88,22 @@ export default function App() {
         setPortfolios(_portfolios);
         // reset form
         setPortfolioFormValue(new Portfolio());
-
-        setSelectedPortfolio((data.length) ? data[0] : null);
+        // update selected portfolio
+        updateSelectedPortfolio(_portfolios);
       });
     });
   };
 
   const handlePortfolioChange = (value: Portfolio) => {
-    const updatedPortfolios = {
-      ...portfolios,
-      [value._id]: value
-    };
-    setPortfolios(updatedPortfolios);
+    console.log('handle portfolio change', value);
+    PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
+      const updatedPortfolios = {
+        ...portfolios,
+        [value._id]: data
+      };
+      setPortfolios(updatedPortfolios);
+      setSelectedPortfolio(data);
+    });
   }
 
   const handleSelectPortfolio = (p: Portfolio) => setSelectedPortfolio(p);
@@ -117,12 +134,10 @@ export default function App() {
 
       <Row>
         <Col>
-
           <PortfolioPage
             portfolio={selectedPortfolio}
             onPortfolioChange={handlePortfolioChange}
           />
-
         </Col>
       </Row>
 
