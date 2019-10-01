@@ -95,14 +95,23 @@ export class PortfolioController {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // find transaction
-    let transaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
+    let stockTransaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
 
-    if (transaction) {
+    if (stockTransaction) {
       // remove transaction
-      portfolio = await portfolio.removeTransaction(transaction);
+      portfolio = await portfolio.removeTransaction(stockTransaction);
+      return this.toPortfolio(portfolio);
     }
 
-    return this.toPortfolio(portfolio);
+    let optionTransaction: DB.IOptionTransactionDocument = await DB.OptionTransaction.findById(txId);
+
+    if (optionTransaction) {
+      // remove transaction
+      portfolio = await portfolio.removeTransaction(optionTransaction);
+      return this.toPortfolio(portfolio);
+    }
+
+    return portfolio;
   }
 
   public static toPortfolio(p: Types.Portfolio | DB.IPortfolioDocument): Types.Portfolio {
