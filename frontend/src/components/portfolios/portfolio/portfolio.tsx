@@ -53,11 +53,11 @@ export function Portfolio(props: PortfolioProps) {
                   <Col key={holding.symbol}>
                     <Card>
                       <Card.Header>
-                        <Typography>{holding.symbol}</Typography>
+                        <Typography>{holding.symbol} (Stock)</Typography>
                       </Card.Header>
                       <Card.Body>
                         <TransactionsTable
-                          transactions={holding.transactions}
+                          transactions={holding.stockTransactions}
                           onDeleteTransaction={handleDeleteTransaction}
                         />
                       </Card.Body>
