@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Portfolio } from '../../../types/portfolio';
-import { Button, Col, Form, FormControl, Row } from '../../../shared';
-// import { FormEvent } from 'react-bootstrap';
+import { Button, Col, Form, Row } from '../../../shared';
 
 export interface PortfolioFormProps {
   onSubmit: (value: Portfolio) => void;

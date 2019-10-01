@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Button, Container, Col, Nav, Row } from './shared';
-
+import { Container, Col, Row } from './shared';
 import { PortfolioAPI } from './api/portfolio-api';
-
 import { Portfolio } from './types';
-
 import { Portfolio as PortfolioPage } from './components/portfolios/portfolio/portfolio';
 import { PortfolioForm } from './components/portfolios/portfolio-form/portfolio-form';
 import PortfolioTabs from './components/portfolios/portfolio-tabs/portfolio-tabs';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 interface Portfolios {
   [id: string]: Portfolio;
@@ -71,10 +67,13 @@ export default function App() {
     let _selectPortfolio: Portfolio;
 
     if (selectedPortfolio) {
+      // update currently selected portfolio
       _selectPortfolio = _portfolios[selectedPortfolio._id];
     } else if (_ids.length) {
+      // set selected to first portfolio in array
       _selectPortfolio = _portfolios[_ids[0]];
     } else {
+      // no portfolios, don't select one
       _selectPortfolio = null;
     }
 
@@ -135,12 +134,10 @@ export default function App() {
 
       <Row>
         <Col>
-
           <PortfolioPage
             portfolio={selectedPortfolio}
             onPortfolioChange={handlePortfolioChange}
           />
-
         </Col>
       </Row>
 

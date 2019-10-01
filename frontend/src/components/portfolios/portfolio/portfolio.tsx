@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
 import { StockTransaction } from '../../../types/transaction';
-import { Accordion, Button, Card, Col, Form, FormControl, Row, Typography } from '../../../shared';
-
+import { Card, Col, Row, Typography } from '../../../shared';
 import { PortfolioAPI } from '../../../api/portfolio-api';
-
-import HoldingsTable from '../../holdings-table/holdings-table';
-import TransactionsTable from '../../transactions-table/transactions-table';
+import TransactionsTable from '../../transactions/transactions-table/transactions-table';
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import { Alert } from 'react-bootstrap';
 
