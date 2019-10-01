@@ -1,6 +1,8 @@
 import * as DB from '../../db';
 import * as Types from '../../lib/types';
 import { TransactionController } from './TransactionController';
+import { StockTransactionController } from './StockTransactionController';
+import { OptionTransactionController } from './OptionTransactionController';
 
 export class PortfolioController {
 
@@ -63,10 +65,23 @@ export class PortfolioController {
   public static async addTransactionToPortfolio(tx: Types.Transaction, portfolioId: string): Promise<Types.Portfolio> {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
-    // create and save transaction
-    let transaction = await TransactionController.saveTransaction(tx);
+    let transaction;
 
-    // add transaction id to Portfolio
+    // create transaction
+    switch (tx.type) {
+      case 'stock': {
+        transaction = await StockTransactionController.saveTransaction(tx);
+        break;
+      }
+      case 'option': {
+        transaction = await OptionTransactionController.saveTransaction(tx);
+        break;
+      }
+      default:
+        throw new Error('Could not and transaction of type');
+    }
+
+    // add transaction to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
     portfolio = await portfolio.save();
