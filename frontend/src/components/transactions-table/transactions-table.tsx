@@ -62,32 +62,60 @@ export default function TransactionTable({ transactions, onDeleteTransaction }: 
   }
 
   return (transactions ? (
-    <MUI.Table size='small'>
-      <MUI.TableHead>
+    <table className='table table-bordered'>
+      <thead className='thead-light'>
         <MUI.TableRow>
           {tableHeaders.map(({ label }, i) => (
             <MUI.TableCell key={i}>{label}</MUI.TableCell>
           ))}
           <MUI.TableCell />
         </MUI.TableRow>
-      </MUI.TableHead>
-      <MUI.TableBody>
-        {transactions && transactions.length ? (transactions.map((tx, j) => (
-          <MUI.TableRow key={j}>
+      </thead>
+      <tbody>
+        {transactions.length ? (transactions.map((tx, j) => (
+          <tr key={j}>
             {tableHeaders.map(({ key, render }) => (
               tx ? (
-                <MUI.TableCell key={key}>
+                <td key={key}>
                   {typeof render === 'function' ? render(tx[key]) : tx[key]}
-                </MUI.TableCell>
+                </td>
               ) : null
             ))}
-            <MUI.TableCell>
-                <Button variant='outline-danger' onClick={handleClickDelete(id(tx))}>Delete</Button>
-            </MUI.TableCell>
-          </MUI.TableRow>
+            <td>
+              <Button variant='link' onClick={handleClickDelete(id(tx))}>Delete</Button>
+            </td>
+          </tr>
         ))) : null}
-      </MUI.TableBody>
-    </MUI.Table>
+      </tbody>
+    </table>
   ) : null);
+  // return (transactions ? (
+  //   <MUI.Table size='small'>
+  //     <MUI.TableHead>
+  //       <MUI.TableRow>
+  //         {tableHeaders.map(({ label }, i) => (
+  //           <MUI.TableCell key={i}>{label}</MUI.TableCell>
+  //         ))}
+  //         <MUI.TableCell />
+  //       </MUI.TableRow>
+  //     </MUI.TableHead>
+  //     <MUI.TableBody>
+  //       {transactions && transactions.length ? (transactions.map((tx, j) => (
+  //         <MUI.TableRow key={j}>
+  //           {tableHeaders.map(({ key, render }) => (
+  //             tx ? (
+  //               <MUI.TableCell key={key}>
+  //                 {typeof render === 'function' ? render(tx[key]) : tx[key]}
+  //               </MUI.TableCell>
+  //             ) : null
+  //           ))}
+  //           <MUI.TableCell>
+  //             <Button variant='link' onClick={handleClickDelete(id(tx))}>Delete</Button>
+  //           </MUI.TableCell>
+  //         </MUI.TableRow>
+  //       ))) : null}
+  //     </MUI.TableBody>
+  //   </MUI.Table>
+  // ) : null);
 }
 
