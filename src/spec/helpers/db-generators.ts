@@ -2,7 +2,8 @@ import * as Types from '../../lib/types';
 
 export const generateHolding = (): Types.Holding => ({
   symbol: 'TEST',
-  transactions: []
+  optionTransactions: [],
+  stockTransactions: []
 });
 
 export const generateStockTransaction = (): Types.StockTransaction => ({

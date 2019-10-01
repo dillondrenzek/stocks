@@ -18,11 +18,13 @@ export class PortfolioController {
 
   public static async fetchTransactionsForHolding(h: Types.Holding): Promise<Types.Holding> {
     // fetch each transaction in transactions array
-    const fetchedTransactions = await TransactionController.getTransactionsByIds(h.transactions);
+    const fetchedStockTransactions = await StockTransactionController.getTransactionsByIds(h.stockTransactions);
+    const fetchedOptionTransactions = await OptionTransactionController.getTransactionsByIds(h.optionTransactions);
 
     // assign the fetched transactions to the holding's transactions array
     const resultHolding: Types.Holding = Object.assign({}, h, {
-      transactions: fetchedTransactions
+      stockTransactions: fetchedStockTransactions,
+      optionTransactions: fetchedOptionTransactions
     });
 
     // return the modified holding
