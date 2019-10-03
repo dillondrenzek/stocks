@@ -62,28 +62,32 @@ export function Portfolio(props: PortfolioProps) {
               {holdings.length ? (<>
                 {holdings.map((holding: Holding, i: number) => (
                   <Col key={holding.symbol}>
-                    <Card>
-                      <Card.Header>
-                        <Typography>{holding.symbol} (Stock)</Typography>
-                      </Card.Header>
-                      <Card.Body>
-                        <StockTransactionsTable
-                          transactions={holding.stockTransactions}
-                          onDeleteTransaction={handleDeleteTransaction}
-                        />
-                      </Card.Body>
-                    </Card>
-                    <Card>
-                      <Card.Header>
-                        <Typography>{holding.symbol} (Option)</Typography>
-                      </Card.Header>
-                      <Card.Body>
-                        <OptionTransactionsTable
-                          transactions={holding.optionTransactions}
-                          onDeleteTransaction={handleDeleteTransaction}
-                        />
-                      </Card.Body>
-                    </Card>
+                    {holding.stockTransactions.length ? (
+                      <Card>
+                        <Card.Header>
+                          <Typography>{holding.symbol} (Stock)</Typography>
+                        </Card.Header>
+                        <Card.Body>
+                          <StockTransactionsTable
+                            transactions={holding.stockTransactions}
+                            onDeleteTransaction={handleDeleteTransaction}
+                          />
+                        </Card.Body>
+                      </Card>
+                    ) : null}
+                    {(holding.optionTransactions.length) ? (
+                      <Card>
+                        <Card.Header>
+                          <Typography>{holding.symbol} (Option)</Typography>
+                        </Card.Header>
+                        <Card.Body>
+                          <OptionTransactionsTable
+                            transactions={holding.optionTransactions}
+                            onDeleteTransaction={handleDeleteTransaction}
+                          />
+                        </Card.Body>
+                      </Card>
+                    ) : null}
                   </Col>
                 ))}
               </>) : (
