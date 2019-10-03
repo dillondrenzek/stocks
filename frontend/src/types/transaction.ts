@@ -31,13 +31,13 @@ export class OptionTransaction {
       ...{
         price: 0.00,
         quantity: 0,
-        side: null,
+        side: 'buy',
         symbol: '',
         type: 'option',
-        callPut: null,
-        expirationDate: new Date(),
+        callPut: 'call',
+        expirationDate: '',
         strikePrice: 0.00,
-        date: null
+        date: new Date().toISOString()
       }
     };
   }

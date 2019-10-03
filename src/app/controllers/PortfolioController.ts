@@ -1,8 +1,8 @@
 import * as DB from '../../db';
 import * as Types from '../../lib/types';
-import { TradeController } from './TradeController';
-// // import { Holding, OptionTrade, Portfolio, StockTrade, Trade } from '../../types';
-// import { calculateHolding } from '../portfolio';
+import { TransactionController } from './TransactionController';
+import { StockTransactionController } from './StockTransactionController';
+import { OptionTransactionController } from './OptionTransactionController';
 
 export class PortfolioController {
 
@@ -18,11 +18,13 @@ export class PortfolioController {
 
   public static async fetchTransactionsForHolding(h: Types.Holding): Promise<Types.Holding> {
     // fetch each transaction in transactions array
-    const fetchedTransactions = await TradeController.getTransactionsByIds(h.transactions);
+    const fetchedStockTransactions = await StockTransactionController.getTransactionsByIds(h.stockTransactions);
+    const fetchedOptionTransactions = await OptionTransactionController.getTransactionsByIds(h.optionTransactions);
 
     // assign the fetched transactions to the holding's transactions array
     const resultHolding: Types.Holding = Object.assign({}, h, {
-      transactions: fetchedTransactions
+      stockTransactions: fetchedStockTransactions,
+      optionTransactions: fetchedOptionTransactions
     });
 
     // return the modified holding
@@ -65,10 +67,23 @@ export class PortfolioController {
   public static async addTransactionToPortfolio(tx: Types.Transaction, portfolioId: string): Promise<Types.Portfolio> {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
-    // create and save transaction
-    let transaction = await TradeController.saveTransaction(tx);
+    let transaction;
 
-    // add transaction id to Portfolio
+    // create transaction
+    switch (tx.type) {
+      case 'stock': {
+        transaction = await StockTransactionController.saveTransaction(tx);
+        break;
+      }
+      case 'option': {
+        transaction = await OptionTransactionController.saveTransaction(tx);
+        break;
+      }
+      default:
+        throw new Error('Could not and transaction of type');
+    }
+
+    // add transaction to Portfolio
     portfolio.addTransaction(transaction);
     // save portfolio
     portfolio = await portfolio.save();
@@ -80,14 +95,23 @@ export class PortfolioController {
     // find portfolio
     let portfolio: DB.IPortfolioDocument = await DB.Portfolio.findById(portfolioId);
     // find transaction
-    let transaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
+    let stockTransaction: DB.IStockTransactionDocument = await DB.StockTransaction.findById(txId);
 
-    if (transaction) {
+    if (stockTransaction) {
       // remove transaction
-      portfolio = await portfolio.removeTransaction(transaction);
+      portfolio = await portfolio.removeTransaction(stockTransaction);
+      return this.toPortfolio(portfolio);
     }
 
-    return this.toPortfolio(portfolio);
+    let optionTransaction: DB.IOptionTransactionDocument = await DB.OptionTransaction.findById(txId);
+
+    if (optionTransaction) {
+      // remove transaction
+      portfolio = await portfolio.removeTransaction(optionTransaction);
+      return this.toPortfolio(portfolio);
+    }
+
+    return portfolio;
   }
 
   public static toPortfolio(p: Types.Portfolio | DB.IPortfolioDocument): Types.Portfolio {
@@ -97,44 +121,5 @@ export class PortfolioController {
       holdings: p.holdings
     }
   }
-//   private async calculateHoldingForSymbol(symbol: string): Promise<Types.Holding> {
-//     const stockTrades = await DB.StockTrade.findBySymbol(symbol);
-//     const holding = calculateHolding(stockTrades);
-//     return holding;
-//   }
-
-//   private findHoldingBySymbol(symbol: string, portfolio: Types.Portfolio): Types.Holding {
-//     return portfolio.holdings.find((holding) => holding.symbol === symbol);
-//   }
-
-//   public async getStockTradesForPortfolioById(id: string): Promise<Types.StockTrade[]> {
-//     const portfolio = await DB.Portfolio.findById(id);
-//     const trades = await portfolio.getAllStockTrades();
-//     return trades;
-//   }
-
-//   public async getOptionTradesForPortfolioById(id: string): Promise<Types.OptionTrade[]> {
-//     const portfolio = await DB.Portfolio.findById(id);
-//     const trades = await portfolio.getAllOptionTrades();
-//     return trades;
-//   }
-
-
-
-//   public async deleteStockTradeForPortfolioById(tradeId: string, portfolioId: string): Promise<DB.IPortfolioDocument> {
-//     const portfolio = await DB.Portfolio.findById(portfolioId);
-//     const trade = await DB.StockTrade.findById(tradeId);
-
-//     // remove trade from portfolio
-//     await portfolio.removeTradeById(trade.type, trade.id);
-
-//     // delete trade
-//     await DB.StockTrade.findByIdAndDelete(tradeId);
-
-//     // recalculate corresponding holding
-//     const holding: Types.Holding = await this.calculateHoldingForSymbol(trade.symbol);
-//     return await portfolio.addOrUpdateHolding(holding);
-    
-//   }
 
 }

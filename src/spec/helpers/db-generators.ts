@@ -2,7 +2,8 @@ import * as Types from '../../lib/types';
 
 export const generateHolding = (): Types.Holding => ({
   symbol: 'TEST',
-  transactions: []
+  optionTransactions: [],
+  stockTransactions: []
 });
 
 export const generateStockTransaction = (): Types.StockTransaction => ({
@@ -21,7 +22,7 @@ export const generateOptionTransaction = (): Types.OptionTransaction => ({
   quantity: 2,
   side: 'buy',
   callPut: 'call',
-  expirationDate: new Date(),
+  expirationDate: '',
   strikePrice: 185.50,
   date: new Date()
 });

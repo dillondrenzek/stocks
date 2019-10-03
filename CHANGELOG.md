@@ -1,8 +1,15 @@
 # Changelog
 
-## Next
+## History
 
-- create option transactions from transaction form (dropdown?)
+### v0.3.0
+
+- create option transaction table
+  - make sure deleting an option transaction works
+- show the option transaction table in addition to the stock transaction table
+- create option transaction form
+- create dropdown switch to switch types of transactions
+- submit option transaction form submits data to endpoint
 
 ### v0.2.3
 

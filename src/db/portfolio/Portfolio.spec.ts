@@ -41,7 +41,7 @@ describe('Portfolio', withDb(() => {
     })
   });
 
-  describe('adds a stock transaction', () => {
+  describe('adds a StockTransaction', () => {
 
     beforeEach(async () => {
       // create test portfolio
@@ -73,7 +73,7 @@ describe('Portfolio', withDb(() => {
         });
 
         it('should add the transaction id to the holdings transactions', () => {
-          expect(createdHolding.transactions).to.contain(savedTransaction.id);
+          expect(createdHolding.stockTransactions).to.contain(savedTransaction.id);
         });
 
       });
@@ -110,13 +110,13 @@ describe('Portfolio', withDb(() => {
         });
 
         it('should still have the first transaction id', () => {
-          expect(existingHolding.transactions).to.contain(firstTransaction.id);
+          expect(existingHolding.stockTransactions).to.contain(firstTransaction.id);
         });
 
         it('should add the transaction id to the holdings transactions', () => {
-          expect(existingHolding.transactions).to.contain(secondTransaction.id);
+          expect(existingHolding.stockTransactions).to.contain(secondTransaction.id);
           // there should now be two transactions
-          expect(existingHolding.transactions.length).to.eq(2);
+          expect(existingHolding.stockTransactions.length).to.eq(2);
         });
 
       });
@@ -156,7 +156,7 @@ describe('Portfolio', withDb(() => {
     });
 
     it('does not contain a transaction with that id', async() => {
-      expect(fetchedPortfolio.holdings[tx.symbol].transactions).not.to.contain(tx._id);
+      expect(fetchedPortfolio.holdings[tx.symbol].stockTransactions).not.to.contain(tx._id);
     });
   });
 

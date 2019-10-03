@@ -12,7 +12,7 @@ export const defaultOptionTransaction = (): IOptionTransaction => ({
   symbol: '',
   date: new Date(),
   callPut: null,
-  expirationDate: new Date(),
+  expirationDate: '',
   strikePrice: 0.00,
   type: 'option',
 });
@@ -24,7 +24,7 @@ const optionTransactionSchema = new mongoose.Schema<IOptionTransactionDocument>(
     type: String,
     default: null
   },
-  expirationDate: Date,
+  expirationDate: String,
   price: Number,
   quantity: Number,
   side: String, // 'buy' or 'sell'

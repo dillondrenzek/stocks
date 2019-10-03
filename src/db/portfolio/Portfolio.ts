@@ -43,27 +43,42 @@ portfolioSchema.statics.createByName = async function (name: string): Promise<IP
 
 // Instance Methods
 
-function newHoldingFromTransaction(transaction: Types.Transaction | ITransactionDocument): Types.Holding {
-  const id = (typeof transaction._id === 'string') ? transaction._id : (transaction as ITransactionDocument).id;
+const getId = (tx: Types.Transaction | ITransactionDocument) => {
+  return (typeof tx._id === 'string') ? tx._id : (tx as ITransactionDocument).id;
+}
+
+function newHoldingFromTransaction(tx: Types.Transaction | ITransactionDocument): Types.Holding {
+  const id = getId(tx);
+  const stockTransactions = (tx.type === 'stock') ? [ id ] : [];
+  const optionTransactions = (tx.type === 'option') ? [ id ] : [];
+  
   return {
-    symbol: transaction.symbol,
-    transactions: [ id ]
+    symbol: tx.symbol,
+    stockTransactions,
+    optionTransactions
   }
 }
 
-function addTransactionToHolding(t: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
-  let { transactions } = holding;
-  let newTransactions: string[];
-  const id = (typeof t._id === 'string') ? t._id : (t as ITransactionDocument).id;
-  // if it doesn't exist, push it
-  if (transactions.indexOf(id) === -1) {
-    newTransactions = [ id, ...transactions ];
+function addTxIdToArray(txId: string, arr: string[]): string[] {
+  if (arr.indexOf(txId) === -1) {
+    return [txId, ...arr];
   } else {
-    newTransactions = transactions;
+    return arr;
   }
-  return Object.assign({}, holding, {
-    transactions: newTransactions
-  });
+}
+
+function addTransactionToHolding(tx: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
+  const id = getId(tx);
+
+  if (tx.type === 'stock') {
+    return Object.assign({}, holding, {
+      stockTransactions: addTxIdToArray(id, holding.stockTransactions)
+    });
+  } else if (tx.type === 'option') {
+    return Object.assign({}, holding, {
+      optionTransactions: addTxIdToArray(id, holding.optionTransactions)
+    });
+  }
 }
 
 function addTransactionToHoldings(t: Types.Transaction | ITransactionDocument, holdings: Types.Holdings ): Types.Holdings {
@@ -77,11 +92,24 @@ function addTransactionToHoldings(t: Types.Transaction | ITransactionDocument, h
   });
 }
 
-function removeTransactionFromHolding(t: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
-  const id = (typeof t._id === 'string') ? t._id : (t as ITransactionDocument).id;
-  return Object.assign({}, holding, {
-    transactions: holding.transactions.filter((txid: string) => txid !== id)
+function removeTxIdFromArray(txId: string, arr: string[]): string[] {
+  return arr.filter((id) => {
+    return txId !== id;
   });
+}
+
+function removeTransactionFromHolding(tx: Types.Transaction | ITransactionDocument, holding: Types.Holding): Types.Holding {
+  const id = getId(tx);
+
+  if (tx.type === 'stock') {
+    return Object.assign({}, holding, {
+      stockTransactions: removeTxIdFromArray(id, holding.stockTransactions)
+    });
+  } else if (tx.type === 'option') {
+    return Object.assign({}, holding, {
+      optionTransactions: removeTxIdFromArray(id, holding.optionTransactions)
+    });
+  }
 }
 
 function removeTransactionFromHoldings(t: Types.Transaction | ITransactionDocument, holdings: Types.Holdings): Types.Holdings {

@@ -24,5 +24,5 @@ export interface OptionTransaction extends BaseTransaction {
   type: 'option';
   strikePrice: number;
   callPut: CallOrPut;
-  expirationDate: string | Date; // MM-DD-YYYY
+  expirationDate: string; // Mth DD YY
 }

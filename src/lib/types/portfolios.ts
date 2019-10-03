@@ -1,5 +1,4 @@
 import { Saveable } from './db';
-import { Transaction } from './transaction';
 
 export interface Portfolio extends Saveable {
   holdings: Holdings;
@@ -12,6 +11,7 @@ export interface Holdings {
 
 export interface Holding {
   symbol: string;
-  transactions: string[]; // Transaction ids
+  stockTransactions: string[];
+  optionTransactions: string[];
 }
 

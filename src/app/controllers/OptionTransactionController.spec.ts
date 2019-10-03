@@ -3,61 +3,53 @@ import * as DB from '../../db';
 import * as Types from '../../lib/types';
 import { generateOptionTransaction, generateStockTransaction } from '../../spec/helpers/db-generators';
 import { withDb } from '../../spec/helpers/db-connect';
-import { TradeController } from './TradeController';
+import { OptionTransactionController } from './OptionTransactionController';
 
 
 
-describe('TradeController', withDb(() => {
+describe('OptionTransactionController', withDb(() => {
 
   describe('saves a Transaction', () => {
     let transaction: Types.Transaction,
       savedTransaction: Types.Transaction;
-
-    describe('as a StockTransaction', () => {
-      beforeEach(async () => {
-        // get a stock tx
-        transaction = generateStockTransaction();
-        // save it
-        savedTransaction = await TradeController.saveTransaction(transaction);
-      });
-
-      it('returns a transaction', () => {
-        expect(savedTransaction).to.exist;
-        expect(typeof savedTransaction._id).to.eq('string');
-      });
-    });
   
     describe('as an OptionTransaction', () => {
       beforeEach(async () => {
         transaction = generateOptionTransaction();
-
-        savedTransaction = await TradeController.saveTransaction(transaction);
+        savedTransaction = await OptionTransactionController.saveTransaction(transaction);
       });
 
       it('returns a transaction', () => {
         expect(savedTransaction._id).to.exist;
+      });
+
+      it('returns a transaction with an id', () => {
         expect(typeof savedTransaction._id).to.eq('string');
+      });
+
+      it('returns a transaction with the correct type', () => {
+        expect(savedTransaction.type).to.eq('option');
       });
     });
   });
 
-  describe('deletes a StockTransaction', () => {
-    let transaction: Types.StockTransaction,
+  describe('deletes a OptionTransaction', () => {
+    let transaction: Types.OptionTransaction,
       savedTransaction: Types.Transaction,
-      fetchedTransaction: DB.IStockTransactionDocument;
+      fetchedTransaction: DB.IOptionTransactionDocument;
 
     beforeEach(async () => {
       // get a stock tx
-      transaction = generateStockTransaction();
+      transaction = generateOptionTransaction();
       // save it
-      savedTransaction = await TradeController.saveTransaction(transaction);
+      savedTransaction = await OptionTransactionController.saveTransaction(transaction);
       // remove it
-      await TradeController.deleteTransaction(savedTransaction);
+      await OptionTransactionController.deleteTransaction(savedTransaction);
     });
 
     it('should not return a transaction', async () => {
       // fetch tx
-      fetchedTransaction = await DB.StockTransaction.findById(savedTransaction._id);
+      fetchedTransaction = await DB.OptionTransaction.findById(savedTransaction._id);
       
       expect(fetchedTransaction).not.to.exist;
     });
@@ -67,25 +59,8 @@ describe('TradeController', withDb(() => {
   describe('gets a Transaction by id', () => {
     describe('if called with an id that doesn\'t exist', () => {
       it('throws an error', () => {
-        expect(() => TradeController.getTransactionById('abc')).to.throw;
+        expect(() => OptionTransactionController.getTransactionById('abc')).to.throw;
       });
-    });
-    describe('for a saved Stock Transaction', () => {
-      let tx: Types.StockTransaction,
-        savedTx: Types.Transaction,
-        fetchedTx: Types.Transaction;
-
-        beforeEach(async () => {
-          tx = generateStockTransaction();
-          savedTx = await TradeController.saveTransaction(tx);
-          fetchedTx = await TradeController.getTransactionById(savedTx._id);
-        });
-
-        it('fetches the transaction', () => {
-          expect(fetchedTx).to.exist;
-          expect(fetchedTx._id).to.eq(savedTx._id);
-          expect(fetchedTx.type).to.eq('stock');
-        });
     });
     describe('for a saved Option Transaction', () => {
       let tx: Types.OptionTransaction,
@@ -94,8 +69,8 @@ describe('TradeController', withDb(() => {
 
       beforeEach(async () => {
         tx = generateOptionTransaction();
-        savedTx = await TradeController.saveTransaction(tx);
-        fetchedTx = await TradeController.getTransactionById(savedTx._id);
+        savedTx = await OptionTransactionController.saveTransaction(tx);
+        fetchedTx = await OptionTransactionController.getTransactionById(savedTx._id);
       });
 
       it('fetches the transaction', () => {
@@ -106,8 +81,8 @@ describe('TradeController', withDb(() => {
     });
   });
 
-  describe('gets Stock Transactions for a list of ids', () => {
-    let transaction: Types.StockTransaction,
+  describe('gets Option Transactions for a list of ids', () => {
+    let transaction: Types.OptionTransaction,
       savedTransactions: Types.Transaction[] = [],
       savedTransactionIds: string[] = [],
       fetchedTransactions: Types.Transaction[] = [];
@@ -116,7 +91,7 @@ describe('TradeController', withDb(() => {
     describe('with an empty list', () => {
       beforeEach(async () => {
         // fetch an empty array
-        fetchedTransactions = await TradeController.getTransactionsByIds([]);
+        fetchedTransactions = await OptionTransactionController.getTransactionsByIds([]);
       });
 
       it('returns an empty array', () => {
@@ -129,23 +104,23 @@ describe('TradeController', withDb(() => {
       it('should throw', async () => {
         const fn = async () => {
           // fetch an empty array
-          fetchedTransactions = await TradeController.getTransactionsByIds([null]);
+          fetchedTransactions = await OptionTransactionController.getTransactionsByIds([null]);
         }
         await expect(fn).to.throw;
       });
     });
 
     beforeEach(async () => {
-      transaction = generateStockTransaction();
+      transaction = generateOptionTransaction();
 
       savedTransactions = await Promise.all([
-        TradeController.saveTransaction(transaction), 
-        TradeController.saveTransaction(transaction)
+        OptionTransactionController.saveTransaction(transaction), 
+        OptionTransactionController.saveTransaction(transaction)
       ]);
 
       savedTransactionIds = savedTransactions.map(t => t._id);
       
-      fetchedTransactions = await TradeController.getTransactionsByIds(savedTransactionIds);
+      fetchedTransactions = await OptionTransactionController.getTransactionsByIds(savedTransactionIds);
     });
 
     it('fetches full objects', () => {
@@ -169,13 +144,13 @@ describe('TradeController', withDb(() => {
       transaction = generateOptionTransaction();
 
       savedTransactions = await Promise.all([
-        TradeController.saveTransaction(transaction), 
-        TradeController.saveTransaction(transaction)
+        OptionTransactionController.saveTransaction(transaction), 
+        OptionTransactionController.saveTransaction(transaction)
       ]);
 
       savedTransactionIds = savedTransactions.map(t => t._id);
       
-      fetchedTransactions = await TradeController.getTransactionsByIds(savedTransactionIds);
+      fetchedTransactions = await OptionTransactionController.getTransactionsByIds(savedTransactionIds);
     });
 
     it('fetches full objects', () => {

@@ -1,5 +1,6 @@
 import * as Mui from '@material-ui/core';
 import * as Bootstrap from 'react-bootstrap';
+// import { FormControlProps } from 'react-bootstrap';
 
 // Bootstrap
 export const Accordion = Bootstrap.Accordion;
@@ -16,6 +17,7 @@ export const Form = Bootstrap.Form;
 export const FormControl = Bootstrap.FormControl;
 export const FormGroup = Bootstrap.FormGroup;
 export const FormLabel = Bootstrap.FormLabel;
+export interface FormControlProps extends Bootstrap.FormControlProps { }
 
 export const Tab = Bootstrap.Tab;
 export const Tabs = Bootstrap.Tabs;
