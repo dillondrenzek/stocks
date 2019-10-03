@@ -3,7 +3,8 @@ import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
 import { StockTransaction, OptionTransaction, Transaction } from '../../../types/transaction';
 import { Alert, Card, Col, Form, FormControlProps, Row, Typography } from '../../../shared';
 import { PortfolioAPI } from '../../../api/portfolio-api';
-import TransactionsTable from '../../transactions/transactions-table/transactions-table';
+import StockTransactionsTable from '../../transactions/stock-transactions-table/stock-transactions-table';
+import OptionTransactionsTable from '../../transactions/option-transactions-table/option-transactions-table';
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import OptionTransactionForm from '../../transactions/option-transaction-form/option-transaction-form';
 import { StockOrOption } from '../../../../../src/lib/types';
@@ -66,10 +67,18 @@ export function Portfolio(props: PortfolioProps) {
                         <Typography>{holding.symbol} (Stock)</Typography>
                       </Card.Header>
                       <Card.Body>
-                        <TransactionsTable
+                        <StockTransactionsTable
                           transactions={holding.stockTransactions}
                           onDeleteTransaction={handleDeleteTransaction}
                         />
+                      </Card.Body>
+                    </Card>
+                    <Card>
+                      <Card.Header>
+                        <Typography>{holding.symbol} (Option)</Typography>
+                      </Card.Header>
+                      <Card.Body>
+                        Test
                       </Card.Body>
                     </Card>
                   </Col>

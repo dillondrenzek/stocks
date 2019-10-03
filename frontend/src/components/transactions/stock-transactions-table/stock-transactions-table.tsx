@@ -15,7 +15,7 @@ type TableHeaders<T> = Array<{
   render?: (h) => React.ReactNode;
 }>;
 
-export default function TransactionTable({ transactions, onDeleteTransaction }: TransactionsTableProps) {
+export default function StockTransactionTable({ transactions, onDeleteTransaction }: TransactionsTableProps) {
 
   const tableHeaders: TableHeaders<Transaction> = [
     {
@@ -60,13 +60,13 @@ export default function TransactionTable({ transactions, onDeleteTransaction }: 
 
   return (transactions ? (
     <table className='table table-bordered'>
-      <thead className='thead-light'>
-        <MUI.TableRow>
+      <thead>
+        <tr>
           {tableHeaders.map(({ label }, i) => (
-            <MUI.TableCell key={i}>{label}</MUI.TableCell>
+            <th key={i}>{label}</th>
           ))}
-          <MUI.TableCell />
-        </MUI.TableRow>
+          <th />
+        </tr>
       </thead>
       <tbody>
         {transactions.length ? (transactions.map((tx, j) => (
