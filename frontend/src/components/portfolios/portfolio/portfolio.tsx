@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
-import { StockTransaction } from '../../../types/transaction';
-import { Card, Col, Row, Typography } from '../../../shared';
+import { StockTransaction, OptionTransaction, Transaction } from '../../../types/transaction';
+import { Alert, Card, Col, Form, FormControlProps, Row, Typography } from '../../../shared';
 import { PortfolioAPI } from '../../../api/portfolio-api';
 import TransactionsTable from '../../transactions/transactions-table/transactions-table';
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
-import { Alert } from 'react-bootstrap';
+import OptionTransactionForm from '../../transactions/option-transaction-form/option-transaction-form';
+import { StockOrOption } from '../../../../../src/lib/types';
+
 
 export interface PortfolioProps {
   portfolio: PortfolioModel;
@@ -17,9 +19,17 @@ export function Portfolio(props: PortfolioProps) {
   const { portfolio } = props;
   const holdings = portfolio ? Object.values(portfolio.holdings) : [];
 
+  const [transactionFormType, setTransactionFormType] = useState<StockOrOption>('stock');
   const [stockTransactionFormValue, setStockTransactionFormValue] = useState(new StockTransaction());
+  const [optionTransactionFormValue, setOptionTransactionFormValue] = useState(new OptionTransaction());
 
-  const handleTransactionFormSubmit = (value: StockTransaction) => {
+  // const handleTransactionFormTypeChange = (ev: React.FormEvent) => {
+  const handleTransactionFormTypeChange = (ev: React.FormEvent<FormControlProps>) => {
+    const value = ev.currentTarget.value as StockOrOption;
+    setTransactionFormType(value);
+  }
+
+  const handleTransactionFormSubmit = (value: Transaction) => {
     console.log('submitted:', value)
 
     PortfolioAPI.addTradeToPortfolio(value, portfolio._id, (p: PortfolioModel) => {
@@ -85,16 +95,31 @@ export function Portfolio(props: PortfolioProps) {
             <Row>
               <Col>
                 <Typography variant='h6'>
-                  New Transaction
+                  <Form.Control
+                    as={'select'}
+                    onChange={handleTransactionFormTypeChange}
+                    value={transactionFormType}
+                  >
+                    <option value='stock'>New Stock Transaction</option>
+                    <option value='option'>New Option Transaction</option>
+                  </Form.Control>
                 </Typography>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
-            <StockTransactionForm
-              onSubmit={handleTransactionFormSubmit}
-              value={stockTransactionFormValue}
-            />
+            {(transactionFormType === 'stock') && (
+              <StockTransactionForm
+                onSubmit={handleTransactionFormSubmit}
+                value={stockTransactionFormValue}
+              />
+            )}
+            {(transactionFormType === 'option') && (
+              <OptionTransactionForm
+                onSubmit={handleTransactionFormSubmit}
+                value={optionTransactionFormValue}
+              />
+            )}
           </Card.Body>
         </Card>
       </Col>
