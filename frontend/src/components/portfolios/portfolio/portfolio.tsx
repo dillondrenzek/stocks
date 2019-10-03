@@ -78,7 +78,10 @@ export function Portfolio(props: PortfolioProps) {
                         <Typography>{holding.symbol} (Option)</Typography>
                       </Card.Header>
                       <Card.Body>
-                        Test
+                        <OptionTransactionsTable
+                          transactions={holding.optionTransactions}
+                          onDeleteTransaction={handleDeleteTransaction}
+                        />
                       </Card.Body>
                     </Card>
                   </Col>

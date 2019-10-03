@@ -25,7 +25,7 @@ export function defaultOptionTrade(): Types.OptionTransaction {
     side: null,
     symbol: '',
     callPut: null,
-    expirationDate: new Date(),
+    expirationDate: '',
     strikePrice: 0,
     type: 'option',
     date: new Date(),

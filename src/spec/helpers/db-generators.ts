@@ -22,7 +22,7 @@ export const generateOptionTransaction = (): Types.OptionTransaction => ({
   quantity: 2,
   side: 'buy',
   callPut: 'call',
-  expirationDate: new Date(),
+  expirationDate: '',
   strikePrice: 185.50,
   date: new Date()
 });
