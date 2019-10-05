@@ -6,12 +6,11 @@ export interface Portfolio extends Saveable {
 }
 
 export interface Holdings {
-  [symbol: string]: Holding
-};
+  [symbol: string]: Holding;
+}
 
 export interface Holding {
   symbol: string;
   stockTransactions: string[];
   optionTransactions: string[];
 }
-

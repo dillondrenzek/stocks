@@ -10,7 +10,8 @@
     "trailing-comma": [false],
     "quotemark": [true, "single"],
     "only-arrow-functions": [false],
-    "object-literal-sort-keys": [false]
+    "object-literal-sort-keys": [false],
+    "max-line-length": [false]
   },
   "rulesDirectory": []
 }
