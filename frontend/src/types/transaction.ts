@@ -1,48 +1,85 @@
-import * as Types from '../../../src/lib/types';
+export type BuyOrSell = 'buy' | 'sell';
+export type CallOrPut = 'call' | 'put';
+export type OpenOrClose = 'open' | 'close';
+export type StockOrOption = 'stock' | 'option';
 
-export type Transaction = Types.Transaction;
-
-export interface StockTransaction extends Types.StockTransaction {
-  date: string; 
+interface BaseTransaction {
+  _id?: string;
+  price: number;
+  quantity: number;
+  side: BuyOrSell;
+  symbol: string;
+  date: string; // MM-DD-YYYY
+  type: StockOrOption;
 }
-export interface OptionTransaction extends Types.OptionTransaction {}
 
-export class StockTransaction {
-  static get defaultValues(): StockTransaction {
-    return {
-      ...{
-        price: 0.00,
-        quantity: 0,
-        side: 'buy',
-        symbol: '',
-        type: 'stock',
-        date: new Date().toISOString()
-      }
-    };
+export type Transaction = StockTransaction | OptionTransaction;
+
+export interface StockTransaction extends BaseTransaction {
+  type: 'stock';
+}
+
+export interface OptionTransaction extends BaseTransaction {
+  type: 'option';
+  strikePrice: number;
+  callPut: CallOrPut;
+  expirationDate: string; // Mth DD YY
+}
+
+export class StockTransaction implements StockTransaction {
+
+  public static totalQuantity (txs: StockTransaction[]) {
+    let result = 0;
+    txs.forEach((tx) => {
+      result += tx.quantity;
+    });
+    return result;
   }
-  constructor(values: Partial<StockTransaction> = StockTransaction.defaultValues) {
-    return Object.assign({}, StockTransaction.defaultValues, values);
+
+  public static averageCost (txs: StockTransaction[]) {
+    return this.totalCost(txs) / this.totalQuantity(txs);
+  }
+
+  public static totalCost (txs: StockTransaction[]) {
+    let result = 0;
+    txs.forEach((tx) => {
+      result += tx.cost
+    });
+    return result;
+  }
+  
+  constructor(values?: Partial<StockTransaction>) {
+    const defaults = {
+      price: 0.00,
+      quantity: 0,
+      side: 'buy',
+      symbol: '',
+      type: 'stock',
+      date: new Date().toISOString()
+    };
+
+    Object.assign(this, defaults, values);
+  }
+
+  get cost() {
+    return this.price * this.quantity;
   }
 }
 
 export class OptionTransaction {
-  static get defaultValues(): OptionTransaction {
-    return {
-      ...{
-        price: 0.00,
-        quantity: 0,
-        side: 'buy',
-        symbol: '',
-        type: 'option',
-        callPut: 'call',
-        expirationDate: '',
-        strikePrice: 0.00,
-        date: new Date().toISOString()
-      }
-    };
-  }
 
-  constructor(values: Partial<OptionTransaction> = OptionTransaction.defaultValues) {
-    return Object.assign({}, OptionTransaction.defaultValues, values);
+  constructor(values?: Partial<OptionTransaction>) {
+    const defaults = {
+      price: 0.00,
+      quantity: 0,
+      side: 'buy',
+      symbol: '',
+      type: 'option',
+      callPut: 'call',
+      expirationDate: '',
+      strikePrice: 0.00,
+      date: new Date().toISOString()
+    };
+    Object.assign(this, defaults, values);
   }
 }

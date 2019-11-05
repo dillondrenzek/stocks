@@ -1,7 +1,21 @@
-import * as Types from '../../../src/lib/types';
+import { StockTransaction, OptionTransaction } from './transaction';
 
-export interface Holding extends Types.Holding {}
-export interface Portfolio extends Types.Portfolio {}
+export interface Portfolio {
+  _id?: string;
+  holdings: Holdings;
+  name: string;
+}
+
+export interface Holdings {
+  [symbol: string]: Holding;
+}
+
+export interface Holding {
+  symbol: string;
+  stockTransactions: StockTransaction[];
+  optionTransactions: OptionTransaction[];
+}
+
 
 const defaultValues: Portfolio = {
   name: '',

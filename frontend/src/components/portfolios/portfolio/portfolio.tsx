@@ -8,6 +8,7 @@ import OptionTransactionsTable from '../../transactions/option-transactions-tabl
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import OptionTransactionForm from '../../transactions/option-transaction-form/option-transaction-form';
 import { StockOrOption } from '../../../../../src/lib/types';
+import { averageCost, netShares, totalCost } from '../../../models/portfolio-model';
 
 
 export interface PortfolioProps {
@@ -68,6 +69,12 @@ export function Portfolio(props: PortfolioProps) {
                           <Typography>{holding.symbol} (Stock)</Typography>
                         </Card.Header>
                         <Card.Body>
+                          <Alert variant='secondary'>
+                            <div>
+                              <div>Avg. Cost</div>
+                              <div>{averageCost(holding.stockTransactions)}</div>
+                            </div>
+                          </Alert>
                           <StockTransactionsTable
                             transactions={holding.stockTransactions}
                             onDeleteTransaction={handleDeleteTransaction}
