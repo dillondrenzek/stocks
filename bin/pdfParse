@@ -28,16 +28,20 @@ function render_page(pageData) {
         if (pageData.pageIndex === 2) {
           console.log('text:', item.str, '|', 'transform', item.transform);
         }
+        // line is within 10 pixels of previous
         if (lastY - item.transform[5] < 10 || !lastY) {
+          // line is on different line, but still same row
           if (lastY != item.transform[5]) {
             text += ' / ';
           }
+          // character is less than 10 pixels away from previous
           if (item.transform[4] - lastX < 10 || !lastX) {
             text += item.str;
           } else {
             text += ` | ${item.str}`;
           }
         } else {
+          // create new row
           text += '\n' + item.str;
         }
         lastX = item.transform[4];
@@ -68,5 +72,6 @@ pdf(dataBuffer, options).then(function(data) {
     // // PDF text
     // console.log(data.text.split('\n\n'));
     const pages = data.text.split('\n\n');
-    console.log(pages[3]);
+    pages.forEach(p => console.log(`\n${p}`));
+    // console.log(pages);
 });
