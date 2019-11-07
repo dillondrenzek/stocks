@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const pdf = require('pdf-parse');
+
+if (!process.argv[2]) {
+  throw new Error('No argv 2');
+}
+
+// default render callback
+function render_page(pageData) {
+  //check documents https://mozilla.github.io/pdf.js/
+  let render_options = {
+      //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.
+      normalizeWhitespace: true,
+      //do not attempt to combine same line TextItem's. The default value is `false`.
+      disableCombineTextItems: true
+  }
+
+  // console.log('render_page:', pageData);
+
+  return pageData.getTextContent(render_options)
+  .then(function(textContent) {
+    // console.log('textContent', textContent);
+      let lastY, lastX, text = '';
+      for (let i = 0; i < textContent.items.length; i++) {
+        const item = textContent.items[i];
+        if (pageData.pageIndex === 2) {
+          console.log('text:', item.str, '|', 'transform', item.transform);
+        }
+        if (lastY - item.transform[5] < 10 || !lastY) {
+          if (lastY != item.transform[5]) {
+            text += ' / ';
+          }
+          if (item.transform[4] - lastX < 10 || !lastX) {
+            text += item.str;
+          } else {
+            text += ` | ${item.str}`;
+          }
+        } else {
+          text += '\n' + item.str;
+        }
+        lastX = item.transform[4];
+        lastY = item.transform[5];
+      }
+      return text;
+  });
+}
+
+let options = {
+  pagerender: render_page
+}
+
+let dataBuffer = fs.readFileSync(process.argv[2]);
+pdf(dataBuffer, options).then(function(data) {
+  // console.log('data:', data);
+    // // number of pages
+    // console.log(data.numpages);
+    // // number of rendered pages
+    // console.log(data.numrender);
+    // // PDF info
+    // console.log(data.info);
+    // // PDF metadata
+    // console.log(data.metadata);
+    // // PDF.js version
+    // // check https://mozilla.github.io/pdf.js/getting_started/
+    // console.log(data.version);
+    // // PDF text
+    // console.log(data.text.split('\n\n'));
+    const pages = data.text.split('\n\n');
+    console.log(pages[3]);
+});
