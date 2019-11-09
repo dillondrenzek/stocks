@@ -31,6 +31,7 @@
     "test": "mocha --exit",
     "test:app": "mocha --exit --config .mocharc-app.json",
     "test:db": "mocha --exit --config .mocharc-db.json",
+    "test:frontend": "cd frontend; npm test",
     "start": "node ./bin/www",
     "watch": "npm-watch"
   },

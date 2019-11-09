@@ -8,8 +8,6 @@ import OptionTransactionsTable from '../../transactions/option-transactions-tabl
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import OptionTransactionForm from '../../transactions/option-transaction-form/option-transaction-form';
 import { StockOrOption } from '../../../../../src/lib/types';
-import { averageCost, netShares, totalCost } from '../../../models/portfolio-model';
-
 
 export interface PortfolioProps {
   portfolio: PortfolioModel;
@@ -70,10 +68,14 @@ export function Portfolio(props: PortfolioProps) {
                         </Card.Header>
                         <Card.Body>
                           <Alert variant='secondary'>
-                            <div>
+                            <span>
+                              <div>No. of Shares</div>
+                              <div>{StockTransaction.totalQuantity(holding.stockTransactions)}</div>
+                            </span>
+                            <span>
                               <div>Avg. Cost</div>
-                              <div>{averageCost(holding.stockTransactions)}</div>
-                            </div>
+                              <div>{StockTransaction.averageCost(holding.stockTransactions)}</div>
+                            </span>
                           </Alert>
                           <StockTransactionsTable
                             transactions={holding.stockTransactions}
