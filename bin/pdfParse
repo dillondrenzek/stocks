@@ -2,10 +2,19 @@
 
 const fs = require('fs');
 const pdf = require('pdf-parse');
+const _ = require('lodash');
 
 if (!process.argv[2]) {
   throw new Error('No argv 2');
 }
+
+
+
+return;
+
+const PAGE_SEPARATOR = '\n\n';
+const COLUMN_SEPARATOR = '|';
+const LINE_SEPARATOR = '___';
 
 // default render callback
 function render_page(pageData) {
@@ -17,8 +26,6 @@ function render_page(pageData) {
       disableCombineTextItems: true
   }
 
-  // console.log('render_page:', pageData);
-
   return pageData.getTextContent(render_options)
   .then(function(textContent) {
     // console.log('textContent', textContent);
@@ -26,19 +33,19 @@ function render_page(pageData) {
       for (let i = 0; i < textContent.items.length; i++) {
         const item = textContent.items[i];
         if (pageData.pageIndex === 2) {
-          console.log('text:', item.str, '|', 'transform', item.transform);
+          // console.log('text:', item.str, '|', 'transform', item.transform);
         }
         // line is within 10 pixels of previous
         if (lastY - item.transform[5] < 10 || !lastY) {
           // line is on different line, but still same row
           if (lastY != item.transform[5]) {
-            text += ' / ';
+            text += ` ${LINE_SEPARATOR} `;
           }
           // character is less than 10 pixels away from previous
           if (item.transform[4] - lastX < 10 || !lastX) {
             text += item.str;
           } else {
-            text += ` | ${item.str}`;
+            text += `${COLUMN_SEPARATOR}${item.str}`;
           }
         } else {
           // create new row
@@ -51,27 +58,97 @@ function render_page(pageData) {
   });
 }
 
-let options = {
-  pagerender: render_page
+function printPage(pageText, pageNumber) {
+  // console.log(`\n## Page ${pageNumber} ##\n${pageText}`);
 }
 
+function splitRowString(str, rowNumber, rows) {
+  console.log(`split row ${rowNumber}`, str);
+  const row = str ? str.split(COLUMN_SEPARATOR) : str;
+  // console.log('-into', row);
+  return row;
+}
+
+function parseAccountActivityTable(pageInfo, pageNumber, pages) {
+  const { 
+    pageTitle,
+    tableHeaders,
+    tableRows,
+  } = pageInfo;
+
+  console.log('Account Activity PageInfo page:', pageNumber, '\n', pageInfo);
+
+  const tableDataKeys = splitRowString(tableHeaders[0], pageNumber, pages);
+  const tableDataValues = tableRows.map(splitRowString);
+  // console.log('tableDataKeys', tableDataKeys);
+  // console.log('tableDataValues', tableDataValues);
+  
+  return {
+    pageTitle: pageTitle[0],
+    tableHeaders: tableDataKeys,
+    tableRows: tableDataValues,
+    tableData: tableDataValues.map(row => _.zipObject(tableDataKeys, row))
+  };
+}
+
+function parsePageData(pageType, lines, index, pages) {
+
+  switch (pageType) {
+    case 'ACCOUNT ACTIVITY':
+      return parseAccountActivity(lines, index, pages);
+
+    case 'PORTFOLIO SUMMARY':
+      return pageInfo;
+  }
+
+}
+
+function parsePage(pageText, pageNumber, pages) {
+  // skip important info page
+  if (pageNumber === 10) return;
+
+  let result = {};
+  // console.log(`\nparsing page ${pageNumber}...\n`, pageText);
+
+  // split by line
+  const lines = pageText.split('\n');
+  // console.log('-lines:', lines);
+
+  // parse out page numbering
+  const pageNumberInfo = lines.splice(0, 1);
+  // console.log('-pageNumberInfo:', pageNumberInfo);
+
+  const headerInfo = lines.splice(0, 5);
+  // console.log('-headerInfo:', headerInfo);
+
+  const pageType = lines.splice(0, 1);
+  // console.log('-pageType:', pageType);  
+
+  const pageData = parsePageTable(pageType, lines, pageNumber, pages);
+
+  // PORTFOLIO SUMMARY
+  // console.log('title', pageTitle);
+  // console.log('tableHeaders', tableHeaders);
+  // console.log('\nremaining:\n', lines);
+
+  result = {
+    pageNumberInfo,
+    headerInfo,
+    pageData,
+    pageType,
+  }
+  // console.log('\nresult:\n', result);
+  if (pageData && pageData.pageTitle && pageData.pageTitle === 'ACCOUNT ACTIVITY') {
+    // console.log(pageInfo.tableData);
+  }
+  return result;
+}
+
+
 let dataBuffer = fs.readFileSync(process.argv[2]);
-pdf(dataBuffer, options).then(function(data) {
-  // console.log('data:', data);
-    // // number of pages
-    // console.log(data.numpages);
-    // // number of rendered pages
-    // console.log(data.numrender);
-    // // PDF info
-    // console.log(data.info);
-    // // PDF metadata
-    // console.log(data.metadata);
-    // // PDF.js version
-    // // check https://mozilla.github.io/pdf.js/getting_started/
-    // console.log(data.version);
-    // // PDF text
-    // console.log(data.text.split('\n\n'));
-    const pages = data.text.split('\n\n');
-    pages.forEach(p => console.log(`\n${p}`));
-    // console.log(pages);
+pdf(dataBuffer, { pagerender: render_page }).then(function (data) {
+  // split text by page
+  const pages = data.text.split(PAGE_SEPARATOR);
+  // parse each page
+  pages.forEach(parsePage);
 });

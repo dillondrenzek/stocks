@@ -8,7 +8,9 @@
   },
   "scripts": {
     "prebuild": "npm run clean",
+    "prebuild:cli": "npm run clean",
     "build": "tsc --build tsconfig.json; npm run build:copy-assets",
+    "build:cli": "tsc --build tsconfig-cli.json",
     "build:copy-assets": "node ./copy-static-assets",
     "build:ts": "tsc --build tsconfig.json",
     "prebuild:test": "rm -rf dist",
@@ -17,6 +19,8 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run frontend:dev\"",
     "frontend:dev": "cd frontend; npm run start",
     "frontend": "npm run frontend:dev",
+    "prepdf:dev": "npm run build:cli",
+    "pdf:dev": "node-dev ./dist/cli",
     "server:dev": "node-dev ./bin/server",
     "server": "npm run server:dev",
     "prefrontend:dev": "cd frontend; npm install",
@@ -40,6 +44,12 @@
         "src"
       ],
       "extensions": "ts,pug"
+    },
+    "pdf:dev": {
+      "patterns": [
+        "cli"
+      ],
+      "extensions": "ts"
     }
   },
   "author": "",
