@@ -3,7 +3,9 @@
   "extends": [
     "tslint:recommended"
   ],
-  "jsRules": {},
+  "jsRules": {
+    "no-var-requires": [false]
+  },
   "rules": {
     "interface-name": [false],
     "no-console": [false],
@@ -13,5 +15,8 @@
     "object-literal-sort-keys": [false],
     "max-line-length": [false]
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["bin/**"]
+  }
 }
