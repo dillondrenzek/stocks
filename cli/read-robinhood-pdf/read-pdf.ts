@@ -157,6 +157,24 @@ export function readRobinhoodPdf(path: string) {
       disableCombineTextItems: true
     };
 
+    function getTextItemsInArea(
+      textContent: TextContent,
+      [startX, startY]: number[] = [30, 420],
+      [endX, endY]: number[] = [1000, 0]
+    ) {
+      return textContent.items.filter((item) => {
+        const { str, transform } = item;
+        const [a, b, c, d, itemX, itemY] = transform;
+
+        return !(str && (
+          itemX < startX ||
+          itemY > startY ||
+          itemX > endX ||
+          itemY < endY
+        ));
+      });
+    }
+
     function parseArea(textContent: TextContent,
       [startX, startY]: number[] = [0, 1000],
       [endX, endY]: number[] = [1000, 0]
@@ -224,39 +242,35 @@ export function readRobinhoodPdf(path: string) {
       return text;
     }
 
-    function parseTable(textContent: TextContent,
+    function parseStatementInfo(textContent: TextContent) {
+      const lines = parseLines(textContent, [500, 600], [1000, 500]);
+
+      let result = {
+        pageNumber: null,
+        dateRange: null,
+        accountHolder: null,
+        accountAddress: null
+      };
+
+      result.pageNumber = lines[0].map((col) => col.text).join('');
+      result.dateRange = lines[1].map((col) => col.text).join('');
+      result.accountHolder = lines[2].map((col) => col.text).join('');
+      result.accountAddress = lines[3].map((col) => col.text).join('');
+
+      return result;
+    }
+
+    function parseLines(textContent: TextContent,
       [startX, startY]: number[] = [30, 420],
       [endX, endY]: number[] = [1000, 0]
     ) {
       // console.log('textContent', textContent);
-      const itemsInArea = textContent.items.filter((item) => {
-        const { str, transform } = item;
-        const [a, b, c, d, itemX, itemY] = transform;
-
-        return !(str && (
-          itemX < startX ||
-          itemY > startY ||
-          itemX > endX ||
-          itemY < endY
-        ));
-      });
-
-      const DEBUG = false;
-      let lastX: number;
-      let lastY: number;
-      let text = '';
-
+      const itemsInArea = getTextItemsInArea(textContent, [startX, startY], [endX, endY]);  
       const tableHeaders: Column[] = [];
       const rows: Column[][] = [];
+      let lastX: number;
+      let lastY: number;
       let currentRow = tableHeaders;
-
-      const isSameLine = (itemY) => {
-        return itemY > lastY - LINE_THRESHOLD;
-      }
-
-      const isSameWord = (itemX) => {
-        return itemX < lastX + WORD_THRESHOLD;
-      }
 
       const newColumn = (item: TextItem) => {
         const { str, transform } = item;
@@ -264,7 +278,6 @@ export function readRobinhoodPdf(path: string) {
         return {
           text: str,
           startX: itemX,
-          // items: [item]
         }
       };
 
@@ -272,82 +285,58 @@ export function readRobinhoodPdf(path: string) {
         return [newColumn(item)];
       }
 
-      const addToCurrentColumn = (item: TextItem) => {
-        const { str, transform } = item;
-        const currentColumn = _.last(currentRow);
-        // console.log('currentColumn', currentColumn);
-
-        currentColumn.text += str;
-        // currentColumn.items.push(item);
-      };
-
-      const addToNewColumn = (item: TextItem) => {
-        currentRow.push(newColumn(item));
-        // console.log('added new column to row', currentRow);
-      }
-
-      const addToCurrentRow = (item: TextItem) => {
-        const { str, transform } = item;
-        const [a, b, c, d, itemX, itemY] = transform;
-
-        if (isSameWord(itemX)) {
-          // X: Same Word
-          addToCurrentColumn(item);
-        } else {
-          // X: Different Word
-          addToNewColumn(item);
-        }
-      }
-
-      const addToNewRow = (item: TextItem) => {
-        const { str, transform } = item;
-        const [a, b, c, d, itemX, itemY] = transform;
-
-        rows.push(newRow(item));
-
-        currentRow = _.last(rows);
-      }
-
-
       for (const item of itemsInArea) {
         const { str, transform } = item;
         const [a, b, c, d, itemX, itemY] = transform;
 
         if (!lastY || !lastX) {
-          // starts with header row
-          addToNewColumn(item);
+          // X: Add to New Column
+          currentRow.push(newColumn(item));
 
         } else {
-
-          if (isSameLine(itemY)) {
+          if (itemY > lastY - LINE_THRESHOLD) {
             // Y: Same Line
-            addToCurrentRow(item);
+            if (itemX < lastX + WORD_THRESHOLD) {
+              // X: Add to current column
+              const currentColumn = _.last(currentRow);
+              currentColumn.text += str;
+            } else {
+              // X: Add to New Column
+              currentRow.push(newColumn(item));
+            }
           } else {
             // Y: New Line
-            addToNewRow(item);
+            rows.push(newRow(item));
+            currentRow = _.last(rows);
           }
-
         }
 
         lastX = itemX;
         lastY = itemY;
-
       }
+      return [tableHeaders, ...rows];    
+    }
 
-      // console.log('- table headers:', tableHeaders);
-      // console.log('- rows:', rows);
 
-      const tableHeaderMap = {};
+    function parseTable(textContent: TextContent,
+      [startX, startY]: number[] = [30, 420],
+      [endX, endY]: number[] = [1000, 0]
+    ) {
+
+      const lines = parseLines(textContent, [startX, startY], [endX, endY]);
+      const tableHeaders = lines[0];
+      lines.splice(0, 1);
+      const tableHeadersMap = {};
       const rowData = [];
 
       for (const header of tableHeaders) {
-        tableHeaderMap[header.startX] = header.text;
+        tableHeadersMap[header.startX] = header.text;
       }
 
-      for (const row of rows) {
+      for (const row of lines) {
         const rowDataItem = {};
         for (const col of row) {
-          const key = tableHeaderMap[col.startX];
+          const key = tableHeadersMap[col.startX];
           if (!key) {
             // console.error('Cannot find header for column:', col);
             continue;
@@ -382,6 +371,8 @@ export function readRobinhoodPdf(path: string) {
     return pageData.getTextContent(renderOptions)
       .then((textContent: TextContent) => {
 
+        const statementInfo = parseStatementInfo(textContent);
+
         // Parse Page Type
         const pageTypeArea = parseArea(textContent, [30, 500], [1000, 444]);
         const pageType = getPageType(pageTypeArea);
@@ -399,6 +390,7 @@ export function readRobinhoodPdf(path: string) {
         }
 
         const result = {
+          statementInfo,
           pageType,
           pageData
         };
