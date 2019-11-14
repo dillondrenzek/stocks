@@ -385,8 +385,6 @@ export function readRobinhoodPdf(path: string) {
             : (pageType === PageType.AccountActivity) ? 420
               : 420;
           pageData = parseTable(textContent, [30, startY], [1000, 0]);
-        } else {
-          console.log('No table for type');
         }
 
         const result = {
