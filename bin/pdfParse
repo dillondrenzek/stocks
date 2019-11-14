@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const { readRobinhoodPdf } = require('../dist/cli/read-pdf');
+
+if (!process.argv[2]) {
+  throw new Error('No argv 2');
+}
+
+const filename = process.argv[2];
+
+readRobinhoodPdf(filename).then((parsedPdf) => {
+  console.log(parsedPdf);
+});

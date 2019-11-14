@@ -7,3 +7,6 @@ node_modules
 dist
 
 docs/.jekyll-cache
+
+# Test data files
+data/test
