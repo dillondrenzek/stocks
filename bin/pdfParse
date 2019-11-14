@@ -107,22 +107,7 @@ function parsePage(pageText, pageNumber, pages) {
   // skip important info page
   if (pageNumber === 10) return;
 
-  let result = {};
-  // console.log(`\nparsing page ${pageNumber}...\n`, pageText);
 
-  // split by line
-  const lines = pageText.split('\n');
-  // console.log('-lines:', lines);
-
-  // parse out page numbering
-  const pageNumberInfo = lines.splice(0, 1);
-  // console.log('-pageNumberInfo:', pageNumberInfo);
-
-  const headerInfo = lines.splice(0, 5);
-  // console.log('-headerInfo:', headerInfo);
-
-  const pageType = lines.splice(0, 1);
-  // console.log('-pageType:', pageType);  
 
   const pageData = parsePageTable(pageType, lines, pageNumber, pages);
 
