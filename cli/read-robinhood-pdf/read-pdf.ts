@@ -38,7 +38,7 @@ interface Page {
 
 interface ParsedPdf {
   numPages: number;
-  pages: Page[];
+  pages: string[];
 }
 
 function parseTableHeaders(lines: string[]) {
@@ -125,11 +125,10 @@ function parseRobinhoodPdfPages(pdfText: string): ParsedPdf {
   const pages = pdfText
     .split(PAGE_SEPARATOR)
     .filter((pg) => !!pg);
-  // .map(parseRobinhoodPdfPage);
 
   return {
     numPages: pages.length,
-    pages: null
+    pages
   };
 }
 
@@ -411,11 +410,11 @@ export function readRobinhoodPdf(path: string) {
 
   }
 
-  return new Promise<ParsedPdf>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
       .then(({ numpages, text }) => {
-        resolve(parseRobinhoodPdfPages(text));
+        resolve(text);
       })
       .catch(reject);
   });

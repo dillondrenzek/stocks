@@ -19,8 +19,8 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run frontend:dev\"",
     "frontend:dev": "cd frontend; npm run start",
     "frontend": "npm run frontend:dev",
-    "prepdf:dev": "npm run build:cli",
-    "pdf:dev": "node-dev ./dist/cli",
+    "preparsePdf": "npm run build:cli",
+    "parsePdf": "node-dev ./bin/pdfParse",
     "server:dev": "node-dev ./bin/server",
     "server": "npm run server:dev",
     "prefrontend:dev": "cd frontend; npm install",
@@ -44,12 +44,6 @@
         "src"
       ],
       "extensions": "ts,pug"
-    },
-    "pdf:dev": {
-      "patterns": [
-        "cli"
-      ],
-      "extensions": "ts"
     }
   },
   "author": "",
