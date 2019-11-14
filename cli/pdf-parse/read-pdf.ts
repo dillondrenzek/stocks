@@ -277,6 +277,7 @@ export function readRobinhoodPdf(path: string) {
         const { str, transform } = item;
         const currentColumn = _.last(currentRow);
         // console.log('currentColumn', currentColumn);
+
         currentColumn.text += str;
         // currentColumn.items.push(item);
       };
@@ -308,7 +309,6 @@ export function readRobinhoodPdf(path: string) {
         currentRow = _.last(rows);
       }
 
-      console.log('items in area:', itemsInArea.length);
 
       for (const item of itemsInArea) {
         const { str, transform } = item;
@@ -335,8 +335,30 @@ export function readRobinhoodPdf(path: string) {
 
       }
 
-      console.log('- table headers:', tableHeaders);
-      console.log('- rows:', rows);
+      // console.log('- table headers:', tableHeaders);
+      // console.log('- rows:', rows);
+
+      const tableHeaderMap = {};
+      const rowData = [];
+
+      for (const header of tableHeaders) {
+        tableHeaderMap[header.startX] = header.text;
+      }
+
+      for (const row of rows) {
+        const rowDataItem = {};
+        for (const col of row) {
+          const key = tableHeaderMap[col.startX];
+          if (!key) {
+            console.error('Cannot find header for column:', col);
+            continue;
+          }
+          rowDataItem[key] = col.text;
+        }
+        rowData.push(rowDataItem);
+      }
+
+      console.log(rowData);
 
       return text;
     }
