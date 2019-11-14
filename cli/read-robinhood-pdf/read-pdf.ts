@@ -13,8 +13,6 @@ interface TextItem {
   height: number;
 }
 
-
-
 const PAGE_SEPARATOR = '\n\n';
 const COLUMN_SEPARATOR = '|';
 const LINE_SEPARATOR = '\n';
@@ -29,114 +27,9 @@ enum PageType {
   Unknown = 'UNKNOWN'
 }
 
-interface Page {
-  pdfPageNumber: string;
-  headerInfo: string[];
-  pageType: PageType;
-  pageData: any;
-}
-
 interface ParsedPdf {
   numPages: number;
   pages: string[];
-}
-
-function parseTableHeaders(lines: string[]) {
-  return lines[0].split(COLUMN_SEPARATOR);
-}
-
-function parseTableRows(lines: string[]) {
-  return lines.map((row) => {
-    return row.split(COLUMN_SEPARATOR);
-  });
-}
-
-function parsePageTable(type: PageType, lines: string[]) {
-  const tableHeaders = parseTableHeaders(lines.splice(0, 1));
-  const tableRows = parseTableRows(lines);
-  return {
-    tableHeaders,
-    tableRows
-  };
-}
-
-function parsePageData(type: PageType, lines: string[]) {
-
-  switch (type) {
-    case PageType.AccountActivity:
-    case PageType.PortfolioSummary:
-      return parsePageTable(type, lines);
-    default:
-      return lines;
-  }
-}
-
-function parsePageNumberInfo(lines: string[]) {
-  return lines[0];
-}
-
-function parsePageType(lines: string[]): PageType {
-  const text = lines[0];
-  if (text === PageType.AccountActivity) {
-    return PageType.AccountActivity;
-  } else if (text === PageType.PortfolioSummary) {
-    return PageType.PortfolioSummary;
-  } else {
-    return PageType.Unknown;
-  }
-}
-
-function parseRobinhoodPdfPage(pageText: string, pageNumber: number, pageTexts: string[]): Page {
-
-  console.log(`\nparsing page ${pageNumber}...\n`, pageText);
-
-  // split by line
-  const lines = pageText.split(LINE_SEPARATOR);
-  // console.log('-lines:', lines);
-
-  // parse out page numbering
-  const pdfPageNumber = parsePageNumberInfo(lines.splice(0, 1));
-  // console.log('-pageNumberInfo:', pageNumberInfo);
-
-  const headerInfo = lines.splice(0, 5);
-  // console.log('-headerInfo:', headerInfo);
-
-  const pageType = parsePageType(lines.splice(0, 1));
-  // console.log('-pageType:', pageType);
-
-  const pageData = parsePageData(pageType, lines);
-
-  // console.log(pageData);
-
-  const result: Page = {
-    pdfPageNumber,
-    headerInfo,
-    pageType,
-    pageData
-  };
-
-  // console.log('parse:', pageText);
-
-  return result;
-}
-
-function parseRobinhoodPdfPages(pdfText: string): ParsedPdf {
-
-  const pages = pdfText
-    .split(PAGE_SEPARATOR)
-    .filter((pg) => !!pg);
-
-  return {
-    numPages: pages.length,
-    pages
-  };
-}
-
-type Line = Word[];
-
-interface Word {
-  text: string;
-  items: TextItem;
 }
 
 interface Column {
@@ -231,8 +124,6 @@ export function readRobinhoodPdf(path: string) {
             text += `${COLUMN_SEPARATOR}${str}`;
           }
 
-
-
         }
 
         lastX = itemX;
@@ -264,7 +155,6 @@ export function readRobinhoodPdf(path: string) {
       [startX, startY]: number[] = [30, 420],
       [endX, endY]: number[] = [1000, 0]
     ) {
-      // console.log('textContent', textContent);
       const itemsInArea = getTextItemsInArea(textContent, [startX, startY], [endX, endY]);  
       const tableHeaders: Column[] = [];
       const rows: Column[][] = [];
@@ -346,8 +236,6 @@ export function readRobinhoodPdf(path: string) {
         rowData.push(rowDataItem);
       }
 
-      // console.log(rowData);
-
       return rowData;
     }
 
@@ -360,7 +248,6 @@ export function readRobinhoodPdf(path: string) {
         return PageType.Unknown;
       }
     }
-
 
     function pageTypeHasTable(type: PageType): boolean {
       return type === PageType.AccountActivity
@@ -376,10 +263,9 @@ export function readRobinhoodPdf(path: string) {
         // Parse Page Type
         const pageTypeArea = parseArea(textContent, [30, 500], [1000, 444]);
         const pageType = getPageType(pageTypeArea);
-        let pageData;
-        // console.log('page type:\n', pageType);
-
+        
         // Parse Page Data
+        let pageData;
         if (pageTypeHasTable(pageType)) {
           const startY = (pageType === PageType.PortfolioSummary) ? 460
             : (pageType === PageType.AccountActivity) ? 420
@@ -392,8 +278,6 @@ export function readRobinhoodPdf(path: string) {
           pageType,
           pageData
         };
-
-        // console.log('result\n', result);
 
         return JSON.stringify(result);
       });
