@@ -228,7 +228,7 @@ export function readRobinhoodPdf(path: string) {
     function parseTable(textContent: TextContent,
       [startX, startY]: number[] = [30, 420],
       [endX, endY]: number[] = [1000, 0]
-    ): string {
+    ) {
       // console.log('textContent', textContent);
       const itemsInArea = textContent.items.filter((item) => {
         const { str, transform } = item;
@@ -350,7 +350,7 @@ export function readRobinhoodPdf(path: string) {
         for (const col of row) {
           const key = tableHeaderMap[col.startX];
           if (!key) {
-            console.error('Cannot find header for column:', col);
+            // console.error('Cannot find header for column:', col);
             continue;
           }
           rowDataItem[key] = col.text;
@@ -358,9 +358,9 @@ export function readRobinhoodPdf(path: string) {
         rowData.push(rowDataItem);
       }
 
-      console.log(rowData);
+      // console.log(rowData);
 
-      return text;
+      return rowData;
     }
 
     function getPageType(text: string): PageType {
@@ -386,18 +386,27 @@ export function readRobinhoodPdf(path: string) {
         // Parse Page Type
         const pageTypeArea = parseArea(textContent, [30, 500], [1000, 444]);
         const pageType = getPageType(pageTypeArea);
-        console.log('page type:\n', pageType);
+        let pageData;
+        // console.log('page type:\n', pageType);
 
         // Parse Page Data
         if (pageTypeHasTable(pageType)) {
           const startY = (pageType === PageType.PortfolioSummary) ? 460
             : (pageType === PageType.AccountActivity) ? 420
               : 420;
-          const renderedTable = parseTable(textContent, [30, startY], [1000, 0]);
+          pageData = parseTable(textContent, [30, startY], [1000, 0]);
         } else {
           console.log('No table for type');
         }
-        return pageType;
+
+        const result = {
+          pageType,
+          pageData
+        };
+
+        // console.log('result\n', result);
+
+        return JSON.stringify(result);
       });
 
   }
