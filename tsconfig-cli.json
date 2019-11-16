@@ -6,7 +6,7 @@
     "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "dist/",
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
@@ -16,9 +16,9 @@
     }
   },
   "include": [
-    "cli/**/*.ts"
+    "src/cli/**/*.ts"
   ],
   "exclude": [
-    "cli/**/*.spec.*"
+    "src/cli/**/*.spec.*"
   ]
 }

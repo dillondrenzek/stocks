@@ -21,7 +21,7 @@
     "frontend:dev": "cd frontend; npm run start",
     "frontend": "npm run frontend:dev",
     "preparsePdf": "npm run build:cli",
-    "parsePdf": "node-dev ./dist/cli/read-robinhood-pdf",
+    "parsePdf": "node-dev ./dist/src/cli/read-robinhood-pdf",
     "parsePdf:dev": "npm run parsePdf -- ./data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
     "server:dev": "node-dev ./bin/server",
     "server": "npm run server:dev",
