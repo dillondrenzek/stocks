@@ -1,47 +1,194 @@
 import fs from 'fs';
 import _ from 'lodash';
 import pdfParse, { } from 'pdf-parse';
+import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
+import { TextContent, TextItem, PageType, Column } from './types';
+import { parsePageType } from './validators';
 
-interface TextContent {
-  items: TextItem[];
+interface ParsedPDF {
+  statementInfo: {
+    pageNumber: number;
+    totalPages: number;
+    startDate: string; // MM/DD/YYYY
+    endDate: string; // MM/DD/YYYY
+    accountHolder: string;
+    accountNumber: string;
+    accountAddress: string;
+  };
+  pageType: PageType;
+  pageData?: any;
 }
 
-interface TextItem {
-  str: string;
-  transform: number[];
-  width: number;
-  height: number;
+interface ParsedPDFAccountActivity extends ParsedPDF {
+  pageType: PageType.AccountActivity;
+  pageData: AccountActivityItem[];
 }
 
-const PAGE_SEPARATOR = '\n\n';
-const COLUMN_SEPARATOR = '|';
-const LINE_SEPARATOR = '\n';
-const SUBLINE_SEPARATOR = '__';
-const WORD_THRESHOLD = 10;
-// const COLUMN_THRESHOLD = 50;
-const LINE_THRESHOLD = 9;
-
-enum PageType {
-  AccountActivity = 'ACCOUNT ACTIVITY',
-  PortfolioSummary = 'PORTFOLIO SUMMARY',
-  Unknown = 'UNKNOWN'
+interface AccountActivityItem { 
+  // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 
+  description: string;
+  // "SYMBOL": "SPY", 
+  symbol: string;
+  // "ACCT TYPE": "Margin", 
+  accountType: string;
+  // "TRANSACTION": "BTC", 
+  transactionType: string;
+  // "DATE": "10/01/2019", 
+  date: string; // MM/DD/YYYY
+  // "QTY": "1",
+  qty: number; 
+  // "PRICE": "$1.56", 
+  price: number;
+  // "DEBIT": "$156.00" 
+  debit?: number;
+  credit?: number
 }
 
-interface ParsedPdf {
-  numPages: number;
-  pages: string[];
+interface ParsedPDFPortfolioSummary extends ParsedPDF {
+  pageType: PageType.PortfolioSummary;
+  pageData: PortfolioSummaryItem[];
 }
 
-interface Column {
-  text: string;
-  startX: number;
-  // items: TextItem[];
+interface PortfolioSummaryItem {
+  // "EQUITIES/OPTIONS": "AdobeEstimated Yield: 0.00%", 
+  equitesOptions: string; 
+  yieldPercent: number;
+  // "SYM/CUSIP": "ADBE", 
+  symbol: string;
+  // "ACCT TYPE": "Margin", 
+  accountType: string;
+  // "QTY": "1", 
+  qty: number;
+  // "PRICE": "$277.93", 
+  price: number;
+  // "MKT VALUE": "$277.93", 
+  mktValue: number;
+  // "LAST PERIOD'S MKT VALUE": "$276.25", 
+  mktValueLastPeriod: number;
+  // "% CHANGE": "0.61%", 
+  changePercent: number;
+  // "EST. ANNUAL INCOME": "$0.00", 
+  annualIncome: number; // estimated
+  // "% OF TOTAL PORTFOLIO": "1.87%"
+  portfolioPercent: number;
 }
 
 export function readRobinhoodPdf(path: string) {
 
   const dataBuffer = fs.readFileSync(path);
-  const renderPage = (pageData) => {
+
+  const parsePageJson = (page: string): ParsedPDF => {
+    let result: any = {};
+
+    try {
+      const parsedJson = JSON.parse(page);
+      const pageType = parsePageType(parsedJson['pageType'] || null);
+
+      const parseNumber = (text: string): number => {
+        if (!text) return;
+        const parsed = parseInt(text);
+        return (isNaN(parsed)) ? null : parsed;
+      }
+
+      const parsePercent = (text: string): number => {
+        if (!text) return;
+        text = text.replace('%', '');
+        const parsed = parseFloat(text);
+        return (isNaN(parsed)) ? null : parsed;
+      }
+
+      const parseCurrency = (text: string): number => {
+        if (!text) return;
+        text = text.replace('$', '');
+        const parsed = parseFloat(text);
+        return (isNaN(parsed)) ? null : parsed;
+      }
+
+      // transform object
+      // console.log('parsedJson', parsedJson);
+
+      switch (pageType) {
+
+        case PageType.AccountActivity:
+          result = {
+            pageType,
+            statementInfo: null,
+            pageData: (Array.isArray(parsedJson['pageData'])) 
+              ? parsedJson['pageData'].map((data: {[key: string]: string}): AccountActivityItem => {
+                  return data ? {
+                    accountType: data['ACCT TYPE'],
+                    credit: parseCurrency(data['CREDIT']),
+                    date: data['DATE'],
+                    debit: parseCurrency(data['DEBIT']),
+                    description: data['DESCRIPTION'],
+                    price: parseCurrency(data['PRICE']),
+                    qty: parseNumber(data['QTY']),
+                    symbol: data['SYMBOL'],
+                    transactionType: data['TRANSACTION']
+                  } : null;
+                })
+              : [] 
+          };
+          break;
+        
+        case PageType.PortfolioSummary:
+          result = {
+            pageType,
+            statementInfo: null,
+            pageData: (Array.isArray(parsedJson['pageData']))
+              ? parsedJson['pageData'].map((data: {[key: string]: string}): PortfolioSummaryItem => {
+
+                const parseYieldPercent = (text: string) => {
+                  const word = 'Estimated Yield: ';
+                  const slice = text.slice(text.indexOf(word));
+                  return slice ? parsePercent(slice.replace(word, '')) : null;
+                }
+
+                return data ? {
+                  accountType: data['ACCT TYPE'],
+                  annualIncome: parseCurrency(data['EST. ANNUAL INCOME']),
+                  changePercent: parsePercent(data['% CHANGE']),
+                  equitesOptions: data['EQUITIES/OPTIONS'],
+                  mktValue: parseCurrency(data['MKT VALUE']),
+                  mktValueLastPeriod: parseCurrency(data['LAST PERIOD\'S MKT VALUE']),
+                  portfolioPercent: parsePercent(data['% OF TOTAL PORTFOLIO']),
+                  price: parseCurrency(data['PRICE']),
+                  qty: parseNumber(data['QTY']),
+                  symbol: data['SYM/CUSIP'],
+                  yieldPercent: parseYieldPercent(data['EQUITIES/OPTIONS'])
+                } : null;
+              }) 
+              : []
+          }
+          break;
+        case PageType.Unknown:
+        default:
+          result = {
+            pageType,
+          }
+          break;
+      }
+
+      console.log('result', result);
+
+    } catch (err) {
+      console.error('[ERR]', err);
+    }
+
+    return result;
+  }
+
+  // page is text 
+  const parsePDFJson = (page: string): ParsedPDF[] => {
+    const pageJsons = page.split(PAGE_SEPARATOR);
+    const parsedJson = pageJsons.map(parsePageJson);
+
+    // console.log('parsedJson', parsedJson);
+
+    return null;
+  }
+
+  const renderPage = (pageData: any) => {
     // check documents https://mozilla.github.io/pdf.js/
     const renderOptions = {
       // replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.
@@ -79,19 +226,11 @@ export function readRobinhoodPdf(path: string) {
       let text = '';
       const DEBUG = false;
 
-      for (const item of textContent.items) {
+      const itemsInArea = getTextItemsInArea(textContent, [startX, startY], [endX, endY]);
+
+      for (const item of itemsInArea) {
         const { str, transform } = item;
         const [a, b, c, d, itemX, itemY] = transform;
-
-        if (
-          !str ||
-          itemX < startX ||
-          itemY > startY ||
-          itemX > endX ||
-          itemY < endY
-        ) {
-          continue;
-        }
 
         if (!lastY) {
           text += str;
@@ -101,14 +240,9 @@ export function readRobinhoodPdf(path: string) {
             : `${LINE_SEPARATOR}${str}`;
           if (columns.indexOf(itemX) === -1) {
             columns.push(itemX);
-            // columns = _.sortBy(columns);
-            // console.log(str, 'columns:', columns);
-          } else if (columns.indexOf(itemX) === 0) {
-            // console.log('new row:', itemY, `(+${lastY - itemY})`);
           }
         } else {
           // add to current row
-
           if (lastX + WORD_THRESHOLD > itemX) {
             // item within word of last item
             text += `${str}`;
@@ -116,10 +250,6 @@ export function readRobinhoodPdf(path: string) {
             // 
             if (columns.indexOf(itemX) === -1) {
               columns.push(itemX);
-              // columns = _.sortBy(columns);
-              // console.log(str, 'columns:', columns);
-            } else if (columns.indexOf(itemX) === 0) {
-              // console.log('new row', itemY);
             }
             text += `${COLUMN_SEPARATOR}${str}`;
           }
@@ -137,10 +267,10 @@ export function readRobinhoodPdf(path: string) {
       const lines = parseLines(textContent, [500, 600], [1000, 500]);
 
       let result = {
-        pageNumber: null,
-        dateRange: null,
-        accountHolder: null,
-        accountAddress: null
+        pageNumber: null as string,
+        dateRange: null as string,
+        accountHolder: null as string,
+        accountAddress: null as string
       };
 
       result.pageNumber = lines[0].map((col) => col.text).join('');
@@ -216,7 +346,7 @@ export function readRobinhoodPdf(path: string) {
       const lines = parseLines(textContent, [startX, startY], [endX, endY]);
       const tableHeaders = lines[0];
       lines.splice(0, 1);
-      const tableHeadersMap = {};
+      const tableHeadersMap: any = {};
       const rowData = [];
 
       for (const header of tableHeaders) {
@@ -224,7 +354,7 @@ export function readRobinhoodPdf(path: string) {
       }
 
       for (const row of lines) {
-        const rowDataItem = {};
+        const rowDataItem: any = {};
         for (const col of row) {
           const key = tableHeadersMap[col.startX];
           if (!key) {
@@ -287,7 +417,14 @@ export function readRobinhoodPdf(path: string) {
   return new Promise<string>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
-      .then(({ numpages, text }) => {
+      .then(({ numpages, text }: any) => {
+        if (!text) {
+          reject('No text came from pdfParse');
+        }
+
+        console.log('page text\n', text);
+        console.log('parsed pageJson:', parsePDFJson(text));
+
         resolve(text);
       })
       .catch(reject);
