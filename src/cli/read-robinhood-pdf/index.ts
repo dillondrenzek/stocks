@@ -9,5 +9,6 @@ const filename = process.argv[2];
 // read robinhood pdf from file system
 readRobinhoodPdf(filename)
   .then((data) => {
-    // console.log('page data', data);
+    console.log('page data', data);
+    console.info('---Successfully parsed Robinhood PDF---');
   });
