@@ -31,11 +31,15 @@ interface ParsedPDFPortfolioSummary extends ParsedPDF {
   pageData: PortfolioSummaryItem[];
 }
 
+type ParseablePDFPage = (ParsedPDFAccountActivity | ParsedPDFPortfolioSummary) | null;
+
+type ParseablePDFPages = ParseablePDFPage[];
+
 export function readRobinhoodPdf(path: string) {
 
   const dataBuffer = fs.readFileSync(path);
 
-  const parsePageJson = (page: string): ParsedPDF => {
+  const parsePageJson = (page: string): ParseablePDFPage => {
     let result: any = {};
 
     try {
@@ -52,7 +56,7 @@ export function readRobinhoodPdf(path: string) {
             pageType,
             statementInfo: null,
             pageData: (Array.isArray(parsedJson['pageData'])) 
-              ? parsedJson['pageData'].map((data: {[key: string]: string}): AccountActivityItem => {
+              ? parsedJson['pageData'].map((data: any): AccountActivityItem => {
                   if (!data) { return null; }
                   // TODO: parse the rows that these filter out
                   if (!data['TRANSACTION']) { return null; }  
@@ -70,7 +74,7 @@ export function readRobinhoodPdf(path: string) {
             pageType,
             statementInfo: null,
             pageData: (Array.isArray(parsedJson['pageData']))
-              ? parsedJson['pageData'].map((data: {[key: string]: string}): PortfolioSummaryItem => {
+              ? parsedJson['pageData'].map((data: any): PortfolioSummaryItem => {
                   if (!data) { return null; }
                   // TODO: parse the rows that these filter out
                   if (!data['PRICE']) { return null; }
@@ -100,7 +104,7 @@ export function readRobinhoodPdf(path: string) {
   }
 
   // page is text 
-  const parsePDFJson = (page: string): ParsedPDF[] => {
+  const parsePDFJson = (page: string): ParseablePDFPages => {
     const pageJsons = page.split(PAGE_SEPARATOR);
     const parsedJson = pageJsons.map(parsePageJson);
     // console.log('parsedJson', parsedJson);
@@ -331,7 +335,7 @@ export function readRobinhoodPdf(path: string) {
 
   }
 
-  return new Promise<ParsedPDF[]>((resolve, reject) => {
+  return new Promise<ParseablePDFPages>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
       .then(({ numpages, text }: any) => {
@@ -339,7 +343,7 @@ export function readRobinhoodPdf(path: string) {
           reject('No text came from pdfParse');
         }
 
-        const pdfJson: ParsedPDF[] = parsePDFJson(text);
+        const pdfJson = parsePDFJson(text);
         // console.log('parsed pageJson:', parsePDFJson(text));
 
         resolve(pdfJson);
