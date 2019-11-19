@@ -26,7 +26,7 @@ interface ParsedPDFAccountActivity extends ParsedPDF {
 
 interface AccountActivityItem { 
   // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 
-  description: string;
+  description: string | Object;
   // "SYMBOL": "SPY", 
   symbol: string;
   // "ACCT TYPE": "Margin", 
@@ -42,6 +42,80 @@ interface AccountActivityItem {
   // "DEBIT": "$156.00" 
   debit?: number;
   credit?: number
+}
+
+enum AccountType {
+  None,
+  Margin
+}
+
+enum TransactionType {
+  Buy = 'Buy',
+  Sell = 'Sell',
+  BTC = 'BTC',
+  STC = 'STC',
+  CDIV = 'CDIV',
+  BTO = 'BTO',
+  STO = 'STO',
+  ACH = 'ACH', // 
+}
+
+class AccountActivityItem {
+  constructor(values?: any) {
+    const accountType = (() => {
+      const data = values['ACCT TYPE'];
+      if (!AccountType[data]) {
+        console.error('Could not parse AccountType', data);
+        return null;
+      }
+      return AccountType[data];
+    })();
+
+    const transactionType = ((): TransactionType => {
+      const data = values['TRANSACTION'];
+      if (!TransactionType[data] || typeof data !== 'string') {
+        console.error('Could not parse TransactionType', data);
+        return null;
+      }
+      return TransactionType[data];
+    })();
+
+    const description = (() => {
+      if (!transactionType) {
+        return null;
+      }
+
+      const data = values['DESCRIPTION'] as string;
+      switch(transactionType) {
+        case TransactionType.Buy:
+        case TransactionType.Sell:
+          const unsolicitedIndex = data.indexOf('Unsolicited');
+          const name = data.split('Unsolicited')[0];
+          let cusip = data.slice(unsolicitedIndex)
+            .replace('Unsolicited, ', '')
+            .replace('CUSIP: ', '');
+          return {
+            name,
+            unsolicited: true,
+            cusip
+          }
+        default:
+          return data;
+      }
+    })();
+
+    return {
+      accountType,
+      credit: values['CREDIT'],
+      date: values['DATE'],
+      debit: values['DEBIT'],
+      description,
+      price: values['PRICE'],
+      qty: values['QTY'],
+      symbol: values['SYMBOL'],
+      transactionType
+    };
+  }
 }
 
 interface ParsedPDFPortfolioSummary extends ParsedPDF {
@@ -115,17 +189,15 @@ export function readRobinhoodPdf(path: string) {
             statementInfo: null,
             pageData: (Array.isArray(parsedJson['pageData'])) 
               ? parsedJson['pageData'].map((data: {[key: string]: string}): AccountActivityItem => {
-                  return data ? {
-                    accountType: data['ACCT TYPE'],
-                    credit: parseCurrency(data['CREDIT']),
-                    date: data['DATE'],
-                    debit: parseCurrency(data['DEBIT']),
-                    description: data['DESCRIPTION'],
-                    price: parseCurrency(data['PRICE']),
-                    qty: parseNumber(data['QTY']),
-                    symbol: data['SYMBOL'],
-                    transactionType: data['TRANSACTION']
-                  } : null;
+                  if (!data) {
+                    return null;
+                  }
+              
+                  // TODO: parse the rows that these filter out
+                  if (!data['TRANSACTION']) {
+                    return null;
+                  }  
+                  return data ? new AccountActivityItem(data): null;
                 })
               : [] 
           };
@@ -142,6 +214,11 @@ export function readRobinhoodPdf(path: string) {
                   const word = 'Estimated Yield: ';
                   const slice = text.slice(text.indexOf(word));
                   return slice ? parsePercent(slice.replace(word, '')) : null;
+                }
+
+                // TODO: parse the rows that these filter out
+                if (!data['PRICE']) {
+                  return null;
                 }
 
                 return data ? {
@@ -169,7 +246,7 @@ export function readRobinhoodPdf(path: string) {
           break;
       }
 
-      console.log('result', result);
+      console.log('result', result.pageData);
 
     } catch (err) {
       console.error('[ERR]', err);
