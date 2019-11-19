@@ -3,6 +3,8 @@ import _ from 'lodash';
 import pdfParse, { } from 'pdf-parse';
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
 import { TextContent, TextItem, PageType, Column } from './types';
+import { AccountActivityItem, TransactionType, AccountType } from './types/robinhood/account-activity';
+import { PortfolioSummaryItem } from './types/robinhood/portfolio-summary';
 import { parsePageType } from './validators';
 
 interface ParsedPDF {
@@ -24,127 +26,9 @@ interface ParsedPDFAccountActivity extends ParsedPDF {
   pageData: AccountActivityItem[];
 }
 
-interface AccountActivityItem { 
-  // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 
-  description: string | Object;
-  // "SYMBOL": "SPY", 
-  symbol: string;
-  // "ACCT TYPE": "Margin", 
-  accountType: string;
-  // "TRANSACTION": "BTC", 
-  transactionType: string;
-  // "DATE": "10/01/2019", 
-  date: string; // MM/DD/YYYY
-  // "QTY": "1",
-  qty: number; 
-  // "PRICE": "$1.56", 
-  price: number;
-  // "DEBIT": "$156.00" 
-  debit?: number;
-  credit?: number
-}
-
-enum AccountType {
-  None,
-  Margin
-}
-
-enum TransactionType {
-  Buy = 'Buy',
-  Sell = 'Sell',
-  BTC = 'BTC',
-  STC = 'STC',
-  CDIV = 'CDIV',
-  BTO = 'BTO',
-  STO = 'STO',
-  ACH = 'ACH', // 
-}
-
-class AccountActivityItem {
-  constructor(values?: any) {
-    const accountType = (() => {
-      const data = values['ACCT TYPE'];
-      if (!AccountType[data]) {
-        console.error('Could not parse AccountType', data);
-        return null;
-      }
-      return AccountType[data];
-    })();
-
-    const transactionType = ((): TransactionType => {
-      const data = values['TRANSACTION'];
-      if (!TransactionType[data] || typeof data !== 'string') {
-        console.error('Could not parse TransactionType', data);
-        return null;
-      }
-      return TransactionType[data];
-    })();
-
-    const description = (() => {
-      if (!transactionType) {
-        return null;
-      }
-
-      const data = values['DESCRIPTION'] as string;
-      switch(transactionType) {
-        case TransactionType.Buy:
-        case TransactionType.Sell:
-          const unsolicitedIndex = data.indexOf('Unsolicited');
-          const name = data.split('Unsolicited')[0];
-          let cusip = data.slice(unsolicitedIndex)
-            .replace('Unsolicited, ', '')
-            .replace('CUSIP: ', '');
-          return {
-            name,
-            unsolicited: true,
-            cusip
-          }
-        default:
-          return data;
-      }
-    })();
-
-    return {
-      accountType,
-      credit: values['CREDIT'],
-      date: values['DATE'],
-      debit: values['DEBIT'],
-      description,
-      price: values['PRICE'],
-      qty: values['QTY'],
-      symbol: values['SYMBOL'],
-      transactionType
-    };
-  }
-}
-
 interface ParsedPDFPortfolioSummary extends ParsedPDF {
   pageType: PageType.PortfolioSummary;
   pageData: PortfolioSummaryItem[];
-}
-
-interface PortfolioSummaryItem {
-  // "EQUITIES/OPTIONS": "AdobeEstimated Yield: 0.00%", 
-  equitesOptions: string; 
-  yieldPercent: number;
-  // "SYM/CUSIP": "ADBE", 
-  symbol: string;
-  // "ACCT TYPE": "Margin", 
-  accountType: string;
-  // "QTY": "1", 
-  qty: number;
-  // "PRICE": "$277.93", 
-  price: number;
-  // "MKT VALUE": "$277.93", 
-  mktValue: number;
-  // "LAST PERIOD'S MKT VALUE": "$276.25", 
-  mktValueLastPeriod: number;
-  // "% CHANGE": "0.61%", 
-  changePercent: number;
-  // "EST. ANNUAL INCOME": "$0.00", 
-  annualIncome: number; // estimated
-  // "% OF TOTAL PORTFOLIO": "1.87%"
-  portfolioPercent: number;
 }
 
 export function readRobinhoodPdf(path: string) {
@@ -155,31 +39,11 @@ export function readRobinhoodPdf(path: string) {
     let result: any = {};
 
     try {
+      if (!page) {
+        return null;
+      }
       const parsedJson = JSON.parse(page);
       const pageType = parsePageType(parsedJson['pageType'] || null);
-
-      const parseNumber = (text: string): number => {
-        if (!text) return;
-        const parsed = parseInt(text);
-        return (isNaN(parsed)) ? null : parsed;
-      }
-
-      const parsePercent = (text: string): number => {
-        if (!text) return;
-        text = text.replace('%', '');
-        const parsed = parseFloat(text);
-        return (isNaN(parsed)) ? null : parsed;
-      }
-
-      const parseCurrency = (text: string): number => {
-        if (!text) return;
-        text = text.replace('$', '');
-        const parsed = parseFloat(text);
-        return (isNaN(parsed)) ? null : parsed;
-      }
-
-      // transform object
-      // console.log('parsedJson', parsedJson);
 
       switch (pageType) {
 
@@ -189,15 +53,13 @@ export function readRobinhoodPdf(path: string) {
             statementInfo: null,
             pageData: (Array.isArray(parsedJson['pageData'])) 
               ? parsedJson['pageData'].map((data: {[key: string]: string}): AccountActivityItem => {
-                  if (!data) {
-                    return null;
-                  }
-              
+                  if (!data) { return null; }
                   // TODO: parse the rows that these filter out
-                  if (!data['TRANSACTION']) {
-                    return null;
-                  }  
-                  return data ? new AccountActivityItem(data): null;
+                  if (!data['TRANSACTION']) { return null; }  
+
+                  return data 
+                    ? new AccountActivityItem(data)
+                    : null;
                 })
               : [] 
           };
@@ -209,32 +71,14 @@ export function readRobinhoodPdf(path: string) {
             statementInfo: null,
             pageData: (Array.isArray(parsedJson['pageData']))
               ? parsedJson['pageData'].map((data: {[key: string]: string}): PortfolioSummaryItem => {
+                  if (!data) { return null; }
+                  // TODO: parse the rows that these filter out
+                  if (!data['PRICE']) { return null; }
 
-                const parseYieldPercent = (text: string) => {
-                  const word = 'Estimated Yield: ';
-                  const slice = text.slice(text.indexOf(word));
-                  return slice ? parsePercent(slice.replace(word, '')) : null;
-                }
-
-                // TODO: parse the rows that these filter out
-                if (!data['PRICE']) {
-                  return null;
-                }
-
-                return data ? {
-                  accountType: data['ACCT TYPE'],
-                  annualIncome: parseCurrency(data['EST. ANNUAL INCOME']),
-                  changePercent: parsePercent(data['% CHANGE']),
-                  equitesOptions: data['EQUITIES/OPTIONS'],
-                  mktValue: parseCurrency(data['MKT VALUE']),
-                  mktValueLastPeriod: parseCurrency(data['LAST PERIOD\'S MKT VALUE']),
-                  portfolioPercent: parsePercent(data['% OF TOTAL PORTFOLIO']),
-                  price: parseCurrency(data['PRICE']),
-                  qty: parseNumber(data['QTY']),
-                  symbol: data['SYM/CUSIP'],
-                  yieldPercent: parseYieldPercent(data['EQUITIES/OPTIONS'])
-                } : null;
-              }) 
+                  return data 
+                    ? new PortfolioSummaryItem(data) 
+                    : null;
+                })
               : []
           }
           break;
@@ -246,7 +90,7 @@ export function readRobinhoodPdf(path: string) {
           break;
       }
 
-      console.log('result', result.pageData);
+      // console.log('result', result.pageData);
 
     } catch (err) {
       console.error('[ERR]', err);
@@ -259,10 +103,8 @@ export function readRobinhoodPdf(path: string) {
   const parsePDFJson = (page: string): ParsedPDF[] => {
     const pageJsons = page.split(PAGE_SEPARATOR);
     const parsedJson = pageJsons.map(parsePageJson);
-
     // console.log('parsedJson', parsedJson);
-
-    return null;
+    return parsedJson;
   }
 
   const renderPage = (pageData: any) => {
@@ -414,7 +256,6 @@ export function readRobinhoodPdf(path: string) {
       return [tableHeaders, ...rows];    
     }
 
-
     function parseTable(textContent: TextContent,
       [startX, startY]: number[] = [30, 420],
       [endX, endY]: number[] = [1000, 0]
@@ -461,7 +302,6 @@ export function readRobinhoodPdf(path: string) {
         || type === PageType.PortfolioSummary;
     }
 
-
     return pageData.getTextContent(renderOptions)
       .then((textContent: TextContent) => {
 
@@ -491,7 +331,7 @@ export function readRobinhoodPdf(path: string) {
 
   }
 
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<ParsedPDF[]>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
       .then(({ numpages, text }: any) => {
@@ -499,10 +339,10 @@ export function readRobinhoodPdf(path: string) {
           reject('No text came from pdfParse');
         }
 
-        console.log('page text\n', text);
-        console.log('parsed pageJson:', parsePDFJson(text));
+        const pdfJson: ParsedPDF[] = parsePDFJson(text);
+        // console.log('parsed pageJson:', parsePDFJson(text));
 
-        resolve(text);
+        resolve(pdfJson);
       })
       .catch(reject);
   });
