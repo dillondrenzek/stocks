@@ -7,7 +7,7 @@ export enum PageType {
   Unknown = 'UNKNOWN'
 }
 
-export interface ParsedPDF {
+interface ParsedPDF {
   statementInfo: {
     pageNumber: number;
     totalPages: number;
