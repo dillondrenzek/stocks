@@ -42,33 +42,26 @@ const parseCurrency = (text: string): number => {
   return (isNaN(parsed)) ? null : parsed;
 }
 
-export class PortfolioSummaryItem {
-  constructor(values?: any) {
-
-    const equitiesOptions = ((): string => {
+export function portfolioSummaryItem(values?: any): PortfolioSummaryItem {
+  return {
+    accountType: values['ACCT TYPE'],
+    annualIncome: parseCurrency(values['EST. ANNUAL INCOME']),
+    changePercent: parsePercent(values['% CHANGE']),
+    equitiesOptions: ((): string => {
       const str = values['EQUITIES/OPTIONS'] as string;
       return str.replace(str.match(/(Estimated Yield)\:\s\d+\.\d+\%/)[0], '');
-    })();
-
-    const yieldPercent = ((): number => {
+    })(),
+    mktValue: parseCurrency(values['MKT VALUE']),
+    mktValueLastPeriod: parseCurrency(values['LAST PERIOD\'S MKT VALUE']),
+    portfolioPercent: parsePercent(values['% OF TOTAL PORTFOLIO']),
+    price: parseCurrency(values['PRICE']),
+    qty: parseNumber(values['QTY']),
+    symbol: values['SYM/CUSIP'],
+    yieldPercent: ((): number => {
       const str = values['EQUITIES/OPTIONS'];
       const word = 'Estimated Yield: ';
       const slice = str.slice(str.indexOf(word));
       return slice ? parsePercent(slice.replace(word, '')) : null;
-    })();
-
-    return {
-      accountType: values['ACCT TYPE'],
-      annualIncome: parseCurrency(values['EST. ANNUAL INCOME']),
-      changePercent: parsePercent(values['% CHANGE']),
-      equitiesOptions,
-      mktValue: parseCurrency(values['MKT VALUE']),
-      mktValueLastPeriod: parseCurrency(values['LAST PERIOD\'S MKT VALUE']),
-      portfolioPercent: parsePercent(values['% OF TOTAL PORTFOLIO']),
-      price: parseCurrency(values['PRICE']),
-      qty: parseNumber(values['QTY']),
-      symbol: values['SYM/CUSIP'],
-      yieldPercent
-    }
+    })()
   }
 }

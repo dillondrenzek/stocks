@@ -36,27 +36,32 @@ export interface AccountActivityItem {
   credit?: number
 }
 
-export class AccountActivityItem {
-  constructor(values?: any) {
-    const accountType = (() => {
+export function accountActivityItem(values?: any): AccountActivityItem {
+  const transactionType = ((): TransactionType => {
+    const data = values['TRANSACTION'] as string;
+    if (!TransactionType[data] || typeof data !== 'string') {
+      console.error('Could not parse TransactionType', data);
+      return null;
+    }
+    return TransactionType[data];
+  })();
+
+  return {
+
+    accountType: (() => {
       const data = values['ACCT TYPE'];
       if (!AccountType[data]) {
         console.error('Could not parse AccountType', data);
         return null;
       }
       return AccountType[data];
-    })();
+    })(),
 
-    const transactionType = ((): TransactionType => {
-      const data = values['TRANSACTION'];
-      if (!TransactionType[data] || typeof data !== 'string') {
-        console.error('Could not parse TransactionType', data);
-        return null;
-      }
-      return TransactionType[data];
-    })();
+    credit: values['CREDIT'],
+    date: values['DATE'],
+    debit: values['DEBIT'],
 
-    const description = (() => {
+    description: (() => {
       if (!transactionType) {
         return null;
       }
@@ -105,18 +110,13 @@ export class AccountActivityItem {
         default:
           return data;
       }
-    })();
+    })(),
 
-    return {
-      accountType,
-      credit: values['CREDIT'],
-      date: values['DATE'],
-      debit: values['DEBIT'],
-      description,
-      price: values['PRICE'],
-      qty: values['QTY'],
-      symbol: values['SYMBOL'],
-      transactionType
-    };
+
+    price: values['PRICE'],
+    qty: values['QTY'],
+    symbol: values['SYMBOL'],
+    transactionType
+
   }
 }
