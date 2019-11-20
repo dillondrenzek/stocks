@@ -3,8 +3,8 @@ import _ from 'lodash';
 import pdfParse from 'pdf-parse';
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
 import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types/pdf';
-import { AccountActivityItem } from './types/robinhood/account-activity';
-import { PortfolioSummaryItem } from './types/robinhood/portfolio-summary';
+import { accountActivityItem, AccountActivityItem } from './types/robinhood/account-activity';
+import { portfolioSummaryItem, PortfolioSummaryItem } from './types/robinhood/portfolio-summary';
 import { parsePageType } from './validators';
 
 
@@ -36,7 +36,7 @@ export function readRobinhoodPdf(path: string) {
                   if (!data['TRANSACTION']) { return null; }  
 
                   return data 
-                    ? new AccountActivityItem(data)
+                    ? accountActivityItem(data)
                     : null;
                 })
               : [] 
@@ -54,7 +54,7 @@ export function readRobinhoodPdf(path: string) {
                   if (!data['PRICE']) { return null; }
 
                   return data 
-                    ? new PortfolioSummaryItem(data) 
+                    ? portfolioSummaryItem(data) 
                     : null;
                 })
               : []
