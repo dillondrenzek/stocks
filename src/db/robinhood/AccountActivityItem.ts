@@ -1,4 +1,4 @@
-import mongoose, { SchemaTypes, Schema } from 'mongoose';
+import mongoose, { SchemaTypes } from 'mongoose';
 
 export interface AccountActivityItem {
   // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 

@@ -1,4 +1,4 @@
-import mongoose, { SchemaTypes, Schema } from 'mongoose';
+import mongoose, { SchemaTypes } from 'mongoose';
 
 export interface PortfolioSummaryItem {
   // "EQUITIES/OPTIONS": "AdobeEstimated Yield: 0.00%", 
