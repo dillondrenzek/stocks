@@ -37,6 +37,8 @@ export interface AccountActivityItem {
 }
 
 export function accountActivityItem(values?: any): AccountActivityItem {
+
+  // first parse transaction type to help with parsing logic
   const transactionType = ((): TransactionType => {
     const data = values['TRANSACTION'] as string;
     if (!TransactionType[data] || typeof data !== 'string') {
@@ -46,6 +48,7 @@ export function accountActivityItem(values?: any): AccountActivityItem {
     return TransactionType[data];
   })();
 
+  // return instance
   return {
 
     accountType: (() => {

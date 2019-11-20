@@ -1,6 +1,6 @@
-import {PageType} from './types/pdf';
+import {PageType} from '../pdf/types';
 
-export function parsePageType(text: string): PageType {
+export function getPageType(text: string): PageType {
   if (text.indexOf(PageType.AccountActivity) !== -1) {
     return PageType.AccountActivity;
   } else if (text.indexOf(PageType.PortfolioSummary) !== -1) {
@@ -11,5 +11,3 @@ export function parsePageType(text: string): PageType {
     return null;
   }
 }
-
-// export function isPageType(text: string): 

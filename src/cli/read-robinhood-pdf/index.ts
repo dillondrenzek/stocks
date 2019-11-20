@@ -1,5 +1,5 @@
-import { readRobinhoodPdf } from './read-pdf';
-import { PageType } from './types/pdf';
+import { readRobinhoodPdf } from './pdf/read-pdf';
+import { PageType } from './pdf/types';
 
 if (!process.argv[2]) {
   throw new Error('No argv 2');

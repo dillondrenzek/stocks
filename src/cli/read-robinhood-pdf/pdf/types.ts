@@ -1,5 +1,5 @@
-import { PortfolioSummaryItem } from './robinhood/portfolio-summary';
-import { AccountActivityItem } from './robinhood/account-activity';
+import { PortfolioSummaryItem } from '../models/portfolio-summary';
+import { AccountActivityItem } from '../models/account-activity';
 
 export enum PageType {
   AccountActivity = 'ACCOUNT ACTIVITY',

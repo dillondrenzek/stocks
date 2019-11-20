@@ -2,10 +2,10 @@ import fs from 'fs';
 import _ from 'lodash';
 import pdfParse from 'pdf-parse';
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
-import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types/pdf';
-import { accountActivityItem, AccountActivityItem } from './types/robinhood/account-activity';
-import { portfolioSummaryItem, PortfolioSummaryItem } from './types/robinhood/portfolio-summary';
-import { parsePageType } from './validators';
+import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types';
+import { accountActivityItem, AccountActivityItem } from '../models/account-activity';
+import { portfolioSummaryItem, PortfolioSummaryItem } from '../models/portfolio-summary';
+import { getPageType } from '../models/validators';
 
 
 
@@ -21,7 +21,7 @@ export function readRobinhoodPdf(path: string) {
         return null;
       }
       const parsedJson = JSON.parse(page);
-      const pageType = parsePageType(parsedJson['pageType'] || null);
+      const pageType = getPageType(parsedJson['pageType'] || null);
 
       switch (pageType) {
 
