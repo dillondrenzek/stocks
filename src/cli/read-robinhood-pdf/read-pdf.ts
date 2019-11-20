@@ -1,39 +1,13 @@
 import fs from 'fs';
 import _ from 'lodash';
-import pdfParse, { } from 'pdf-parse';
+import pdfParse from 'pdf-parse';
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
-import { TextContent, TextItem, PageType, Column } from './types';
-import { AccountActivityItem, TransactionType, AccountType } from './types/robinhood/account-activity';
+import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types/pdf';
+import { AccountActivityItem } from './types/robinhood/account-activity';
 import { PortfolioSummaryItem } from './types/robinhood/portfolio-summary';
 import { parsePageType } from './validators';
 
-interface ParsedPDF {
-  statementInfo: {
-    pageNumber: number;
-    totalPages: number;
-    startDate: string; // MM/DD/YYYY
-    endDate: string; // MM/DD/YYYY
-    accountHolder: string;
-    accountNumber: string;
-    accountAddress: string;
-  };
-  pageType: PageType;
-  pageData?: any;
-}
 
-interface ParsedPDFAccountActivity extends ParsedPDF {
-  pageType: PageType.AccountActivity;
-  pageData: AccountActivityItem[];
-}
-
-interface ParsedPDFPortfolioSummary extends ParsedPDF {
-  pageType: PageType.PortfolioSummary;
-  pageData: PortfolioSummaryItem[];
-}
-
-type ParseablePDFPage = (ParsedPDFAccountActivity | ParsedPDFPortfolioSummary) | null;
-
-type ParseablePDFPages = ParseablePDFPage[];
 
 export function readRobinhoodPdf(path: string) {
 
@@ -343,7 +317,7 @@ export function readRobinhoodPdf(path: string) {
           reject('No text came from pdfParse');
         }
 
-        const pdfJson = parsePDFJson(text);
+        const pdfJson = parsePDFJson(text).filter((page) => page);
         // console.log('parsed pageJson:', parsePDFJson(text));
 
         resolve(pdfJson);
