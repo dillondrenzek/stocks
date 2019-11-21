@@ -1,8 +1,8 @@
 import { loadEnv } from './load-env';
 loadEnv();
 
-import { readRobinhoodPdf } from './pdf/read-pdf';
-import { saveRobinhoodPdf } from './db';
+import { readRobinhoodPdf } from './pdf';
+import { saveRobinhoodPdf, dropRobinhoodPdfDb } from './db';
 
 
 
@@ -11,25 +11,39 @@ import { saveRobinhoodPdf } from './db';
 if (!process.argv[2]) {
   throw new Error('No argv 2');
 }
-const filename = process.argv[2];
 
-// read robinhood pdf from file system
-console.info('---Begin reading Robinhood PDF', filename, '...');
-readRobinhoodPdf(filename)
-  .then((data) => {
-    // console.log('page data', data);
-    console.info('...Successfully read Robinhood PDF---');
+console.log('read-robinhood-pdf:', process.argv);
 
-    console.info('---Begin saving Robinhood PDF...\n');
-    saveRobinhoodPdf(data)
-      .then(() => {
-        // data saved
-        console.info('...Successfully saved Robinhood PDF---');
-        process.exit();
-      })
-      .catch((err) => {
-        console.error('FAILED to save Robinhood PDF');
-        console.error('Error:', err);
-      });
+if (process.argv[2] === 'drop-robinhood-db') {
+  dropRobinhoodPdfDb()
+    .then(() => {
+      console.info('Successfully dropped Robinhood database');
+      process.exit();
+    });
+} else {
 
-  });
+  const filename = process.argv[2];
+  
+  // read robinhood pdf from file system
+  console.info('---Begin reading Robinhood PDF', filename, '...');
+  readRobinhoodPdf(filename)
+    .then((data) => {
+      // console.log('page data', data);
+      console.info('...Successfully read Robinhood PDF---');
+  
+      console.info('---Begin saving Robinhood PDF...\n');
+      saveRobinhoodPdf(data)
+        .then(() => {
+          // data saved
+          console.info('...Successfully saved Robinhood PDF---');
+          process.exit();
+        })
+        .catch((err) => {
+          console.error('FAILED to save Robinhood PDF');
+          console.error('Error:', err);
+        });
+  
+    });
+}
+
+
