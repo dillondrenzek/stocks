@@ -95,8 +95,8 @@ export function accountActivityItem(values?: any): AccountActivityItem {
           const str = data.replace('Cash Div: ', '');
           const rD = str.match(/R\/D\s[0-9]{4}\-[0-9]{2}\-[0-9]{2}/)[0];
           const pD = str.match(/P\/D\s[0-9]{4}\-[0-9]{2}\-[0-9]{2}/)[0];
-          const shareCount = parseInt(str.match(/[0-9]{1,}\sshares/)[0].replace('shares', ''));
-          const rate = parseFloat(str.match(/at\ [0-9]{1,}\.[0-9]{1,}/)[0].replace('at', '').trim());
+          const shareCount = str.match(/[0-9]{1,}\sshares/)[0].replace('shares', '');
+          const rate = str.match(/at\ [0-9]{1,}\.[0-9]{1,}/)[0].replace('at', '').trim();
           return {
             rD,
             pD,
@@ -111,7 +111,7 @@ export function accountActivityItem(values?: any): AccountActivityItem {
           const str = data.replace(values['SYMBOL'], '').trim();
           const expDate = str.match(/\d+\/\d+\/\d+/)[0];
           const callPut = str.match(/(Call|Put)/)[0];
-          const strikePrice = parseFloat(str.match(/\$\d+\.\d+/)[0].replace('$', ''));
+          const strikePrice = str.match(/\$\d+\.\d+/)[0];
           return {
             expDate,
             callPut,

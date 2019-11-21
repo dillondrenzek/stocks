@@ -2,32 +2,32 @@ import mongoose from 'mongoose';
 
 export interface PortfolioSummaryItem {
   accountType: string;
-  annualIncome: number; // estimated
-  changePercent: number;
+  annualIncome: string; // estimated
+  changePercent: string;
   equitiesOptions: string;
-  mktValue: number;
-  mktValueLastPeriod: number;
-  portfolioPercent: number;
-  price: number;
-  qty: number;
+  mktValue: string;
+  mktValueLastPeriod: string;
+  portfolioPercent: string;
+  price: string;
+  qty: string;
   symbol: string;
-  yieldPercent: number; 
+  yieldPercent: string; 
 }
 
 export type PortfolioSummaryItemDocument = PortfolioSummaryItem & mongoose.Document;
 
 const portfolioSummaryItemSchema = new mongoose.Schema<PortfolioSummaryItemDocument>({
   accountType: mongoose.SchemaTypes.String,
-  annualIncome: mongoose.SchemaTypes.Number,
-  changePercent: mongoose.SchemaTypes.Number,
+  annualIncome: mongoose.SchemaTypes.String,
+  changePercent: mongoose.SchemaTypes.String,
   equitiesOptions: mongoose.SchemaTypes.String,
-  mktValue: mongoose.SchemaTypes.Number,
-  mktValueLastPeriod: mongoose.SchemaTypes.Number,
-  portfolioPercent: mongoose.SchemaTypes.Number,
-  price: mongoose.SchemaTypes.Number,
-  qty: mongoose.SchemaTypes.Number,
+  mktValue: mongoose.SchemaTypes.String,
+  mktValueLastPeriod: mongoose.SchemaTypes.String,
+  portfolioPercent: mongoose.SchemaTypes.String,
+  price: mongoose.SchemaTypes.String,
+  qty: mongoose.SchemaTypes.String,
   symbol: mongoose.SchemaTypes.String,
-  yieldPercent: mongoose.SchemaTypes.Number,
+  yieldPercent: mongoose.SchemaTypes.String,
 });
 
 export const PortfolioSummaryItem = mongoose.model<PortfolioSummaryItemDocument>('PortfolioSummaryItem', portfolioSummaryItemSchema);
