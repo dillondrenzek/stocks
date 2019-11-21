@@ -1,24 +1,35 @@
+import { loadEnv } from './load-env';
+loadEnv();
+
 import { readRobinhoodPdf } from './pdf/read-pdf';
-import { PageType } from './pdf/types';
+import { saveRobinhoodPdf } from './db';
+
+
+
+// Parse Process Args
 
 if (!process.argv[2]) {
   throw new Error('No argv 2');
 }
-
 const filename = process.argv[2];
 
 // read robinhood pdf from file system
+console.info('---Begin reading Robinhood PDF', filename, '...');
 readRobinhoodPdf(filename)
   .then((data) => {
     // console.log('page data', data);
-    console.info('---Successfully parsed Robinhood PDF---');
+    console.info('...Successfully read Robinhood PDF---');
 
-    const accountActivityPages = data.filter((page) => page.pageType === PageType.AccountActivity);
-    const portfolioSummaryPages = data.filter((page) => page.pageType === PageType.PortfolioSummary);
-
-    // transform Account Activity pages
-
-    console.log('account activity pages\n', accountActivityPages);
-
+    console.info('---Begin saving Robinhood PDF...\n');
+    saveRobinhoodPdf(data)
+      .then(() => {
+        // data saved
+        console.info('...Successfully saved Robinhood PDF---');
+        process.exit();
+      })
+      .catch((err) => {
+        console.error('FAILED to save Robinhood PDF');
+        console.error('Error:', err);
+      });
 
   });

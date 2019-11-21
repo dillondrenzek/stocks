@@ -1,8 +1,12 @@
 
 
 export enum AccountType {
-  None,
-  Margin
+  None = 'None',
+  Margin = 'Margin'
+}
+
+export function isAccountType(key: string): key is AccountType {
+  return Object.keys(AccountType).includes(key);
 }
 
 export enum TransactionType {
@@ -16,15 +20,19 @@ export enum TransactionType {
   ACH = 'ACH', // 
 }
 
+export function isTransactionType(key: string): key is TransactionType {
+  return Object.keys(TransactionType).includes(key);
+}
+
 export interface AccountActivityItem {
   // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 
   description: string | Object;
   // "SYMBOL": "SPY", 
   symbol: string;
   // "ACCT TYPE": "Margin", 
-  accountType: string;
+  accountType: AccountType;
   // "TRANSACTION": "BTC", 
-  transactionType: string;
+  transactionType: TransactionType;
   // "DATE": "10/01/2019", 
   date: string; // MM/DD/YYYY
   // "QTY": "1",
@@ -41,7 +49,7 @@ export function accountActivityItem(values?: any): AccountActivityItem {
   // first parse transaction type to help with parsing logic
   const transactionType = ((): TransactionType => {
     const data = values['TRANSACTION'] as string;
-    if (!TransactionType[data] || typeof data !== 'string') {
+    if (typeof data !== 'string' || !isTransactionType(data)) {
       console.error('Could not parse TransactionType', data);
       return null;
     }
@@ -52,8 +60,8 @@ export function accountActivityItem(values?: any): AccountActivityItem {
   return {
 
     accountType: (() => {
-      const data = values['ACCT TYPE'];
-      if (!AccountType[data]) {
+      const data = values['ACCT TYPE'] as string;
+      if (typeof data !== 'string' || !isAccountType(data)) {
         console.error('Could not parse AccountType', data);
         return null;
       }

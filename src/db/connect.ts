@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
 
-export function connectDb(connectionString: string) {
-  return mongoose.connect(connectionString, { useNewUrlParser: true });
+export async function connectDb(connectionString: string) {
+
+  let connection;
+
+  try {
+    connection = await mongoose.connect(connectionString, { useNewUrlParser: true });
+  } catch (err) {
+    console.error('Error connecting to db:', err);
+  }
+
+  return connection;
 }

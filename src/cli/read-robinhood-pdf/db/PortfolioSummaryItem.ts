@@ -1,4 +1,4 @@
-import mongoose, { SchemaTypes } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface PortfolioSummaryItem {
   accountType: string;
@@ -17,17 +17,17 @@ export interface PortfolioSummaryItem {
 export type PortfolioSummaryItemDocument = PortfolioSummaryItem & mongoose.Document;
 
 const portfolioSummaryItemSchema = new mongoose.Schema<PortfolioSummaryItemDocument>({
-  accountType: SchemaTypes.String,
-  annualIncome: SchemaTypes.Number,
-  changePercent: SchemaTypes.Number,
-  equitiesOptions: SchemaTypes.String,
-  mktValue: SchemaTypes.Number,
-  mktValueLastPeriod: SchemaTypes.Number,
-  portfolioPercent: SchemaTypes.Number,
-  price: SchemaTypes.Number,
-  qty: SchemaTypes.Number,
-  symbol: SchemaTypes.String,
-  yieldPercent: SchemaTypes.Number,
+  accountType: mongoose.SchemaTypes.String,
+  annualIncome: mongoose.SchemaTypes.Number,
+  changePercent: mongoose.SchemaTypes.Number,
+  equitiesOptions: mongoose.SchemaTypes.String,
+  mktValue: mongoose.SchemaTypes.Number,
+  mktValueLastPeriod: mongoose.SchemaTypes.Number,
+  portfolioPercent: mongoose.SchemaTypes.Number,
+  price: mongoose.SchemaTypes.Number,
+  qty: mongoose.SchemaTypes.Number,
+  symbol: mongoose.SchemaTypes.String,
+  yieldPercent: mongoose.SchemaTypes.Number,
 });
 
 export const PortfolioSummaryItem = mongoose.model<PortfolioSummaryItemDocument>('PortfolioSummaryItem', portfolioSummaryItemSchema);

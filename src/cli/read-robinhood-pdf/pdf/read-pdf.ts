@@ -1,6 +1,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import pdfParse from 'pdf-parse';
+
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
 import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types';
 import { accountActivityItem, AccountActivityItem } from '../models/account-activity';
@@ -9,7 +10,7 @@ import { getPageType } from '../models/validators';
 
 
 
-export function readRobinhoodPdf(path: string) {
+export function readRobinhoodPdf(path: string): Promise<ParseablePDFPages> {
 
   const dataBuffer = fs.readFileSync(path);
 
@@ -35,9 +36,7 @@ export function readRobinhoodPdf(path: string) {
                   // TODO: parse the rows that these filter out
                   if (!data['TRANSACTION']) { return null; }  
 
-                  return data 
-                    ? accountActivityItem(data)
-                    : null;
+                  return accountActivityItem(data);
                 })
               : [] 
           };

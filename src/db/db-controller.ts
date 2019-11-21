@@ -3,10 +3,11 @@ import { connectDb } from './connect';
 
 class DBController {
 
-  constructor(private connectionUrl: string) {
-    connectDb(connectionUrl);
+  async connect(connectionUrl: string = process.env.MONGODB_URL) {
+    return await connectDb(connectionUrl)
+      .catch((err) => console.error('Failed to connect to DB:', err));
   }
 
 }
 
-export const dbController = new DBController(process.env.MONGODB_URL);
+export const dbController = new DBController();

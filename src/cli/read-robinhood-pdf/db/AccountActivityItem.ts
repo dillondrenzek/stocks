@@ -1,4 +1,4 @@
-import mongoose, { SchemaTypes } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface AccountActivityItem {
   accountType: string;
@@ -15,15 +15,15 @@ export interface AccountActivityItem {
 export type AccountActivityItemDocument = AccountActivityItem & mongoose.Document;
 
 const accountActivityItemSchema = new mongoose.Schema<AccountActivityItemDocument>({
-  accountType: SchemaTypes.String,
-  credit: SchemaTypes.Number,
-  date: SchemaTypes.String,
-  debit: SchemaTypes.Number,
-  description: SchemaTypes.Mixed,
-  price: SchemaTypes.Number,
-  qty: SchemaTypes.Number,
-  symbol: SchemaTypes.String,
-  transactionType: SchemaTypes.String,
+  accountType: mongoose.SchemaTypes.String,
+  credit: mongoose.SchemaTypes.String,
+  date: mongoose.SchemaTypes.String,
+  debit: mongoose.SchemaTypes.String,
+  description: mongoose.SchemaTypes.Mixed,
+  price: mongoose.SchemaTypes.String,
+  qty: mongoose.SchemaTypes.String,
+  symbol: mongoose.SchemaTypes.String,
+  transactionType: mongoose.SchemaTypes.String,
 });
 
 export const AccountActivityItem = mongoose.model<AccountActivityItemDocument>('AccountActivityItem', accountActivityItemSchema);
