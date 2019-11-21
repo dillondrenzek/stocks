@@ -1,7 +1,5 @@
-import { connectDb } from '../../../db';
+import { connectDb, AccountActivityItem, PortfolioSummaryItem } from '../../../db';
 import { ParseablePDFPages, PageType } from '../pdf';
-import { AccountActivityItem } from './AccountActivityItem';
-import { PortfolioSummaryItem } from './PortfolioSummaryItem';
 
 // TODO: only save item if it doesn't already exist
 async function saveAccountActivityItems(items: AccountActivityItem[]) {

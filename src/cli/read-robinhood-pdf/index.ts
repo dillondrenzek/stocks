@@ -12,7 +12,7 @@ if (!process.argv[2]) {
   throw new Error('No argv 2');
 }
 
-console.log('read-robinhood-pdf:', process.argv);
+
 
 if (process.argv[2] === 'drop-robinhood-db') {
 
