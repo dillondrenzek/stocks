@@ -12,6 +12,13 @@ if (!process.argv[2]) {
   throw new Error('No argv 2');
 }
 
+switch (process.argv[2]) {
+  case 'drop':
+    break;
+  case 'read':
+    break;
+}
+
 
 
 if (process.argv[2] === 'drop-robinhood-db') {
