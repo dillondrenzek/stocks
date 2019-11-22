@@ -20,10 +20,6 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run frontend:dev\"",
     "frontend:dev": "cd frontend; npm run start",
     "frontend": "npm run frontend:dev",
-    "preread-robinhood-pdf": "npm run build:cli",
-    "read-robinhood-pdf": "node-dev ./dist/src/cli/read-robinhood-pdf",
-    "drop-robinhood-db": "npm run read-robinhood-pdf drop-robinhood-db",
-    "read-robinhood-pdf:dev": "npm run read-robinhood-pdf -- ./data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
     "server:dev": "node-dev ./bin/server",
     "server": "npm run server:dev",
     "prefrontend:dev": "cd frontend; npm install",
@@ -40,7 +36,13 @@
     "test:db": "mocha --exit --config .mocharc-db.json",
     "test:frontend": "cd frontend; npm test",
     "start": "node ./bin/www",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+
+    "preread-robinhood-pdf": "npm run build:cli",
+    "robinhood-pdf": "node-dev ./cli/robinhood-pdf/dist/index.js",
+    "drop-robinhood-db": "npm run robinhood-pdf drop-robinhood-db",
+    "robinhood-pdf:dev": "tsc --watch --project ./cli/robinhood-pdf/tsconfig.json",
+    "robinhood-pdf:test": "npm run robinhood-pdf -- ./data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf"
   },
   "watch": {
     "server:dev": {

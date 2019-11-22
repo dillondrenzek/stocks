@@ -3,21 +3,21 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist/",
-    "baseUrl": ".",
+    "outDir": "dist",
+    "baseUrl": "./cli/robinhood-pdf",
     "paths": {
       "*": [
-        "node_modules/*"
+        "../../node_modules/*"
       ]
     }
   },
   "include": [
-    "src/**/*", "cli"
+    "./**/*.ts"
   ],
   "exclude": [
-    "./src/**/*.spec.*"
+    "./**/*.spec.*"
   ]
 }
