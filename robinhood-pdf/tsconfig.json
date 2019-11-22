@@ -15,7 +15,7 @@
     }
   },
   "include": [
-    "./**/*.ts"
+    "./**/*.ts", "../db/robinhood-pdf/PortfolioSummaryItem.ts", "../db/robinhood/AccountActivityItem.ts"
   ],
   "exclude": [
     "./**/*.spec.*"

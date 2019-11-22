@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import * as Types from '../../lib/types';
-import { CallOrPut, OpenOrClose } from '../../lib/types';
+import * as Types from '../../src/lib/types';
+import { CallOrPut, OpenOrClose } from '../../src/lib/types';
 import { ITransaction } from './Transaction';
 
 export interface IOptionTransaction extends Types.OptionTransaction {}

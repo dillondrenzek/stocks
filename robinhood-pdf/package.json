@@ -9,7 +9,7 @@
     "build": "tsc --project ./tsconfig.json",
     "start": "node ./dist/robinhood-pdf/index.js",
     "dev": "tsc --watch --project ./tsconfig.json",
-    "test": "node ./dist/robinhood-pdf/index.js ../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
+    "test": "node ./dist/robinhood-pdf/index.js print ../../../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
     "drop-db": "npm run robinhood-pdf drop-robinhood-db"
   },
   "keywords": [

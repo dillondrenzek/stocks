@@ -1,4 +1,4 @@
-import * as DB from '../../db';
+import * as DB from '../../../db';
 import * as Types from '../../lib/types';
 import { TransactionController } from './TransactionController';
 import { StockTransactionController } from './StockTransactionController';

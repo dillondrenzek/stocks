@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import path from 'path';
 import api from './api';
-import { connectDb } from './db';
+import { connectDb } from '../db';
 
 // import portfolioRoutes from '../server/routes/portfolio';
 // import holdingsRoutes = require('./routes/holdings');

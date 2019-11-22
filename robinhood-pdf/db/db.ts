@@ -1,6 +1,6 @@
-import { connectDb } from '../../src/db';
-import { AccountActivityItem } from './AccountActivityItem';
-import { PortfolioSummaryItem } from './PortfolioSummaryItem';
+import { connectDb } from '../../db';
+import { AccountActivityItem } from '../../db/robinhood-pdf/AccountActivityItem';
+import { PortfolioSummaryItem } from '../../db/robinhood-pdf/PortfolioSummaryItem';
 import { ParseablePDFPages, PageType } from '../pdf';
 
 // TODO: only save item if it doesn't already exist

@@ -1,3 +1,3 @@
 export * from './db';
-export * from './AccountActivityItem';
-export * from './PortfolioSummaryItem';
+export * from '../../db/robinhood-pdf/AccountActivityItem';
+export * from '../../db/robinhood-pdf/PortfolioSummaryItem';

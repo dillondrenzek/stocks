@@ -15,7 +15,7 @@
     }
   },
   "include": [
-    "src/**/*", "cli"
+    "src/**/*", "cli", "db"
   ],
   "exclude": [
     "./src/**/*.spec.*"
