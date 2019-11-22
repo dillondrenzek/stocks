@@ -1,4 +1,6 @@
-import { connectDb, AccountActivityItem, PortfolioSummaryItem } from '../../src/db';
+import { connectDb } from '../../src/db';
+import { AccountActivityItem } from './AccountActivityItem';
+import { PortfolioSummaryItem } from './PortfolioSummaryItem';
 import { ParseablePDFPages, PageType } from '../pdf';
 
 // TODO: only save item if it doesn't already exist

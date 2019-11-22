@@ -11,13 +11,3 @@ export {
   IStockTransaction, 
   IStockTransactionDocument 
 } from './transaction';
-
-export {
-  AccountActivityItem,
-  AccountActivityItemDocument
-} from './robinhood/AccountActivityItem';
-
-export {
-  PortfolioSummaryItem,
-  PortfolioSummaryItemDocument
-} from './robinhood/PortfolioSummaryItem';
