@@ -1,9 +1,10 @@
-import { loadEnv } from './load-env';
-loadEnv();
+import { loadEnv } from '../lib/load-env';
+loadEnv('../../.env');
 
 import { resolve } from 'path';
 import { readRobinhoodPdf } from './pdf';
 import { saveRobinhoodPdf, dropRobinhoodPdfDb } from './db';
+import { startServer } from './api';
 
 
 
@@ -48,6 +49,11 @@ switch (process.argv[2]) {
           });
     
       });
+    break;
+  }
+
+  case 'serve': {
+    
     break;
   }
 

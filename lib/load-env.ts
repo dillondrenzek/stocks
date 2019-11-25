@@ -1,11 +1,11 @@
 import { resolve } from 'path';
 
-export function loadEnv() {
+export function loadEnv(path: string) {
   // do not load an .env file
   if (process.env.NODE_ENV !== 'production') {
-    const path = resolve(__dirname, '../../.env');
-    require('dotenv').config({ path });
-    console.log('Loaded .env file!\n', path);
+    const resolved = resolve(__dirname, path);
+    require('dotenv').config({ path: resolved });
+    console.log('Loaded .env file!\n', resolved);
   }
 
   if (!process.env.MONGODB_URL) {

@@ -6,7 +6,7 @@
     "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "dist/",
     "baseUrl": ".",
     "paths": {
       "*": [
@@ -15,9 +15,9 @@
     }
   },
   "include": [
-    "./**/*.ts", "../db/robinhood-pdf/PortfolioSummaryItem.ts", "../db/robinhood/AccountActivityItem.ts"
+    "**/*.ts"
   ],
   "exclude": [
-    "./**/*.spec.*"
+    "**/*.spec.*"
   ]
 }

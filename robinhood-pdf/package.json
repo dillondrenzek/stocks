@@ -7,9 +7,13 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "build": "tsc --project ./tsconfig.json",
+    "build:copy-assets": "node ./dist/robinhood-pdf/lib/copy-static-assets",
     "start": "node ./dist/robinhood-pdf/index.js",
     "dev": "tsc --watch --project ./tsconfig.json",
+    "preserve": "npm run build && npm run build:copy-assets",
+    "serve": "node ./dist/robinhood-pdf/api/index.js",
     "test": "node ./dist/robinhood-pdf/index.js print ../../../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
+    "test:save": "node ./dist/robinhood-pdf/index.js save ../../../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
     "drop-db": "npm run robinhood-pdf drop-robinhood-db"
   },
   "keywords": [
@@ -19,6 +23,7 @@
   "author": "Dillon Drenzek",
   "license": "ISC",
   "devDependencies": {
+    "@types/shelljs": "^0.8.6",
     "nodemon": "2.0.0",
     "typescript": "3.7.2"
   },
