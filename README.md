@@ -61,16 +61,15 @@ stores data that comes from various sources
   - **`OptionTransaction`** (Implemented)
   - **`CryptoTransaction`** (Future)
 - `robinhood-pdf`
-  - **`AccountActivity`**
+  - **`AccountActivityItem`**
     - `create(x: AccountAcctivity | AccountActivity[])` - create one or many
     - `update(x: AccountActivity | AccountActivity[])` - update one or many
     - `findById(id: string)` - read one (get)
     - `findByIds(ids: string[]): AccountActivity[]` - read many (list)
     - `deleteByIds(ids: string | string[])` - delete
-  - **`PortfolioSummary`**
+  - **`PortfolioSummaryItem`**
     - `create(x: AccountAcctivity | AccountActivity[])` - create one or many
     - `update(x: AccountActivity | AccountActivity[])` - update one or many
     - `findById(id: string)` - read one (get)
     - `findByIds(ids: string[]): AccountActivity[]` - read many (list)
     - `deleteByIds(ids: string | string[])` - delete
-
