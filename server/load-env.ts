@@ -15,7 +15,7 @@ export function loadEnv(path: string) {
       throw new Error('Could not process .env file');
     }
 
-    console.log('Loaded .env file!\n', resolved);
+    console.log('Loaded .env');
   }
 
   // if (!process.env.MONGODB_URL) {
