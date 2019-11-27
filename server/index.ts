@@ -13,7 +13,7 @@ server.use(accessControlAllowOrigin('*'));
 
 // Routes
 server.use('/', (req, res) => {
-  res.send('Index route');
+  res.send('Index route 4');
 });
 
 

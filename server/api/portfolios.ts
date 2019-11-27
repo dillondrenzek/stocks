@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express';
-import { PortfolioController } from '../app/controllers/PortfolioController';
+import { PortfolioController } from '../../src/app/controllers/PortfolioController';
 
 // Export Router
 const router = express();

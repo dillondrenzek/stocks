@@ -10,17 +10,18 @@
     "server:build": "tsc --project server/tsconfig.json",
     "server:build:watch": "tsc --watch --project server/tsconfig.json",
     "preserver:start": "npm run server:build",
-    "server:start": "node-dev ./server/dist",
-    "server:start:watch": "npm run watch server:start",
+    "server:start": "node-dev ./server/dist/index.js",
+    "server:start:watch": "nodemon --config ./server/nodemon.json",
     "server:dev": "concurrently \"npm run server:build:watch\" \"npm run server:start:watch\"",
     "watch": "npm-watch"
   },
   "watch": {
     "server:dev": {
       "patterns": [
-        "src"
+        "src",
+        "server/dist"
       ],
-      "extensions": "ts,pug"
+      "extensions": "js"
     }
   },
   "author": "",

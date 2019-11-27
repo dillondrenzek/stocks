@@ -1,15 +1,18 @@
 import express from 'express';
 import { Logger, accessControlAllowOrigin } from '../util';
+import portfoliosApi from './portfolios';
 
-const api = express();
+const router = express();
 
 // Middleware
-api.use(Logger.logRequests);
-api.use(accessControlAllowOrigin('*'));
+router.use(Logger.logRequests);
+router.use(accessControlAllowOrigin('*'));
 
-// Routes
-api.use('/', () => {
+// Router
+router.use('/portfolios', portfoliosApi);
+
+router.use('/', () => {
   console.log('Hit / route');
 });
 
-export default api;
+export default router;
