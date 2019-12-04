@@ -30,57 +30,61 @@ A simple, personal stock trading manager
 
 - http server
 - interfaces with `app` to persist and make calculations
-- `API`
-  - `RobinhoodApi`
-    - `/account-activity GET` 
-      - get all AccountActivity items
-      - **Responses**:
-      - **Errors**:
-    - `/account-activity POST` 
-      - create one or many
-      - **Validations**:
-      - **Responses**:
-      - **Errors**:
-    - `/account-activity PUT`
-      - update an existing AccountActivity (one or many)
-      - **Validations**:
-        - make sure `_id` is defined
-      - **Responses**:
-      - **Errors**:
-    - `/account-activity/:id GET`
-      - read one item from `db`
-      - **Responses**:
-      - **Errors**:
-    - `/account-activity?ids=id1,id2,idn DELETE`
-      - delete one or many ids from `db`
-      - **Validations**:
-      - **Responses**:
-      - **Errors**:
-    - `/portfolio-summary POST`
-      - create one or many
-      - **Validations**:
-      - **Responses**:
-      - **Errors**:
-    - `/portfolio-summary PUT`
-      - update one or many
-      - **Validations**:
-      - **Responses**:
-      - **Errors**:
-    - `/portfolio-summary/:id GET`
-      - read one (get)
-      - **Responses**:
-      - **Errors**:
-    - `/portfolio-summary GET`
-      - read many (list)
-      - **Responses**:
-      - **Errors**:
-    - `/portfolio-summary?ids=id1,id2,idn DELETE`
-      - delete
-      - **Validations**:
-      - **Responses**:
-      - **Errors**:
-  - `TransactionsApi`
-  - `PortfoliosApi`
+- `TransactionsApi`
+- `PortfoliosApi`
+- `RobinhoodApi`
+  - `AccountActivityApi`
+  - `PortfolioSummaryApi`
+
+##### `RobinhoodApi`
+- `/account-activity GET` 
+  - get all AccountActivity items
+  - **Responses**:
+  - **Errors**:
+- `/account-activity POST` 
+  - create one or many
+  - **Validations**:
+  - **Responses**:
+  - **Errors**:
+- `/account-activity PUT`
+  - update an existing AccountActivity (one or many)
+  - **Validations**:
+    - make sure `_id` is defined
+  - **Responses**:
+  - **Errors**:
+- `/account-activity/:id GET`
+  - read one item from `db`
+  - **Responses**:
+  - **Errors**:
+- `/account-activity?ids=id1,id2,idn DELETE`
+  - delete one or many ids from `db`
+  - **Validations**:
+  - **Responses**:
+  - **Errors**:
+- `/portfolio-summary POST`
+  - create one or many
+  - **Validations**:
+  - **Responses**:
+  - **Errors**:
+- `/portfolio-summary PUT`
+  - update one or many
+  - **Validations**:
+  - **Responses**:
+  - **Errors**:
+- `/portfolio-summary/:id GET`
+  - read one (get)
+  - **Responses**:
+  - **Errors**:
+- `/portfolio-summary GET`
+  - read many (list)
+  - **Responses**:
+  - **Errors**:
+- `/portfolio-summary?ids=id1,id2,idn DELETE`
+  - delete
+  - **Validations**:
+  - **Responses**:
+  - **Errors**:
+
 
 ---
 
