@@ -4,17 +4,17 @@ import express, {Request, Response} from 'express';
 const router = express();
 
 // Routes
-router.get('/', getAccountActivityItems);
+router.get('/', getPortfolioSummaryItems);
 
 
 // API Methods
 
-// Get Account Activity Items
-export async function getAccountActivityItems(req: Request, res: Response) {
+// Get PortfolioSummaryItems
+export async function getPortfolioSummaryItems(req: Request, res: Response) {
   try {
-    res.send('Success GET /');
+    res.send('Success GET / Portfolio Summary items');
   } catch (err) {
-    res.status(500).send('Error getting AccountActivityItems: ' + err);
+    res.status(500).send('Error getting PortfolioSummaryItems: ' + err);
   }
 }
 

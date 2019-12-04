@@ -1,5 +1,5 @@
-import * as DB from '../../../db';
-import * as Types from '../../lib/types';
+import * as DB from '../../db';
+import * as Types from '../../src/lib/types';
 
 export class StockTransactionController {
 
