@@ -4,9 +4,9 @@ import pdfParse from 'pdf-parse';
 
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
 import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types';
-import { accountActivityItem, AccountActivityItem } from '../models/account-activity';
-import { portfolioSummaryItem, PortfolioSummaryItem } from '../models/portfolio-summary';
-import { getPageType } from '../models/validators';
+import { accountActivityItem, AccountActivityItem } from './models/account-activity';
+import { portfolioSummaryItem, PortfolioSummaryItem } from './models/portfolio-summary';
+import { getPageType } from './models/validators';
 
 
 

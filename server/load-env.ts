@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-export function loadEnv(path: string) {
+function loadEnv(path: string) {
   // do not load an .env file
   if (process.env.NODE_ENV !== 'production') {
     const resolved = resolve(__dirname, path);
@@ -18,9 +18,17 @@ export function loadEnv(path: string) {
     console.log('Loaded .env');
   }
 
-  // if (!process.env.MONGODB_URL) {
-  //   throw new Error('Did not provide a MongoDB url');
-  // }
-
-  process.env.PORT = process.env.PORT || '7000';
+  if (!process.env.MONGODB_URL) {
+    throw new Error('Did not provide a MongoDB url');
+  }
+  
+  return {
+    ...process.env,
+    PORT: process.env.PORT || '7000',
+    MONGODB_URL: process.env.MONGODB_URL || null
+  };
 }
+
+const Env = loadEnv('../.env');
+
+export default Env;
