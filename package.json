@@ -7,6 +7,8 @@
     "stocks": "bin/stocks"
   },
   "scripts": {
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run server:dev\"",
+
     "server:clean": "rm -rf ./server/dist",
     "server:build": "tsc --project server/tsconfig.json",
     "server:build:watch": "tsc --watch --project server/tsconfig.json",
