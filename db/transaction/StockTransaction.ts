@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import * as Types from '../../src/lib/types';
+import * as Types from '../../lib/types';
 import { ITransaction, ITransactionDocument } from './Transaction';
 
 export interface IStockTransaction extends Types.StockTransaction {}
