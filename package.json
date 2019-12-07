@@ -8,7 +8,6 @@
   },
   "scripts": {
     "dev": "concurrently \"npm run frontend:dev\" \"npm run server:dev\"",
-
     "server:clean": "rm -rf ./dist",
     "server:build": "tsc --project ./tsconfig.json",
     "server:build:watch": "tsc --watch --project ./tsconfig.json",
@@ -16,14 +15,13 @@
     "server:start": "node-dev ./dist/server/index.js",
     "server:start:watch": "nodemon --config ./nodemon.json",
     "server:dev": "npm run server:start:watch",
-
     "frontend:dev": "cd frontend; npm run start"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/request": "2.48.2",
-    "body-parser": "^1.18.3",
+    "body-parser": "1.19.0",
     "bootstrap": "^4.1.3",
     "clsx": "1.0.4",
     "cookie-parser": "~1.4.3",
