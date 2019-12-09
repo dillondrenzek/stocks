@@ -7,7 +7,7 @@ import StockTransactionsTable from '../../transactions/stock-transactions-table/
 import OptionTransactionsTable from '../../transactions/option-transactions-table/option-transactions-table';
 import StockTransactionForm from '../../transactions/stock-transaction-form/stock-transaction-form';
 import OptionTransactionForm from '../../transactions/option-transaction-form/option-transaction-form';
-import { StockOrOption } from '../../../../../src/lib/types';
+import { StockOrOption } from '../../../../../lib/types';
 
 export interface PortfolioProps {
   portfolio: PortfolioModel;
