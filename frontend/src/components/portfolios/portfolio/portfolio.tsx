@@ -53,8 +53,13 @@ export function Portfolio(props: PortfolioProps) {
             <Row>
               <Col>
                 <Typography variant='h4'>
-                  {`${portfolio.name} - Portfolio Holdings`}
+                  {`${portfolio.name}`}
                 </Typography>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <h3>Holdings</h3>
               </Col>
             </Row>
             <Row>

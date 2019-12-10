@@ -37,11 +37,12 @@ A simple, personal stock trading manager
   - `PortfolioSummaryApi`
 
 ##### `RobinhoodApi`
-- `/account-activity GET` 
+
+- `/account-activity GET`
   - get all AccountActivity items
   - **Responses**:
   - **Errors**:
-- `/account-activity POST` 
+- `/account-activity POST`
   - create one or many
   - **Validations**:
   - **Responses**:
@@ -85,7 +86,6 @@ A simple, personal stock trading manager
   - **Responses**:
   - **Errors**:
 
-
 ---
 
 ### `/cli`
@@ -112,6 +112,7 @@ A simple, personal stock trading manager
 stores data that comes from various sources
 
 #### `DBController`
+
 - **`Models`**
   - **`Portfolio`** (Implemented)
   - **`StockTransaction`** (Implemented)
