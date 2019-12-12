@@ -14,14 +14,9 @@ export interface PortfolioProps {
   onPortfolioChange: (portfolio: PortfolioModel) => void;
 }
 
-// const useTransactionFormSubmit = (value: Transaction) => {
-//   return useEff
-// }
-
 export function Portfolio(props: PortfolioProps) {
 
-  const { portfolio } = props;
-  const holdings = portfolio ? Object.values(portfolio.holdings) : [];
+  const holdings = props.portfolio ? Object.values(props.portfolio.holdings) : [];
 
   const [transactionFormType, setTransactionFormType] = useState<StockOrOption>('stock');
   const [stockTransactionFormValue, setStockTransactionFormValue] = useState(new StockTransaction());
@@ -35,34 +30,30 @@ export function Portfolio(props: PortfolioProps) {
   const handleTransactionFormSubmit = (value: Transaction) => {
     console.log('submitted:', value)
 
-    PortfolioAPI.addTradeToPortfolio(value, portfolio._id, (p: PortfolioModel) => {
+    PortfolioAPI.addTradeToPortfolio(value, props.portfolio._id, (p: PortfolioModel) => {
       console.log('added trade', value, 'to portfolio', p);
       props.onPortfolioChange(p);
     });
   };
 
   const handleDeleteTransaction = (txId: string) => {
-    PortfolioAPI.removeTradeFromPortfolio(txId, portfolio._id, (p: PortfolioModel) => {
+    PortfolioAPI.removeTradeFromPortfolio(txId, props.portfolio._id, (p: PortfolioModel) => {
       console.log('removed tx', txId, 'from portfolio', p);
       props.onPortfolioChange(p);
     });
   }
 
-  // useEffect(() => {
-
-
-
-  // }, [portfolio])
+  console.log('Render Portfolio with portfolio:', JSON.stringify(props));
 
   return (
     <Row>
       <Col xs={8}>
-        {portfolio ? (
+        {props.portfolio ? (
           <>
             <Row>
               <Col>
                 <Typography variant='h4'>
-                  {`${portfolio.name}`}
+                  {`${props.portfolio.name}`}
                 </Typography>
               </Col>
             </Row>

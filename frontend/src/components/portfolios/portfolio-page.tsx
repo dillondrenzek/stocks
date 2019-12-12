@@ -21,27 +21,27 @@ function arrayToPortfolios(data: Portfolio[]): Portfolios {
 function useSelectedPortfolio(initialState) {
   const [portfolio, setPortfolio] = useState<Portfolio>(initialState);
 
-  const refreshSelectedPortfolio = () => {
+  const fetchSelectedPortfolio = () => {
     // fetch portfolio then set it
     PortfolioAPI.getPortfolioById(portfolio._id, (fetchedPortfolio: Portfolio) => {
       console.log('Fetched currently selected portfolio:\n', fetchedPortfolio);
-      setPortfolio(Object.assign(portfolio, fetchedPortfolio));
+      setPortfolio(fetchedPortfolio);
     });
   };
   
   useEffect(() => {
     if (portfolio) {
       console.log('Fetching portfolio:', portfolio.name);
-      refreshSelectedPortfolio();
+      fetchSelectedPortfolio();
     } else {
       console.log('Skipped fetching selected portfolio: No current portfolio is selected.');
     }
-  }, [portfolio]);
+  }, []);
 
   return {
     selectedPortfolio: portfolio,
     selectPortfolio: setPortfolio,
-    refreshSelectedPortfolio
+    refreshSelectedPortfolio: fetchSelectedPortfolio
   };
 }
 
@@ -49,7 +49,7 @@ function usePortfolios(initialState: Portfolios) {
   const [portfolios, setPortfolios] = useState<Portfolios>(null);
 
   
-  const refreshPortfolios = () => {
+  const fetchPortfolios = () => {
     console.log('Refreshing Portfolios...');
     PortfolioAPI.getPortfolios((data) => {
       
@@ -63,12 +63,12 @@ function usePortfolios(initialState: Portfolios) {
   
   // get portfolios
   useEffect(() => {
-    refreshPortfolios();
+    fetchPortfolios();
   }, []);
 
   return {
     portfolios,
-    refreshPortfolios
+    refreshPortfolios: fetchPortfolios
   };
 }
 
@@ -122,7 +122,9 @@ export default function PortfolioPage() {
   const getTabs = portfolios && Object.values(portfolios);
 
   useEffect(() => {
-    updateSelectedPortfolio(portfolios);
+    if (portfolios) {
+      updateSelectedPortfolio(portfolios);
+    }
   }, [portfolios]);
 
   return (
