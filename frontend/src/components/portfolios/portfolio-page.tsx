@@ -18,51 +18,76 @@ function arrayToPortfolios(data: Portfolio[]): Portfolios {
   return portfolios;
 };
 
-function useSelectedPortfolio(initialState): [Portfolio, (p: Portfolio) => void] {
+function useSelectedPortfolio(initialState) {
   const [portfolio, setPortfolio] = useState<Portfolio>(initialState);
 
-  return [
-    portfolio,
-    (newPortfolio: Portfolio) => {
-
-      if (!newPortfolio) {
-        setPortfolio(newPortfolio);
-      } else {
-        // fetch portfolio then set it
-        PortfolioAPI.getPortfolioById(newPortfolio._id, (fetchedPortfolio: Portfolio) => {
-          console.log('fetched selected portfolio:', fetchedPortfolio);
-          setPortfolio(fetchedPortfolio);
-        });
-      }
+  const refreshSelectedPortfolio = () => {
+    // fetch portfolio then set it
+    PortfolioAPI.getPortfolioById(portfolio._id, (fetchedPortfolio: Portfolio) => {
+      console.log('Fetched currently selected portfolio:\n', fetchedPortfolio);
+      setPortfolio(Object.assign(portfolio, fetchedPortfolio));
+    });
+  };
+  
+  useEffect(() => {
+    if (portfolio) {
+      console.log('Fetching portfolio:', portfolio.name);
+      refreshSelectedPortfolio();
+    } else {
+      console.log('Skipped fetching selected portfolio: No current portfolio is selected.');
     }
-  ];
+  }, [portfolio]);
+
+  return {
+    selectedPortfolio: portfolio,
+    selectPortfolio: setPortfolio,
+    refreshSelectedPortfolio
+  };
+}
+
+function usePortfolios(initialState: Portfolios) {
+  const [portfolios, setPortfolios] = useState<Portfolios>(null);
+
+  
+  const refreshPortfolios = () => {
+    console.log('Refreshing Portfolios...');
+    PortfolioAPI.getPortfolios((data) => {
+      
+      // set portfolios
+      const _portfolios = arrayToPortfolios(data);
+      setPortfolios(_portfolios);
+      
+      console.log('Successfully refreshed portfolios.');
+    });
+  }
+  
+  // get portfolios
+  useEffect(() => {
+    refreshPortfolios();
+  }, []);
+
+  return {
+    portfolios,
+    refreshPortfolios
+  };
 }
 
 export default function PortfolioPage() {
 
-  const [portfolios, setPortfolios] = useState<Portfolios>(null);
-  const [portfolioFormValue, setPortfolioFormValue] = useState<Portfolio>(new Portfolio());
-  const [selectedPortfolio, setSelectedPortfolio] = useSelectedPortfolio(null);
+  const {
+    portfolios,
+    refreshPortfolios
+  } = usePortfolios(null);
 
-
-
-
-  // get portfolios
-  useEffect(() => {
-    if (!portfolios) {
-      PortfolioAPI.getPortfolios((data) => {
-
-        // set portfolios
-        const _portfolios = arrayToPortfolios(data);
-        setPortfolios(_portfolios);
-
-        // select an initial portfolio
-        updateSelectedPortfolio(_portfolios);
-      });
-    }
-  }, []);
+  const {
+    selectedPortfolio,
+    selectPortfolio
+  } = useSelectedPortfolio(null);
 
   const updateSelectedPortfolio = (_portfolios: Portfolios) => {
+    if (!_portfolios) {
+      return;
+    }
     const _ids = Object.keys(_portfolios);
     let _selectPortfolio: Portfolio;
 
@@ -77,38 +102,28 @@ export default function PortfolioPage() {
       _selectPortfolio = null;
     }
 
-    setSelectedPortfolio(_selectPortfolio);
+    selectPortfolio(_selectPortfolio);
   };
 
   const handlePortfolioChange = (value: Portfolio) => {
-    console.log('handle portfolio change', value);
-    PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
-      const updatedPortfolios = {
-        ...portfolios,
-        [value._id]: data
-      };
-      setPortfolios(updatedPortfolios);
-      setSelectedPortfolio(data);
-    });
+    console.log('[UNIMPLEMENTED] handle portfolio change', value);
+    // PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
+    //   const updatedPortfolios = {
+    //     ...portfolios,
+    //     [value._id]: data
+    //   };
+    //   setPortfolios(updatedPortfolios);
+    //   selectPortfolio(data);
+    // });
   }
 
-  const handleSelectPortfolio = (p: Portfolio) => setSelectedPortfolio(p);
+  const handleSelectPortfolio = (p: Portfolio) => selectPortfolio(p);
 
   const getTabs = portfolios && Object.values(portfolios);
 
-  const handlePortfolioFormSubmit = (value: Portfolio) => {
-    PortfolioAPI.createPortfolio(value, () => {
-      PortfolioAPI.getPortfolios((data: Portfolio[]) => {
-        const _portfolios = arrayToPortfolios(data);
-        // set array of new portfolios
-        setPortfolios(_portfolios);
-        // reset form
-        setPortfolioFormValue(new Portfolio());
-        // update selected portfolio
-        updateSelectedPortfolio(_portfolios);
-      });
-    });
-  };
+  useEffect(() => {
+    updateSelectedPortfolio(portfolios);
+  }, [portfolios]);
 
   return (
     <Container fluid>
