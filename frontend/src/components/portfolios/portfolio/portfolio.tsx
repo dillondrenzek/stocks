@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
 import { StockTransaction, OptionTransaction, Transaction } from '../../../types/transaction';
 import { Alert, Card, Col, Form, FormControlProps, Row, Typography } from '../../../shared';
@@ -47,6 +47,12 @@ export function Portfolio(props: PortfolioProps) {
       props.onPortfolioChange(p);
     });
   }
+
+  // useEffect(() => {
+
+
+
+  // }, [portfolio])
 
   return (
     <Row>

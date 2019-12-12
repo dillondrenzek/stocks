@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { Alert, Button, Container, Col, Form, Nav, Row } from '../../../shared';
+import { Alert, Button, Form, Nav } from '../../../shared';
 import { Portfolio } from '../../../types';
-import { PortfolioForm, usePortfolioForm } from '../portfolio-form/portfolio-form';
+import { usePortfolioForm } from '../portfolio-form/portfolio-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Input } from '@material-ui/core';
 import { InputGroup } from 'react-bootstrap';
 
 interface PortfolioTabsProps {
