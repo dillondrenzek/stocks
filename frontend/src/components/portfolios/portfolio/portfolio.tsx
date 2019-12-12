@@ -27,7 +27,6 @@ export function Portfolio(props: PortfolioProps) {
   const [stockTransactionFormValue, setStockTransactionFormValue] = useState(new StockTransaction());
   const [optionTransactionFormValue, setOptionTransactionFormValue] = useState(new OptionTransaction());
 
-  // const handleTransactionFormTypeChange = (ev: React.FormEvent) => {
   const handleTransactionFormTypeChange = (ev: React.FormEvent<FormControlProps>) => {
     const value = ev.currentTarget.value as StockOrOption;
     setTransactionFormType(value);
