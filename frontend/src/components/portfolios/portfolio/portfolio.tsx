@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Portfolio as PortfolioModel, Holding } from '../../../types/portfolio';
 import { StockTransaction, OptionTransaction, Transaction } from '../../../types/transaction';
 import { Alert, Card, Col, Form, FormControlProps, Row, Typography } from '../../../shared';
@@ -16,8 +16,7 @@ export interface PortfolioProps {
 
 export function Portfolio(props: PortfolioProps) {
 
-  const { portfolio } = props;
-  const holdings = portfolio ? Object.values(portfolio.holdings) : [];
+  const holdings = props.portfolio ? Object.values(props.portfolio.holdings) : [];
 
   const [transactionFormType, setTransactionFormType] = useState<StockOrOption>('stock');
   const [stockTransactionFormValue, setStockTransactionFormValue] = useState(new StockTransaction());
@@ -31,28 +30,30 @@ export function Portfolio(props: PortfolioProps) {
   const handleTransactionFormSubmit = (value: Transaction) => {
     console.log('submitted:', value)
 
-    PortfolioAPI.addTradeToPortfolio(value, portfolio._id, (p: PortfolioModel) => {
+    PortfolioAPI.addTradeToPortfolio(value, props.portfolio._id, (p: PortfolioModel) => {
       console.log('added trade', value, 'to portfolio', p);
       props.onPortfolioChange(p);
     });
   };
 
   const handleDeleteTransaction = (txId: string) => {
-    PortfolioAPI.removeTradeFromPortfolio(txId, portfolio._id, (p: PortfolioModel) => {
+    PortfolioAPI.removeTradeFromPortfolio(txId, props.portfolio._id, (p: PortfolioModel) => {
       console.log('removed tx', txId, 'from portfolio', p);
       props.onPortfolioChange(p);
     });
   }
 
+  console.log('Render Portfolio with portfolio:', JSON.stringify(props));
+
   return (
     <Row>
       <Col xs={8}>
-        {portfolio ? (
+        {props.portfolio ? (
           <>
             <Row>
               <Col>
                 <Typography variant='h4'>
-                  {`${portfolio.name}`}
+                  {`${props.portfolio.name}`}
                 </Typography>
               </Col>
             </Row>
@@ -64,44 +65,48 @@ export function Portfolio(props: PortfolioProps) {
             <Row>
               {holdings.length ? (<>
                 {holdings.map((holding: Holding, i: number) => (
-                  <Col key={holding.symbol}>
+                  <React.Fragment key={i}>
                     {holding.stockTransactions.length ? (
-                      <Card>
-                        <Card.Header>
-                          <Typography>{holding.symbol} (Stock)</Typography>
-                        </Card.Header>
-                        <Card.Body>
-                          <Alert variant='secondary'>
-                            <span>
-                              <div>No. of Shares</div>
-                              <div>{StockTransaction.totalQuantity(holding.stockTransactions)}</div>
-                            </span>
-                            <span>
-                              <div>Avg. Cost</div>
-                              <div>{StockTransaction.averageCost(holding.stockTransactions)}</div>
-                            </span>
-                          </Alert>
-                          <StockTransactionsTable
-                            transactions={holding.stockTransactions}
-                            onDeleteTransaction={handleDeleteTransaction}
-                          />
-                        </Card.Body>
-                      </Card>
+                      <Col key={holding.symbol}>
+                        <Card>
+                          <Card.Header>
+                            <Typography>{holding.symbol} (Stock)</Typography>
+                          </Card.Header>
+                          <Card.Body>
+                            <Alert variant='secondary'>
+                              <span>
+                                <div>No. of Shares</div>
+                                <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
+                              </span>
+                              <span>
+                                <div>Avg. Cost</div>
+                                <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
+                              </span>
+                            </Alert>
+                            <StockTransactionsTable
+                              transactions={holding.stockTransactions}
+                              onDeleteTransaction={handleDeleteTransaction}
+                            />
+                          </Card.Body>
+                        </Card>
+                      </Col>
                     ) : null}
                     {(holding.optionTransactions.length) ? (
-                      <Card>
-                        <Card.Header>
-                          <Typography>{holding.symbol} (Option)</Typography>
-                        </Card.Header>
-                        <Card.Body>
-                          <OptionTransactionsTable
-                            transactions={holding.optionTransactions}
-                            onDeleteTransaction={handleDeleteTransaction}
-                          />
-                        </Card.Body>
-                      </Card>
+                      <Col>
+                        <Card>
+                          <Card.Header>
+                            <Typography>{holding.symbol} (Option)</Typography>
+                          </Card.Header>
+                          <Card.Body>
+                            <OptionTransactionsTable
+                              transactions={holding.optionTransactions}
+                              onDeleteTransaction={handleDeleteTransaction}
+                            />
+                          </Card.Body>
+                        </Card>
+                      </Col>
                     ) : null}
-                  </Col>
+                  </React.Fragment>
                 ))}
               </>) : (
                 <Col>
@@ -113,10 +118,10 @@ export function Portfolio(props: PortfolioProps) {
             </Row>
           </>
         ) : (
-            <Alert variant='dark'>
-              No portfolio selected
+          <Alert variant='dark'>
+            No portfolio selected
           </Alert>
-          )}
+        )}
       </Col>
       <Col xs={4}>
         <Card>

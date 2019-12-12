@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { Alert, Button, Container, Col, Nav, Row } from '../../../shared';
-
+import { Alert, Button, Form, Nav } from '../../../shared';
 import { Portfolio } from '../../../types';
-
+import { usePortfolioForm } from '../portfolio-form/portfolio-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { InputGroup } from 'react-bootstrap';
 
 interface PortfolioTabsProps {
   portfolios: Portfolio[],
@@ -32,6 +32,12 @@ export default function PortfolioTabs({
 
   const portfoliosExist = portfolios && portfolios.length;
 
+  const { 
+    value: formValue, 
+    getFieldChangeHandler,
+    submitForm 
+  } = usePortfolioForm(new Portfolio());
+
   return (
     portfoliosExist ? (
       <Nav
@@ -43,6 +49,21 @@ export default function PortfolioTabs({
             <Nav.Link eventKey={key(portfolio)}>{portfolio.name}</Nav.Link>
           </Nav.Item>
         ))}
+        <Nav.Item>
+          <Form inline onSubmit={submitForm}>
+            <InputGroup>
+              <Form.Control 
+                placeholder='New Portfolio'
+                type='text' 
+                value={formValue.name} 
+                onChange={getFieldChangeHandler('name')} 
+              />
+              <InputGroup.Append>
+                <Button type='submit'>Add</Button>
+              </InputGroup.Append>
+            </InputGroup>
+          </Form>
+        </Nav.Item>
       </Nav>
     ) : (
       <Alert variant='dark'>

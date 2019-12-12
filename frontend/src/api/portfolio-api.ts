@@ -6,7 +6,7 @@ import {
 
 export const PortfolioAPI = {
 
-  createPortfolio: (portfolio: Portfolio, cb: () => void) => {
+  createPortfolio: (portfolio: Portfolio, cb?: () => void): Promise<void> => {
     const url = 'http://localhost:7000/api/portfolios';
     const params = new URLSearchParams();
     Object.keys(portfolio).forEach((key) => {
@@ -17,9 +17,9 @@ export const PortfolioAPI = {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
-    http.post(url, params, config)
-      .then(cb)
-      .catch(console.error);
+    return http.post(url, params, config)
+      // .then(cb)
+      // .catch(console.error);
   },
 
   // TODO: Reimplement

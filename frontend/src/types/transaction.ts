@@ -46,13 +46,14 @@ export class StockTransaction implements StockTransaction {
     console.log('calc avg cost:', txs);
     txs.forEach((tx) => {
       console.log('tx', tx);
-      let newQty;
+      let newQty,
+        txCost = tx.price * tx.quantity;
       if (tx.side === 'buy') {
         newQty = currQty + tx.quantity;
         console.log('newQty', newQty);
         // average cost changes with new buys
-        currAvgCost = ((currAvgCost * currQty) + tx.cost) / newQty;
-        console.log('tx.cost', tx.cost);
+        currAvgCost = ((currAvgCost * currQty) + txCost) / newQty;
+        console.log('tx.cost', txCost);
         console.log('currQty', currQty);
         console.log('currAvgCost', currAvgCost);
       } else if (tx.side === 'sell') {
