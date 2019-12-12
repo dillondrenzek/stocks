@@ -18,7 +18,7 @@ function arrayToPortfolios(data: Portfolio[]): Portfolios {
   return portfolios;
 };
 
-function useSelectedPortfolio(initialState) {
+function useSelectedPortfolio(initialState: Portfolio) {
   const [portfolio, setPortfolio] = useState<Portfolio>(initialState);
 
   const fetchSelectedPortfolio = () => {
@@ -36,7 +36,7 @@ function useSelectedPortfolio(initialState) {
     } else {
       console.log('Skipped fetching selected portfolio: No current portfolio is selected.');
     }
-  }, []);
+  }, [portfolio ? portfolio._id : '']);
 
   return {
     selectedPortfolio: portfolio,
