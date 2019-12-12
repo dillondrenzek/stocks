@@ -81,7 +81,8 @@ export default function PortfolioPage() {
 
   const {
     selectedPortfolio,
-    selectPortfolio
+    selectPortfolio,
+    refreshSelectedPortfolio
   } = useSelectedPortfolio(null);
 
   const updateSelectedPortfolio = (_portfolios: Portfolios) => {
@@ -106,15 +107,15 @@ export default function PortfolioPage() {
   };
 
   const handlePortfolioChange = (value: Portfolio) => {
-    console.log('[UNIMPLEMENTED] handle portfolio change', value);
-    // PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
-    //   const updatedPortfolios = {
-    //     ...portfolios,
-    //     [value._id]: data
-    //   };
-    //   setPortfolios(updatedPortfolios);
-    //   selectPortfolio(data);
-    // });
+    // console.log('[UNIMPLEMENTED] handle portfolio change', value);
+    PortfolioAPI.getPortfolioById(value._id, (data: Portfolio) => {
+      const updatedPortfolios = {
+        ...portfolios,
+        [value._id]: data
+      };
+      // setPortfolios(updatedPortfolios);
+      selectPortfolio(data);
+    });
   }
 
   const handleSelectPortfolio = (p: Portfolio) => selectPortfolio(p);

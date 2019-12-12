@@ -65,44 +65,48 @@ export function Portfolio(props: PortfolioProps) {
             <Row>
               {holdings.length ? (<>
                 {holdings.map((holding: Holding, i: number) => (
-                  <Col key={holding.symbol}>
+                  <React.Fragment key={i}>
                     {holding.stockTransactions.length ? (
-                      <Card>
-                        <Card.Header>
-                          <Typography>{holding.symbol} (Stock)</Typography>
-                        </Card.Header>
-                        <Card.Body>
-                          <Alert variant='secondary'>
-                            <span>
-                              <div>No. of Shares</div>
-                              <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
-                            </span>
-                            <span>
-                              <div>Avg. Cost</div>
-                              <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
-                            </span>
-                          </Alert>
-                          <StockTransactionsTable
-                            transactions={holding.stockTransactions}
-                            onDeleteTransaction={handleDeleteTransaction}
-                          />
-                        </Card.Body>
-                      </Card>
+                      <Col key={holding.symbol}>
+                        <Card>
+                          <Card.Header>
+                            <Typography>{holding.symbol} (Stock)</Typography>
+                          </Card.Header>
+                          <Card.Body>
+                            <Alert variant='secondary'>
+                              <span>
+                                <div>No. of Shares</div>
+                                <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
+                              </span>
+                              <span>
+                                <div>Avg. Cost</div>
+                                <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
+                              </span>
+                            </Alert>
+                            <StockTransactionsTable
+                              transactions={holding.stockTransactions}
+                              onDeleteTransaction={handleDeleteTransaction}
+                            />
+                          </Card.Body>
+                        </Card>
+                      </Col>
                     ) : null}
                     {(holding.optionTransactions.length) ? (
-                      <Card>
-                        <Card.Header>
-                          <Typography>{holding.symbol} (Option)</Typography>
-                        </Card.Header>
-                        <Card.Body>
-                          <OptionTransactionsTable
-                            transactions={holding.optionTransactions}
-                            onDeleteTransaction={handleDeleteTransaction}
-                          />
-                        </Card.Body>
-                      </Card>
+                      <Col>
+                        <Card>
+                          <Card.Header>
+                            <Typography>{holding.symbol} (Option)</Typography>
+                          </Card.Header>
+                          <Card.Body>
+                            <OptionTransactionsTable
+                              transactions={holding.optionTransactions}
+                              onDeleteTransaction={handleDeleteTransaction}
+                            />
+                          </Card.Body>
+                        </Card>
+                      </Col>
                     ) : null}
-                  </Col>
+                  </React.Fragment>
                 ))}
               </>) : (
                 <Col>
@@ -114,10 +118,10 @@ export function Portfolio(props: PortfolioProps) {
             </Row>
           </>
         ) : (
-            <Alert variant='dark'>
-              No portfolio selected
+          <Alert variant='dark'>
+            No portfolio selected
           </Alert>
-          )}
+        )}
       </Col>
       <Col xs={4}>
         <Card>
