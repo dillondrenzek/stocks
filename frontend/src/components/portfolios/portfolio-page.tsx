@@ -112,14 +112,14 @@ export default function PortfolioPage() {
 
   return (
     <Container fluid>
-      <Row>
+      {/* <Row>
         <Col>
           <PortfolioForm
             onSubmit={handlePortfolioFormSubmit}
             value={portfolioFormValue}
           />
         </Col>
-      </Row>
+      </Row> */}
 
       <Row>
         <Col>
