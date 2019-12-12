@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import * as Bootstrap from 'react-bootstrap';
 import _ from 'lodash';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom';
-import { Container, Col, Row } from './shared';
-import PortfolioPage from './components/portfolios/portfolio-page';
-
-import { Portfolio } from './types';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import PortfolioPage from './components/portfolios/portfolio-page';
 
 
 function Nav() {
@@ -25,12 +18,9 @@ function Nav() {
           <Bootstrap.Nav.Link as={Link} to='/'>
             Portfolios
           </Bootstrap.Nav.Link>
-          {/* <Bootstrap.Nav.Link>
-            <Link to='/about'>About</Link>
+          <Bootstrap.Nav.Link as={Link} to='/robinhood-pdf'>
+            Robinhood PDF
           </Bootstrap.Nav.Link>
-          <Bootstrap.Nav.Link>
-            <Link to='/dashboard'>Dashboard</Link>
-          </Bootstrap.Nav.Link> */}
         </Bootstrap.Nav>
       </Bootstrap.Navbar.Collapse>
     </Bootstrap.Navbar>
@@ -38,9 +28,6 @@ function Nav() {
 }
 
 export default function App() {
-
- 
-
   return (
     <Router>
       <div>
@@ -48,6 +35,9 @@ export default function App() {
         <Switch>
           <Route exact path='/'>
             <PortfolioPage />
+          </Route>
+          <Route exact path='/robinhood-pdf'>
+            Robinhood PDF goes here
           </Route>
         </Switch>
       </div>
