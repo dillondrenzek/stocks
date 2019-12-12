@@ -75,11 +75,11 @@ export function Portfolio(props: PortfolioProps) {
                           <Alert variant='secondary'>
                             <span>
                               <div>No. of Shares</div>
-                              <div>{StockTransaction.totalQuantity(holding.stockTransactions)}</div>
+                              <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
                             </span>
                             <span>
                               <div>Avg. Cost</div>
-                              <div>{StockTransaction.averageCost(holding.stockTransactions)}</div>
+                              <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
                             </span>
                           </Alert>
                           <StockTransactionsTable
