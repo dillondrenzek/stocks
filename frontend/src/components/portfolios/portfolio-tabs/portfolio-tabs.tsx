@@ -41,12 +41,13 @@ export default function PortfolioTabs({
   return (
     portfoliosExist ? (
       <Nav
+        variant='tabs'
         activeKey={key(selectedPortfolio)}
         onSelect={handleSelectPortfolio}
       >
         {portfolios.map((portfolio, i) => (
           <Nav.Item key={i}>
-            <Nav.Link eventKey={key(portfolio)}>{portfolio.name}</Nav.Link>
+            <Nav.Link eventKey={key(portfolio)} active={selectedPortfolio && selectedPortfolio._id === portfolio._id}>{portfolio.name}</Nav.Link>
           </Nav.Item>
         ))}
         <Nav.Item>
