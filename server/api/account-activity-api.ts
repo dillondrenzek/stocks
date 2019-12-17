@@ -1,4 +1,5 @@
 import express, {Request, Response} from 'express';
+import { AccountActivityController } from '../../app/controllers/AccountActivityController';
 
 // Router
 const router = express();
@@ -12,7 +13,8 @@ router.get('/', getAccountActivityItems);
 // Get Account Activity Items
 export async function getAccountActivityItems(req: Request, res: Response) {
   try {
-    res.send('Success GET /');
+    const items = await AccountActivityController.getAccountActivityItems();
+    res.json(items);
   } catch (err) {
     res.status(500).send('Error getting AccountActivityItems: ' + err);
   }
