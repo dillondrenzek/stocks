@@ -68,42 +68,30 @@ export function Portfolio(props: PortfolioProps) {
                   <React.Fragment key={i}>
                     {holding.stockTransactions.length ? (
                       <Col key={holding.symbol}>
-                        <Card>
-                          <Card.Header>
-                            <Typography>{holding.symbol} (Stock)</Typography>
-                          </Card.Header>
-                          <Card.Body>
-                            <Alert variant='secondary'>
-                              <span>
-                                <div>No. of Shares</div>
-                                <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
-                              </span>
-                              <span>
-                                <div>Avg. Cost</div>
-                                <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
-                              </span>
-                            </Alert>
-                            <StockTransactionsTable
-                              transactions={holding.stockTransactions}
-                              onDeleteTransaction={handleDeleteTransaction}
-                            />
-                          </Card.Body>
-                        </Card>
+                        <Typography>{holding.symbol} (Stock)</Typography>
+                        <Alert variant='secondary'>
+                          <span>
+                            <div>No. of Shares</div>
+                            <div>{StockTransaction.totalQuantity(holding.stockTransactions).toString()}</div>
+                          </span>
+                          <span>
+                            <div>Avg. Cost</div>
+                            <div>{StockTransaction.averageCost(holding.stockTransactions).toString()}</div>
+                          </span>
+                        </Alert>
+                        <StockTransactionsTable
+                          transactions={holding.stockTransactions}
+                          onDeleteTransaction={handleDeleteTransaction}
+                        />
                       </Col>
                     ) : null}
                     {(holding.optionTransactions.length) ? (
                       <Col>
-                        <Card>
-                          <Card.Header>
-                            <Typography>{holding.symbol} (Option)</Typography>
-                          </Card.Header>
-                          <Card.Body>
-                            <OptionTransactionsTable
-                              transactions={holding.optionTransactions}
-                              onDeleteTransaction={handleDeleteTransaction}
-                            />
-                          </Card.Body>
-                        </Card>
+                        <Typography>{holding.symbol} (Option)</Typography>
+                        <OptionTransactionsTable
+                          transactions={holding.optionTransactions}
+                          onDeleteTransaction={handleDeleteTransaction}
+                        />
                       </Col>
                     ) : null}
                   </React.Fragment>
@@ -124,38 +112,32 @@ export function Portfolio(props: PortfolioProps) {
         )}
       </Col>
       <Col xs={4}>
-        <Card>
-          <Card.Header>
-            <Row>
-              <Col>
-                <Typography variant='h6'>
-                  <Form.Control
-                    as={'select'}
-                    onChange={handleTransactionFormTypeChange}
-                    value={transactionFormType}
-                  >
-                    <option value='stock'>New Stock Transaction</option>
-                    <option value='option'>New Option Transaction</option>
-                  </Form.Control>
-                </Typography>
-              </Col>
-            </Row>
-          </Card.Header>
-          <Card.Body>
-            {(transactionFormType === 'stock') && (
-              <StockTransactionForm
-                onSubmit={handleTransactionFormSubmit}
-                value={stockTransactionFormValue}
-              />
-            )}
-            {(transactionFormType === 'option') && (
-              <OptionTransactionForm
-                onSubmit={handleTransactionFormSubmit}
-                value={optionTransactionFormValue}
-              />
-            )}
-          </Card.Body>
-        </Card>
+        <Row>
+          <Col>
+            <Typography variant='h6'>
+              <Form.Control
+                as={'select'}
+                onChange={handleTransactionFormTypeChange}
+                value={transactionFormType}
+              >
+                <option value='stock'>New Stock Transaction</option>
+                <option value='option'>New Option Transaction</option>
+              </Form.Control>
+            </Typography>
+          </Col>
+        </Row>
+        {(transactionFormType === 'stock') && (
+          <StockTransactionForm
+            onSubmit={handleTransactionFormSubmit}
+            value={stockTransactionFormValue}
+          />
+        )}
+        {(transactionFormType === 'option') && (
+          <OptionTransactionForm
+            onSubmit={handleTransactionFormSubmit}
+            value={optionTransactionFormValue}
+          />
+        )}
       </Col>
     </Row>
   );
