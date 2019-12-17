@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PortfolioPage from './components/portfolios/portfolio-page';
+import { AccountActivityPage } from './components/account-activity/account-activity-page';
 
 
 function Nav() {
@@ -37,7 +38,7 @@ export default function App() {
             <PortfolioPage />
           </Route>
           <Route exact path='/robinhood-pdf'>
-            Robinhood PDF goes here
+            <AccountActivityPage />
           </Route>
         </Switch>
       </div>

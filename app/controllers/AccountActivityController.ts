@@ -4,7 +4,9 @@ import { AccountActivityItem, getAccountType, getTransactionType } from '../../r
 export class AccountActivityController {
 
   public static async getAccountActivityItems(): Promise<AccountActivityItem[]> {
-    const fetched = await DB.AccountActivityItem.find({});
+    const fetched = await DB.AccountActivityItem
+      .find({})
+      .sort({date: -1});
     return fetched.map((item) => this.toAccountActivityItem(item));
   }
 
