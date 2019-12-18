@@ -29,8 +29,8 @@ export function AccountActivityTable(props: AccountActivityTableProps) {
       {props.items ? (
         <Table<AccountActivityItem>
           columns={[
-            { key: 'description', label: 'Description', render: (props) => <DescriptionCell {...props} /> },
             { key: 'symbol', label: 'Symbol' },
+            { key: 'description', label: 'Description', render: (props) => <DescriptionCell {...props} /> },
             { key: 'price', label: 'Price' },
             { key: 'qty', label: 'Qty' },
             { key: 'credit', label: 'Credit' },
