@@ -13,6 +13,7 @@
     "preserve": "npm run build && npm run build:copy-assets",
     "serve": "node ./dist/robinhood-pdf/api/index.js",
     "test": "node ./dist/robinhood-pdf/index.js print ../../../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
+    "pretest:save": "npm run build",
     "test:save": "node ./dist/robinhood-pdf/index.js save ../../../data/test/bc89ed90-4874-443a-8a8c-413d4b099ff2.pdf",
     "drop-db": "npm run robinhood-pdf drop-robinhood-db"
   },

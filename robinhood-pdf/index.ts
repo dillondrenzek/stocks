@@ -1,10 +1,10 @@
 import { loadEnv } from '../lib/load-env';
-loadEnv('../../.env');
+loadEnv('../../../.env');
+
 
 import { resolve } from 'path';
 import { readRobinhoodPdf } from './pdf';
-import { saveRobinhoodPdf, dropRobinhoodPdfDb } from './db';
-import { startServer } from './api';
+import { saveRobinhoodPdf, dropRobinhoodPdfDb } from '../server/api/robinhood/db';
 
 
 

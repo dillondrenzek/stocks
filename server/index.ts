@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import * as DB from '../db';
-import Env from './load-env';
+import Env from '../lib/load-env';
 import { Logger, accessControlAllowOrigin } from './api/util';
 import api from './api';
 

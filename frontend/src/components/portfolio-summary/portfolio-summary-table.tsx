@@ -15,16 +15,17 @@ export function PortfolioSummaryTable(props: PortfolioSummaryTableProps) {
       {props.items ? (
         <Table<PortfolioSummaryItem>
           columns={[
-            // { key: '', label: ''}
-            // { key: 'description', label: 'Description', render: (props) => <span>{props && typeof props.value === 'object' ? JSON.stringify(props.value) : (typeof props.value === 'string' || 'number') ? props.value : ''}</span> },
-            // { key: 'symbol', label: 'Symbol' },
-            // { key: 'price', label: 'Price' },
-            // { key: 'qty', label: 'Qty' },
-            // { key: 'credit', label: 'Credit' },
-            // { key: 'debit', label: 'Debit' },
-            // { key: 'date', label: 'Date' },
-            // { key: 'transactionType', label: 'Type' },
-            // { key: 'accountType', label: 'Account Type' }
+            { key: 'accountType', label: 'Acct Type' },
+            { key: 'annualIncome', label: 'Annual Income' },
+            { key: 'changePercent', label: 'Change %' },
+            { key: 'equitiesOptions', label: 'Equities/Options' },
+            { key: 'mktValue', label: 'Market Value' },
+            { key: 'mktValueLastPeriod', label: 'Market Value Last Period' },
+            { key: 'portfolioPercent', label: 'Portfolio %' },
+            { key: 'price', label: 'Price' },
+            { key: 'qty', label: 'Qty' },
+            { key: 'symbol', label: 'symbol' },
+            { key: 'yieldPercent', label: 'Yield %' },
           ]}
           data={props.items}
         />
