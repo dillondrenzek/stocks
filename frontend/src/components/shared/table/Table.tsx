@@ -18,13 +18,12 @@ interface TableProps<T = any> {
 
 export function Table<T = any>(props: TableProps<T>) {
   return (
-    <table className='table table-bordered'>
+    <table className='table table-bordered table-sm'>
       <thead>
         <tr>
           {props.columns.map(({ label }, i) => (
             <th key={i}>{label}</th>
           ))}
-          <th />
         </tr>
       </thead>
       <tbody>

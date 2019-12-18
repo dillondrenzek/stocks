@@ -25,6 +25,7 @@ export function AccountActivityPage(props) {
       <Row>
         <Col>
 
+          <h3>Account Activity</h3>
           <AccountActivityTable
             items={accountActivityItems}
           />
