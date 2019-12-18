@@ -15,17 +15,17 @@ export function PortfolioSummaryTable(props: PortfolioSummaryTableProps) {
       {props.items ? (
         <Table<PortfolioSummaryItem>
           columns={[
-            { key: 'accountType', label: 'Acct Type' },
-            { key: 'annualIncome', label: 'Annual Income' },
-            { key: 'changePercent', label: 'Change %' },
             { key: 'equitiesOptions', label: 'Equities/Options' },
-            { key: 'mktValue', label: 'Market Value' },
-            { key: 'mktValueLastPeriod', label: 'Market Value Last Period' },
-            { key: 'portfolioPercent', label: 'Portfolio %' },
+            { key: 'symbol', label: 'symbol' },
             { key: 'price', label: 'Price' },
             { key: 'qty', label: 'Qty' },
-            { key: 'symbol', label: 'symbol' },
+            { key: 'portfolioPercent', label: '% of Portfolio' },
+            { key: 'annualIncome', label: 'Annual Income' },
+            { key: 'changePercent', label: 'Change %' },
+            { key: 'mktValue', label: 'Market Value' },
+            { key: 'mktValueLastPeriod', label: 'Market Value Last Period' },
             { key: 'yieldPercent', label: 'Yield %' },
+            // { key: 'accountType', label: 'Acct Type' },
           ]}
           data={props.items}
         />
