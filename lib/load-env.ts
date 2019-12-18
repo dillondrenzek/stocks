@@ -9,6 +9,8 @@ export function loadEnv(path: string) {
     throw new Error('Could not resolve .env path: ' + path);
   }
 
+  console.log('Loading env at:', resolved);
+
   require('dotenv').config({ path: resolved });
 
   if (!process.env) {
@@ -21,7 +23,7 @@ export function loadEnv(path: string) {
     throw new Error('Did not provide a MongoDB url');
   }
   
-  console.log('Loaded .env at:');
+  console.log('Loaded.');
 
   return {
     ...process.env,
