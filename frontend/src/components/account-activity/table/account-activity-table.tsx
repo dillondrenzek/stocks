@@ -1,7 +1,23 @@
 import React from 'react';
-import { AccountActivityItem } from '../../types/account-activity';
-import { Table } from '../shared/table';
+import { AccountActivityItem, TransactionType } from '../../../types/account-activity';
+import { Table } from '../../shared/table';
 
+export interface DescriptionCellProps {
+  data: AccountActivityItem;
+  value: Object | string | number;
+}
+
+function DescriptionCell(props: DescriptionCellProps) {
+  if (!props) {
+    return null;
+  }
+  
+  return (
+    <span>
+      {props.data.formattedDescription}
+    </span>
+  );
+}
 
 export interface AccountActivityTableProps {
   items: AccountActivityItem[]
@@ -13,7 +29,7 @@ export function AccountActivityTable(props: AccountActivityTableProps) {
       {props.items ? (
         <Table<AccountActivityItem>
           columns={[
-            { key: 'description', label: 'Description', render: (props) => <span>{props && typeof props.value === 'object' ? JSON.stringify(props.value) : (typeof props.value === 'string' || 'number') ? props.value : ''}</span> },
+            { key: 'description', label: 'Description', render: (props) => <DescriptionCell {...props} /> },
             { key: 'symbol', label: 'Symbol' },
             { key: 'price', label: 'Price' },
             { key: 'qty', label: 'Qty' },
