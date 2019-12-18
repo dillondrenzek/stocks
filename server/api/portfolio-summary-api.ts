@@ -1,4 +1,5 @@
 import express, {Request, Response} from 'express';
+import {PortfolioSummaryController} from '../../app/controllers/PortfolioSummaryController';
 
 // Router
 const router = express();
@@ -12,7 +13,8 @@ router.get('/', getPortfolioSummaryItems);
 // Get PortfolioSummaryItems
 export async function getPortfolioSummaryItems(req: Request, res: Response) {
   try {
-    res.send('Success GET / Portfolio Summary items');
+    const items = await PortfolioSummaryController.getPortfolioSummaryItems();
+    res.json(items);
   } catch (err) {
     res.status(500).send('Error getting PortfolioSummaryItems: ' + err);
   }

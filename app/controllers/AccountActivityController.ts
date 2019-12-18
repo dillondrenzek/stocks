@@ -1,5 +1,5 @@
 import * as DB from '../../db';
-import { AccountActivityItem, getAccountType, getTransactionType } from '../../robinhood-pdf/models/account-activity';
+import { AccountActivityItem, getAccountType, getTransactionType } from '../../robinhood-pdf/models';
 
 export class AccountActivityController {
 
