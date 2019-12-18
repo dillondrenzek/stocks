@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PortfolioPage from './components/portfolios/portfolio-page';
+import { AccountActivityPage } from './components/account-activity/account-activity-page';
 
 
 function Nav() {
@@ -18,8 +19,8 @@ function Nav() {
           <Bootstrap.Nav.Link as={Link} to='/'>
             Portfolios
           </Bootstrap.Nav.Link>
-          <Bootstrap.Nav.Link as={Link} to='/robinhood-pdf'>
-            Robinhood PDF
+          <Bootstrap.Nav.Link as={Link} to='/account-activity'>
+            Account Activity
           </Bootstrap.Nav.Link>
         </Bootstrap.Nav>
       </Bootstrap.Navbar.Collapse>
@@ -36,8 +37,8 @@ export default function App() {
           <Route exact path='/'>
             <PortfolioPage />
           </Route>
-          <Route exact path='/robinhood-pdf'>
-            Robinhood PDF goes here
+          <Route exact path='/account-activity'>
+            <AccountActivityPage />
           </Route>
         </Switch>
       </div>

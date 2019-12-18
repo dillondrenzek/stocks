@@ -1,5 +1,5 @@
-import { PortfolioSummaryItem } from './models/portfolio-summary';
-import { AccountActivityItem } from './models/account-activity';
+import { PortfolioSummaryItem } from '../models/portfolio-summary';
+import { AccountActivityItem } from '../models/account-activity';
 
 export enum PageType {
   AccountActivity = 'ACCOUNT ACTIVITY',

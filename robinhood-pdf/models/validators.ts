@@ -1,4 +1,4 @@
-import {PageType} from '../types';
+import {PageType} from '../pdf/types';
 
 export function getPageType(text: string): PageType {
   if (text.indexOf(PageType.AccountActivity) !== -1) {
