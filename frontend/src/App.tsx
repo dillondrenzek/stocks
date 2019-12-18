@@ -19,8 +19,8 @@ function Nav() {
           <Bootstrap.Nav.Link as={Link} to='/'>
             Portfolios
           </Bootstrap.Nav.Link>
-          <Bootstrap.Nav.Link as={Link} to='/robinhood-pdf'>
-            Robinhood PDF
+          <Bootstrap.Nav.Link as={Link} to='/account-activity'>
+            Account Activity
           </Bootstrap.Nav.Link>
         </Bootstrap.Nav>
       </Bootstrap.Navbar.Collapse>
@@ -37,7 +37,7 @@ export default function App() {
           <Route exact path='/'>
             <PortfolioPage />
           </Route>
-          <Route exact path='/robinhood-pdf'>
+          <Route exact path='/account-activity'>
             <AccountActivityPage />
           </Route>
         </Switch>

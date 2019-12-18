@@ -21,7 +21,7 @@ export function AccountActivityPage(props) {
   const { accountActivityItems } = useAccountActivityItems();
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
 
