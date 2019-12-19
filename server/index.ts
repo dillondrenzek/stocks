@@ -1,8 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { loadEnv } from '../lib/load-env';
+const Env = loadEnv('../.env');
 
 import * as DB from '../db';
-import Env from './load-env';
 import { Logger, accessControlAllowOrigin } from './api/util';
 import api from './api';
 

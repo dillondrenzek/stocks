@@ -1,36 +1,5 @@
-
-
-export enum AccountType {
-  None = 'None',
-  Margin = 'Margin'
-}
-
-export function isAccountType(key: string): key is AccountType {
-  return Object.keys(AccountType).includes(key);
-}
-
-export function getAccountType(data: string): AccountType {
-  if (data.toLowerCase() === 'margin') {
-    return AccountType.Margin;
-  } else {
-    return AccountType.None;
-  }
-}
-
-export enum TransactionType {
-  Buy = 'Buy',
-  Sell = 'Sell',
-  BTC = 'BTC',
-  STC = 'STC',
-  CDIV = 'CDIV',
-  BTO = 'BTO',
-  STO = 'STO',
-  ACH = 'ACH', // 
-}
-
-export function isTransactionType(key: string): key is TransactionType {
-  return Object.keys(TransactionType).includes(key);
-}
+import { AccountType, isAccountType } from './helpers/account-type';
+import { TransactionType, isTransactionType } from './helpers/transaction-type';
 
 export function getTransactionType(data: string): TransactionType {
   return isTransactionType(data) ? TransactionType[data] : null;
