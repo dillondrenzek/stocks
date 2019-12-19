@@ -1,5 +1,5 @@
 import { AccountType, isAccountType } from './helpers/account-type';
-import { TransactionType, isTransactionType } from './helpers/transaction-type';
+import { TransactionType, isTransactionType, getTransactionType } from './helpers/transaction-type';
 
 export interface AccountActivityItem {
   // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 

@@ -29,13 +29,11 @@ export function Table<T = any>(props: TableProps<T>) {
       <tbody>
         {props.data.length ? (props.data.map((tx, j) => (
           <tr key={j}>
-            {props.columns.map(({ key, render }, i) => (
-              tx ? (
-                <td key={i}>
-                  {typeof render === 'function' ? render({ data: tx, value: tx[key] }) : tx[key]}
-                </td>
-              ) : null
-            ))}
+            {props.columns.map(({ key, render }, i) => (tx ? (
+              <td key={i}>
+                {typeof render === 'function' ? render({ data: tx, value: tx[key] }) : tx[key]}
+              </td>
+            ) : null))}
           </tr>
         ))) : null}
       </tbody>

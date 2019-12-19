@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { AccountActivityTable } from './account-activity-table';
+import { AccountActivityTable } from './table/account-activity-table';
 import { AccountActivityApi } from '../../api/account-activity-api';
 
 function useAccountActivityItems() {
