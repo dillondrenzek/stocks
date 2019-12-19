@@ -1,6 +1,10 @@
 import { AccountType, isAccountType } from './helpers/account-type';
 import { TransactionType, isTransactionType } from './helpers/transaction-type';
 
+export function getTransactionType(data: string): TransactionType {
+  return isTransactionType(data) ? TransactionType[data] : null;
+}
+
 export interface AccountActivityItem {
   // "DESCRIPTION": "SPY 10/18/2019 Put $286.00", 
   description: string | Object;
