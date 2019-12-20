@@ -3,14 +3,14 @@ import _ from 'lodash';
 import pdfParse from 'pdf-parse';
 
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
-import { TextContent, TextItem, PageType, Column, ParsedPDFPage, ParsedPDFPages } from './types';
+import { TextContent, TextItem, PageType, Column, ParsedPDFPage, ParsedPDFPages, ParsedPDF } from './types';
 import { accountActivityItem, AccountActivityItem } from '../models/account-activity';
 import { portfolioSummaryItem, PortfolioSummaryItem } from '../models/portfolio-summary';
 import { getPageType } from '../models/validators';
 
 
 
-export function readRobinhoodPdf(path: string): Promise<ParsedPDFPages> {
+export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
 
   const dataBuffer = fs.readFileSync(path);
 
@@ -308,7 +308,7 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDFPages> {
 
   }
 
-  return new Promise<ParsedPDFPages>((resolve, reject) => {
+  return new Promise<ParsedPDF>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
       .then(({ numpages, text }: any) => {
@@ -316,10 +316,21 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDFPages> {
           reject('No text came from pdfParse');
         }
 
-        const pdfJson = parsePDFJson(text).filter((page) => page);
+        const parsedPages = parsePDFJson(text).filter((page) => page);
         // console.log('parsed pageJson:', parsePDFJson(text));
 
-        resolve(pdfJson);
+        if (!parsedPages.length) {
+          reject('No pages were able to be parsed');
+        }
+
+        const { statementInfo: { startDate, endDate }} = parsedPages[0];
+        const parsedPdf: ParsedPDF = {
+          pages: parsedPages,
+          startDate,
+          endDate
+        };
+
+        resolve(parsedPdf);
       })
       .catch(reject);
   });

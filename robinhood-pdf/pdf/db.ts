@@ -1,16 +1,28 @@
 import { connectDb } from '../../db';
+import { PdfImport } from '../../db/robinhood-pdf/PdfImport';
 import { AccountActivityItem } from '../../db/robinhood-pdf/AccountActivityItem';
 import { PortfolioSummaryItem } from '../../db/robinhood-pdf/PortfolioSummaryItem';
 
-import { ParsedPDFPages, PageType } from './types';
+import { ParsedPDFPages, PageType, ParsedPDF } from './types';
 
-export async function saveRobinhoodPdf(pages: ParsedPDFPages): Promise<void> {
+export async function saveRobinhoodPdf(parsedPdf: ParsedPDF): Promise<void> {
+  const { 
+    endDate,
+    pages,
+    startDate
+  } = parsedPdf;
 
   // establish connection to db
   await connectDb(process.env.MONGODB_URL);
 
   // create a new pdf import
-  
+  const pdfImport = new PdfImport({
+    accountActivityItems: [],
+    created: new Date(),
+    endDate,
+    portfolioSummaryItems: [],
+    startDate,
+  });
 
   // for each page
   await Promise.all(pages.map(async (page) => {
