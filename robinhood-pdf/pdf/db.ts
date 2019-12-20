@@ -1,7 +1,8 @@
-import { connectDb } from '../../../db';
-import { AccountActivityItem } from '../../../db/robinhood-pdf/AccountActivityItem';
-import { PortfolioSummaryItem } from '../../../db/robinhood-pdf/PortfolioSummaryItem';
-import { ParsedPDFPages, PageType } from '../../../robinhood-pdf/pdf';
+import { connectDb } from '../../db';
+import { AccountActivityItem } from '../../db/robinhood-pdf/AccountActivityItem';
+import { PortfolioSummaryItem } from '../../db/robinhood-pdf/PortfolioSummaryItem';
+
+import { ParsedPDFPages, PageType } from './types';
 
 // TODO: only save item if it doesn't already exist
 async function saveAccountActivityItems(items: AccountActivityItem[]) {
