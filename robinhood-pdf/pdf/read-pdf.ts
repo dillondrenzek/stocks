@@ -3,18 +3,18 @@ import _ from 'lodash';
 import pdfParse from 'pdf-parse';
 
 import { COLUMN_SEPARATOR, LINE_SEPARATOR, LINE_THRESHOLD, WORD_THRESHOLD, PAGE_SEPARATOR } from './constants';
-import { TextContent, TextItem, PageType, Column, ParseablePDFPage, ParseablePDFPages } from './types';
+import { TextContent, TextItem, PageType, Column, ParsedPDFPage, ParsedPDFPages } from './types';
 import { accountActivityItem, AccountActivityItem } from '../models/account-activity';
 import { portfolioSummaryItem, PortfolioSummaryItem } from '../models/portfolio-summary';
 import { getPageType } from '../models/validators';
 
 
 
-export function readRobinhoodPdf(path: string): Promise<ParseablePDFPages> {
+export function readRobinhoodPdf(path: string): Promise<ParsedPDFPages> {
 
   const dataBuffer = fs.readFileSync(path);
 
-  const parsePageJson = (page: string): ParseablePDFPage => {
+  const parsePageJson = (page: string): ParsedPDFPage => {
     let result: any = {};
 
     try {
@@ -77,7 +77,7 @@ export function readRobinhoodPdf(path: string): Promise<ParseablePDFPages> {
   }
 
   // page is text 
-  const parsePDFJson = (page: string): ParseablePDFPages => {
+  const parsePDFJson = (page: string): ParsedPDFPages => {
     const pageJsons = page.split(PAGE_SEPARATOR);
     const parsedJson = pageJsons.map(parsePageJson);
     // console.log('parsedJson', parsedJson);
@@ -308,7 +308,7 @@ export function readRobinhoodPdf(path: string): Promise<ParseablePDFPages> {
 
   }
 
-  return new Promise<ParseablePDFPages>((resolve, reject) => {
+  return new Promise<ParsedPDFPages>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
       .then(({ numpages, text }: any) => {

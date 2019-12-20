@@ -1,7 +1,7 @@
 import { connectDb } from '../../../db';
 import { AccountActivityItem } from '../../../db/robinhood-pdf/AccountActivityItem';
 import { PortfolioSummaryItem } from '../../../db/robinhood-pdf/PortfolioSummaryItem';
-import { ParseablePDFPages, PageType } from '../../../robinhood-pdf/pdf';
+import { ParsedPDFPages, PageType } from '../../../robinhood-pdf/pdf';
 
 // TODO: only save item if it doesn't already exist
 async function saveAccountActivityItems(items: AccountActivityItem[]) {
@@ -33,7 +33,7 @@ async function savePortfolioSummaryItems(items: PortfolioSummaryItem[]) {
   });
 }
 
-export async function saveRobinhoodPdf(pages: ParseablePDFPages): Promise<void> {
+export async function saveRobinhoodPdf(pages: ParsedPDFPages): Promise<void> {
 
   // establish connection to db
   await connectDb(process.env.MONGODB_URL);

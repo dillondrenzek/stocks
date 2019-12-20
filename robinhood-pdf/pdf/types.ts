@@ -31,9 +31,9 @@ export interface ParsedPDFPortfolioSummary extends ParsedPDF {
   pageData: PortfolioSummaryItem[];
 }
 
-export type ParseablePDFPage = (ParsedPDFAccountActivity | ParsedPDFPortfolioSummary) | null;
+export type ParsedPDFPage = (ParsedPDFAccountActivity | ParsedPDFPortfolioSummary) | null;
 
-export type ParseablePDFPages = ParseablePDFPage[];
+export type ParsedPDFPages = ParsedPDFPage[];
 
 export interface TextContent {
   items: TextItem[];
