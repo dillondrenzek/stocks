@@ -1,6 +1,5 @@
 import express, {Request, Response} from 'express';
 import { RobinhoodPdfController } from '../../app/controllers/RobinhoodPdfController';
-// import {PortfolioSummaryController} from '../../app/controllers/PortfolioSummaryController';
 
 // Router
 const router = express();

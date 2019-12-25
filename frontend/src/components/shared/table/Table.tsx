@@ -7,7 +7,7 @@ interface TableHeaderProps<T> {
 
 interface TableHeader<T> {
   key: keyof Partial<T>,
-  label: string;
+  label?: string;
   render?: (h: TableHeaderProps<T>) => React.ReactNode;
 }
 
@@ -21,8 +21,8 @@ export function Table<T = any>(props: TableProps<T>) {
     <table className='table table-bordered table-sm'>
       <thead>
         <tr>
-          {props.columns.map(({ label }, i) => (
-            <th key={i}>{label}</th>
+          {props.columns.map(({ label, key }, i) => (
+            <th key={i}>{label || key}</th>
           ))}
         </tr>
       </thead>
