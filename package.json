@@ -7,15 +7,28 @@
     "stocks": "bin/stocks"
   },
   "scripts": {
+    "build:test": "tsc --project ./tsconfig-spec.json",
+    "clean": "rm -rf ./dist",
     "dev": "concurrently \"npm run frontend:dev\" \"npm run server:dev\"",
+    "pretest": "npm run clean; npm run build:test",
+    "test": "mocha --config .mocharc.json",
+
+    "preapp:test": "npm run clean; tsc --project ./tsconfig-spec.json",
+    "predb:test": "npm run clean; tsc --project ./tsconfig-spec.json",
+    "app:test": "mocha --config .mocharc-app.json",
+    "db:test": "mocha --config .mocharc-db.json",
+
+    "frontend:dev": "cd frontend; npm run start",
+
     "server:clean": "rm -rf ./dist",
     "server:build": "tsc --project ./tsconfig.json",
     "server:build:watch": "tsc --watch --project ./tsconfig.json",
     "preserver:start": "npm run server:build",
     "server:start": "node-dev ./dist/server/index.js",
     "server:start:watch": "nodemon --config ./nodemon.json",
-    "server:dev": "npm run server:start:watch",
-    "frontend:dev": "cd frontend; npm run start"
+    "server:dev": "npm run server:start:watch"
+
+
   },
   "author": "",
   "license": "ISC",

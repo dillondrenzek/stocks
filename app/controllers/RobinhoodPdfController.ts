@@ -12,8 +12,26 @@ export class RobinhoodPdfController {
     return fetched.map((val) => this.toPdfImport(val));
   }
 
+  public static async deletePdfImportById(id: string): Promise<void> {
+    const removee = await DB.PdfImport.findById(id);
+
+    // if it exists ...
+    if (removee) {
+
+      // remove all child models
+      await Promise.all(removee.accountActivityItems.map((id) => DB.AccountActivityItem.findByIdAndDelete(id)));
+      await Promise.all(removee.portfolioSummaryItems.map((id) => DB.PortfolioSummaryItem.findByIdAndDelete(id)));
+
+      // remove pdf import
+      await removee.remove();
+    } else {
+      throw new Error('Unable to find PdfImport with id ' + id);
+    }
+  }
+
   private static toPdfImport(i: DB.PdfImportDocument): PdfImport {
     return {
+      _id: i.id,
       startDate: i.startDate,
       endDate: i.endDate,
       accountActivityItems: i.accountActivityItems,

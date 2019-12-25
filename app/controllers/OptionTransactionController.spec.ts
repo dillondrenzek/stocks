@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as DB from '../../../db';
+import * as DB from '../../db';
 import * as Types from '../../lib/types';
 import { generateOptionTransaction, generateStockTransaction } from '../../spec/helpers/db-generators';
 import { withDb } from '../../spec/helpers/db-connect';

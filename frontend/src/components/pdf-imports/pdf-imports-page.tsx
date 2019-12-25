@@ -21,19 +21,28 @@ function usePdfImports(initialValue: PdfImport[] = []) {
   const [pdfImports, setPdfImports] = useState(initialValue);
 
   useEffect(() => {
+    fetchPdfImports();
+  }, []);
+
+  const fetchPdfImports = () => {
     PdfImportApi.getPdfImports((imports: PdfImport[]) => {
       debug('Fetched imports:', imports);
       setPdfImports(imports);
     });
-  }, []);
+  };
 
   return {
-    pdfImports
+    pdfImports,
+    fetchPdfImports
   };
 }
 
 export function PdfImportsPage() {
-  const { pdfImports } = usePdfImports();
+  const { pdfImports, fetchPdfImports } = usePdfImports();
+
+  const handleDeleteRow = (id: string) => {
+    PdfImportApi.deletePdfImportById(id, fetchPdfImports);
+  };
 
   return (
     <Container fluid>
@@ -42,6 +51,7 @@ export function PdfImportsPage() {
           <h3>Robinhood Pdf Imports</h3>
           <PdfImportTable
             items={pdfImports}
+            onDeleteRow={handleDeleteRow}
           />
         </Col>
       </Row>

@@ -15,7 +15,8 @@
     }
   },
   "include": [
-    "./**/*"
+    "./db/robinhood-pdf/**/*.spec.ts",
+    "./app/controllers/RobinhoodPdfController.spec.ts"
   ],
   "exclude": [
     "./cli/**/*",
