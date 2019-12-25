@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface PdfImport {
   startDate: string; // MM/DD/YYYY
@@ -8,7 +8,12 @@ export interface PdfImport {
   created: Date;
 }
 
-export type PdfImportDocument = PdfImport & mongoose.Document;
+export interface PdfImportStatics {
+  generate: (values?: Partial<PdfImport>) => Promise<PdfImportDocument>;
+}
+
+export type PdfImportDocument = mongoose.Document & PdfImport;
+export type PdfImportModel = mongoose.Model<PdfImportDocument> & PdfImportStatics;
 
 const pdfImportSchema = new mongoose.Schema<PdfImportDocument>({
   created: mongoose.SchemaTypes.Date,
@@ -18,4 +23,17 @@ const pdfImportSchema = new mongoose.Schema<PdfImportDocument>({
   portfolioSummaryItems: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'PortfolioSummaryItem' }]
 });
 
-export const PdfImport = mongoose.model<PdfImportDocument>('PdfImport', pdfImportSchema);
+pdfImportSchema.statics.generate = async (values?: Partial<PdfImport>): Promise<PdfImportDocument> => {
+    values = {
+      accountActivityItems: [],
+      portfolioSummaryItems: [],
+      startDate: '9/1/2019',
+      endDate: '9/30/2019',
+      created: new Date(),
+      ...values,
+    };
+
+    return await PdfImport.create(values);
+}
+
+export const PdfImport = mongoose.model<PdfImportDocument, PdfImportModel>('PdfImport', pdfImportSchema);
