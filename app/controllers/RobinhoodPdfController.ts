@@ -24,11 +24,14 @@ export class RobinhoodPdfController {
 
       // remove pdf import
       await removee.remove();
+    } else {
+      throw new Error('Unable to find PdfImport with id ' + id);
     }
   }
 
   private static toPdfImport(i: DB.PdfImportDocument): PdfImport {
     return {
+      _id: i.id,
       startDate: i.startDate,
       endDate: i.endDate,
       accountActivityItems: i.accountActivityItems,

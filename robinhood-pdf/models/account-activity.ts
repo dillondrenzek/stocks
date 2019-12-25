@@ -13,12 +13,12 @@ export interface AccountActivityItem {
   // "DATE": "10/01/2019", 
   date: string; // MM/DD/YYYY
   // "QTY": "1",
-  qty: number;
+  qty: string;
   // "PRICE": "$1.56", 
-  price: number;
+  price: string;
   // "DEBIT": "$156.00" 
-  debit?: number;
-  credit?: number
+  debit?: string;
+  credit?: string;
 }
 
 export function accountActivityItem(values?: any): AccountActivityItem {
