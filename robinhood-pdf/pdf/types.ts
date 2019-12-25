@@ -7,16 +7,18 @@ export enum PageType {
   Unknown = 'UNKNOWN'
 }
 
+export interface StatementInfo {
+  pageNumber: number;
+  totalPages: number;
+  startDate: string; // MM/DD/YYYY
+  endDate: string; // MM/DD/YYYY
+  accountHolder: string;
+  accountNumber: string;
+  accountAddress: string;
+}
+
 interface IParsedPDFPage {
-  statementInfo: {
-    pageNumber: number;
-    totalPages: number;
-    startDate: string; // MM/DD/YYYY
-    endDate: string; // MM/DD/YYYY
-    accountHolder: string;
-    accountNumber: string;
-    accountAddress: string;
-  };
+  statementInfo: StatementInfo;
   pageType: PageType;
   pageData?: any;
 }

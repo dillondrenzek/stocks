@@ -29,7 +29,7 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
         case PageType.AccountActivity:
           result = {
             pageType,
-            statementInfo: null,
+            statementInfo: parsedJson.statementInfo,
             pageData: (Array.isArray(parsedJson['pageData'])) 
               ? parsedJson['pageData'].map((data: any): AccountActivityItem => {
                   if (!data) { return null; }
@@ -45,7 +45,7 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
         case PageType.PortfolioSummary:
           result = {
             pageType,
-            statementInfo: null,
+            statementInfo: parsedJson.statementInfo,
             pageData: (Array.isArray(parsedJson['pageData']))
               ? parsedJson['pageData'].map((data: any): PortfolioSummaryItem => {
                   if (!data) { return null; }
@@ -164,13 +164,18 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
 
       let result = {
         pageNumber: null as string,
-        dateRange: null as string,
+        startDate: null as string,
+        endDate: null as string,
         accountHolder: null as string,
         accountAddress: null as string
       };
+      // parse dates
+      const dateRange = lines[1].map((col) => col.text).join('');
+      const dates = dateRange.split(' to ');
 
       result.pageNumber = lines[0].map((col) => col.text).join('');
-      result.dateRange = lines[1].map((col) => col.text).join('');
+      result.startDate = dates[0];
+      result.endDate = dates[1];
       result.accountHolder = lines[2].map((col) => col.text).join('');
       result.accountAddress = lines[3].map((col) => col.text).join('');
 
@@ -279,6 +284,8 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
         || type === PageType.PortfolioSummary;
     }
 
+
+
     return pageData.getTextContent(renderOptions)
       .then((textContent: TextContent) => {
 
@@ -308,6 +315,11 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
 
   }
 
+  function pageTypeHasStatementInfo(type: PageType): boolean {
+    return type === PageType.AccountActivity ||
+      type === PageType.PortfolioSummary;
+  }
+
   return new Promise<ParsedPDF>((resolve, reject) => {
     // parse pdf
     pdfParse(dataBuffer, { pagerender: renderPage })
@@ -317,17 +329,26 @@ export function readRobinhoodPdf(path: string): Promise<ParsedPDF> {
         }
 
         const parsedPages = parsePDFJson(text).filter((page) => page);
-        // console.log('parsed pageJson:', parsePDFJson(text));
+        console.log('parsed pageJson:', parsedPages);
 
         if (!parsedPages.length) {
           reject('No pages were able to be parsed');
         }
 
-        const { statementInfo: { startDate, endDate }} = parsedPages[0];
+        // Find first statement info
+        let statementInfo;
+        for (let page of parsedPages) {
+          if (pageTypeHasStatementInfo(page.pageType)) {
+            statementInfo = page.statementInfo;
+            break;
+          }
+        }
+
+
         const parsedPdf: ParsedPDF = {
           pages: parsedPages,
-          startDate,
-          endDate
+          startDate: statementInfo.startDate,
+          endDate: statementInfo.endDate
         };
 
         resolve(parsedPdf);
