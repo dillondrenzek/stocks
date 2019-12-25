@@ -37,9 +37,10 @@ accountActivityItemSchema.statics.generate = async (values?: Partial<AccountActi
     date: '09/03/2019',
     symbol: 'TEST',
     qty: '1',
-    price: '$86.05',
-
-    
+    price: '$1.23',
+    description: 'Test description',
+    debit: '$1.23',
+    transactionType: 'Buy',
     ...values,
   };
 

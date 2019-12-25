@@ -19,13 +19,11 @@ export class RobinhoodPdfController {
     if (removee) {
 
       // remove all child models
-      
+      await Promise.all(removee.accountActivityItems.map((id) => DB.AccountActivityItem.findByIdAndDelete(id)));
+
       // remove pdf import
-
+      await removee.remove();
     }
-
-
-    await DB.PdfImport.findByIdAndDelete(id);
   }
 
   private static toPdfImport(i: DB.PdfImportDocument): PdfImport {

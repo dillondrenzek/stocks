@@ -27,8 +27,8 @@ pdfImportSchema.statics.generate = async (values?: Partial<PdfImport>): Promise<
     values = {
       accountActivityItems: [],
       portfolioSummaryItems: [],
-      startDate: '9/1/2019',
-      endDate: '9/30/2019',
+      startDate: '7/1/2019',
+      endDate: '7/31/2019',
       created: new Date(),
       ...values,
     };
