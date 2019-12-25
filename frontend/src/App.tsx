@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PortfolioPage from './components/portfolios/portfolio-page';
 import { AccountActivityPage } from './components/account-activity/account-activity-page';
 import { PortfolioSummaryPage } from './components/portfolio-summary/portfolio-summary-page';
+import { PdfImportsPage } from './components/pdf-imports/pdf-imports-page';
 
 
 function Nav() {
@@ -25,6 +26,9 @@ function Nav() {
           </Bootstrap.Nav.Link>
           <Bootstrap.Nav.Link as={Link} to='/portfolio-summary'>
             Portfolio Summary
+          </Bootstrap.Nav.Link>
+          <Bootstrap.Nav.Link as={Link} to='/pdf-imports'>
+            PDF Imports
           </Bootstrap.Nav.Link>
         </Bootstrap.Nav>
       </Bootstrap.Navbar.Collapse>
@@ -46,6 +50,9 @@ export default function App() {
           </Route>
           <Route exact path='/portfolio-summary'>
             <PortfolioSummaryPage />
+          </Route>
+          <Route exact path='/pdf-imports'>
+            <PdfImportsPage />
           </Route>
         </Switch>
       </div>

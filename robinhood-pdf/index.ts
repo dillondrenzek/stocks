@@ -4,7 +4,7 @@ loadEnv('../../../.env');
 
 import { resolve } from 'path';
 import { readRobinhoodPdf } from './pdf';
-import { saveRobinhoodPdf, dropRobinhoodPdfDb } from '../server/api/robinhood/db';
+import { saveRobinhoodPdf, dropRobinhoodPdfDb } from './pdf/db';
 
 
 

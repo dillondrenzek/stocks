@@ -21,3 +21,8 @@ export {
   PortfolioSummaryItem,
   PortfolioSummaryItemDocument
 } from './robinhood-pdf/PortfolioSummaryItem';
+
+export {
+  PdfImport,
+  PdfImportDocument
+} from './robinhood-pdf/PdfImport';
