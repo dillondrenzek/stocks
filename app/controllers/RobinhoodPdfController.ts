@@ -13,6 +13,18 @@ export class RobinhoodPdfController {
   }
 
   public static async deletePdfImportById(id: string): Promise<void> {
+    const removee = await DB.PdfImport.findById(id);
+
+    // if it exists ...
+    if (removee) {
+
+      // remove all child models
+      
+      // remove pdf import
+
+    }
+
+
     await DB.PdfImport.findByIdAndDelete(id);
   }
 
