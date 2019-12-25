@@ -20,6 +20,7 @@ export class RobinhoodPdfController {
 
       // remove all child models
       await Promise.all(removee.accountActivityItems.map((id) => DB.AccountActivityItem.findByIdAndDelete(id)));
+      await Promise.all(removee.portfolioSummaryItems.map((id) => DB.PortfolioSummaryItem.findByIdAndDelete(id)));
 
       // remove pdf import
       await removee.remove();

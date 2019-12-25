@@ -24,15 +24,25 @@ describe('RobinhoodPdfController', withDb(() => {
         DB.AccountActivityItem.generate()
       ])).map((i) => i._id);
 
+      portfolioSummaryItems = (await Promise.all([
+        DB.PortfolioSummaryItem.generate(),
+        DB.PortfolioSummaryItem.generate(),
+        DB.PortfolioSummaryItem.generate(),
+      ])).map((i) => i._id);
+
       // create pdf import with child models
       pdfImport = await DB.PdfImport.generate({
-        accountActivityItems
+        accountActivityItems,
+        portfolioSummaryItems
       });
 
+      // call test method
       await RobinhoodPdfController.deletePdfImportById(pdfImport.id);
 
+      // check post-state
       fetchedPdfImport = await DB.PdfImport.findById(pdfImport._id);
       fetchedAccountActivityItems = await Promise.all(accountActivityItems.map((aa) => DB.AccountActivityItem.findById(aa._id)));
+      fetchedPortfolioSummaryItems = await Promise.all(portfolioSummaryItems.map((ps) => DB.PortfolioSummaryItem.findById(ps._id)));
     });
 
     it('Deletes the PdfImport instance', () => {
@@ -44,7 +54,12 @@ describe('RobinhoodPdfController', withDb(() => {
         expect(item).to.be.null;
       }
     });
-    xit('Deletes the child portfolio summary items');
+    it('Deletes the child portfolio summary items', () => {
+      expect(fetchedPortfolioSummaryItems.length).to.eq(portfolioSummaryItems.length);
+      for (let item of fetchedPortfolioSummaryItems) {
+        expect(item).to.be.null;
+      }
+    });
   });
 
 }));
