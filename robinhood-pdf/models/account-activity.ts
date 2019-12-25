@@ -30,7 +30,7 @@ export function accountActivityItem(values?: any): AccountActivityItem {
       console.error('Could not parse TransactionType', data);
       return null;
     }
-    return TransactionType[data];
+    return getTransactionType(data);
   })();
 
   // return instance

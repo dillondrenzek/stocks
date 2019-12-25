@@ -18,5 +18,5 @@ export function getTransactionType(data: string): TransactionType {
   if (data === 'T/A') {
     return TransactionType.TA;
   }
-  return isTransactionType(data) ? TransactionType[data] : null;
+  return isTransactionType(data) ? (<any>TransactionType)[data] : null;
 }
