@@ -12,6 +12,10 @@ export class RobinhoodPdfController {
     return fetched.map((val) => this.toPdfImport(val));
   }
 
+  public static async deletePdfImportById(id: string): Promise<void> {
+    await DB.PdfImport.findByIdAndDelete(id);
+  }
+
   private static toPdfImport(i: DB.PdfImportDocument): PdfImport {
     return {
       startDate: i.startDate,

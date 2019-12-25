@@ -7,10 +7,14 @@
     "stocks": "bin/stocks"
   },
   "scripts": {
+    "build:test": "tsc --project ./tsconfig-spec.json",
+    "clean": "rm -rf ./dist",
     "dev": "concurrently \"npm run frontend:dev\" \"npm run server:dev\"",
+    "pretest": "npm run clean; npm run build:test",
+    "test": "mocha --config .mocharc.json",
 
-    "preapp:test": "tsc --project ./tsconfig-spec.json",
-    "predb:test": "tsc --project ./tsconfig-spec.json",
+    "preapp:test": "npm run clean; tsc --project ./tsconfig-spec.json",
+    "predb:test": "npm run clean; tsc --project ./tsconfig-spec.json",
     "app:test": "mocha --config .mocharc-app.json",
     "db:test": "mocha --config .mocharc-db.json",
 
