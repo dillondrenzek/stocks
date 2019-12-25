@@ -2,17 +2,22 @@ import mongoose from 'mongoose';
 
 export interface AccountActivityItem {
   accountType: string;
-  credit?: number
+  credit?: string
   date: string; // MM/DD/YYYY
-  debit?: number;
+  debit?: string;
   description: string | Object; // different based on type
-  price: number;
-  qty: number;
+  price: string;
+  qty: string;
   symbol: string;
   transactionType: string;
 }
 
+export interface AccountActivityItemStatics {
+  generate: (values?: Partial<AccountActivityItem>) => Promise<AccountActivityItemDocument>;
+}
+
 export type AccountActivityItemDocument = AccountActivityItem & mongoose.Document;
+export type AccountActivityItemModel = AccountActivityItemStatics & mongoose.Model<AccountActivityItemDocument>;
 
 const accountActivityItemSchema = new mongoose.Schema<AccountActivityItemDocument>({
   accountType: mongoose.SchemaTypes.String,
@@ -26,4 +31,19 @@ const accountActivityItemSchema = new mongoose.Schema<AccountActivityItemDocumen
   transactionType: mongoose.SchemaTypes.String,
 });
 
-export const AccountActivityItem = mongoose.model<AccountActivityItemDocument>('AccountActivityItem', accountActivityItemSchema);
+accountActivityItemSchema.statics.generate = async (values?: Partial<AccountActivityItem>): Promise<AccountActivityItemDocument> => {
+  values = {
+    accountType: 'Margin',
+    date: '09/03/2019',
+    symbol: 'TEST',
+    qty: '1',
+    price: '$86.05',
+
+    
+    ...values,
+  };
+
+  return await AccountActivityItem.create(values);
+}
+
+export const AccountActivityItem = mongoose.model<AccountActivityItemDocument, AccountActivityItemModel>('AccountActivityItem', accountActivityItemSchema);
