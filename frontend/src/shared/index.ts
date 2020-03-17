@@ -9,6 +9,8 @@ export const Button = Bootstrap.Button;
 export const Card = Bootstrap.Card;
 export const Col = Bootstrap.Col;
 export const Container = Bootstrap.Container;
+export const Dropdown = Bootstrap.Dropdown;
+export const DropdownButton = Bootstrap.DropdownButton;
 export const Row = Bootstrap.Row;
 
 export const Nav = Bootstrap.Nav;
